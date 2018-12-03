@@ -1,0 +1,46 @@
+<div id="container" class="content-grid mdl-grid mdl-cell--12-col content-w-h">
+
+  <app-sidebar></app-sidebar>
+
+  <div class="content-w-h">
+    <div class="mdl-cell div-logotype">
+      <img src="src/img/logo_login_page.png" alt="EVENT messenger" class="login-logotype">
+    </div>
+    <form class="content-w-h">
+      <div class="login-form mdl-cell">
+        <div class="mdl-cell mdl-cell--3-col left-cell">
+          <span>Login or e-mail: </span>
+        </div>
+        <div class="mdl-cell mdl-cell--6-col left-cell">
+          <input type="text"
+                 class="input-login"
+                 id="login" ngModel="params.username" required>
+        </div>
+      </div>
+      <div class="login-form mdl-cell">
+        <div class="mdl-cell mdl-cell--3-col left-cell">
+          <span>Password: </span>
+          <div class="mdl-cell mdl-cell--6-col left-cell">
+            <input type="password"
+                   class="input-login"
+                   onfocus="hideErr()"
+                   id="password" ngModel="params.password" >
+          </div>
+        </div>
+      </div>
+      <div class="mdl-cell mdl-cell--9-col sbmt-cell">
+        <input type="submit" onclick="setAuth(params)" class="btn-submit-login"  value="enter">
+        <input type="submit" onclick="" class="btn-clear-login margin-btn-login"  value="clear">
+      </div>
+    </form>
+    <div class="mdl-cell mdl-cell--12-col login-content">
+      <div class="spacer-loginpage"></div>
+    </div>
+    <div class="mdl-cell mdl-cell--12-col login-content">
+      <a routerLink="registration" title="Create new accaunt" class="text-registration"><span>Registration new member</span></a>
+    </div>
+  </div>
+
+
+<router-outlet></router-outlet>
+</div>

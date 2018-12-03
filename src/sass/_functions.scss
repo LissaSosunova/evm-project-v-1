@@ -1,0 +1,25 @@
+@mixin set-border($border-size, $border-radius){
+  border: $border-size;
+  border-radius: $border-radius;
+};
+
+@mixin set-border-mes($border-size, $border-radius1, $border-radius2, $border-radius3, $border-radius4){
+  border: $border-size;
+  border-radius: $border-radius1 $border-radius2 $border-radius3 $border-radius4;
+};
+
+@mixin set-transparent($map, $name, $value){
+  background-color: transparentize(map-get($map, $name), $value)
+};
+
+@mixin color-light($map, $name, $value){
+  background-color: lighten(map-get($map, $name), $value);
+};
+
+@mixin color-dark($map, $name, $value){
+  background-color: darken(map-get($map, $name), $value);
+}
+
+@mixin font-color-light($map, $name, $value){
+  font-color: lighten(map-get($map, $name), $value);
+};
