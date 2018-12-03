@@ -1,5 +1,5 @@
 nav {
-  background: #14200B;
+  background: #1c2001;
   height: 100%;
 
   ul {
@@ -11,7 +11,7 @@ nav {
 
       a {
         color: #fff;
-        padding: 24px;
+        padding: 20px;
         display: block;
         &:hover {
           color: #9bb00f;
@@ -19,7 +19,7 @@ nav {
       }
 
       .activated {
-        background-color: #d8f612;
+        background-color: #00a8ff;
       }
     }
   }
