@@ -1,63 +1,42 @@
-<div> Back to login page
+<div class="col-xs-2"> Back to login page
   <a routerLink="" title="Back to login page">
     <i class="material-icons">subdirectory_arrow_left</i>
   </a>
 </div>
-<div class="mdl-cell div-logotype">
-  <img src="src/img/logo_login_page.png" alt="EVENT messenger" class="login-logotype">
-</div>
-
-<div class="mdl-cell mdl-cell--12-col login-content">
+<div class="col-xs-10
+              col-sm-10
+              col-md-10
+              col-lg-10">
+  <div class=" div-logotype">
+    <img src="src/img/logo_login_page.png" alt="EVENT messenger" class="login-logotype">
+  </div>
   <form class="">
+
     <div class="login-form">
-      <div class="mdl-cell mdl-cell--3-col left-cell">
-        <span>Unique username: </span>
+      <span>Unique username: </span>
+      <input type="text"
+             class="input-login"
+             id="login" ngModel="params.username" required>
+      <span>Your e-mail: </span>
+      <input type="text"
+             class="input-login"
+             id="mail"
+             ngModel="params.email" required>
+      <span>Create password: </span>
+      <input type="password"
+             class="input-login"
+             onfocus="hideErr()"
+             id="password" ngModel="params.password" >
+      <span>Confirm password: </span>
+      <input type="password"
+             class="input-login"
+             onfocus="hideErr()"
+             id="password_conf" ngModel="params.passwordConf" >
+      <div class="login-btns-conteiner">
+        <input type="submit" onclick="setReg(params)" class="btn-submit-login"  value="create">
+        <input type="submit" onclick="" class="btn-clear-login margin-btn-login"  value="clear">
       </div>
-      <div class="mdl-cell mdl-cell--6-col left-cell">
-        <input type="text"
-               class="input-login"
-               id="login" ngModel="params.username" required>
-      </div>
-    </div>
-    <div class="login-form">
-      <div class="mdl-cell mdl-cell--3-col left-cell">
-        <span>Your e-mail: </span>
-      </div>
-      <div class="mdl-cell mdl-cell--6-col left-cell">
-        <input type="text"
-               class="input-login"
-               id="mail"
-               ngModel="params.email" required>
-      </div>
-    </div>
-    <div class="login-form">
-      <div class="mdl-cell mdl-cell--3-col left-cell">
-        <span>Create password: </span>
-        <div class="mdl-cell mdl-cell--6-col left-cell">
-          <input type="password"
-                 class="input-login"
-                 onfocus="hideErr()"
-                 id="password" ngModel="params.password" >
-        </div>
-      </div>
-    </div>
-    <div class="login-form">
-      <div class="mdl-cell mdl-cell--3-col left-cell">
-        <span>Confirm password: </span>
-        <div class="mdl-cell mdl-cell--6-col left-cell">
-          <input type="password"
-                 class="input-login"
-                 onfocus="hideErr()"
-                 id="password_conf" ngModel="params.passwordConf" >
-        </div>
-      </div>
-    </div>
-    <div class="mdl-cell mdl-cell--9-col sbmt-cell">
-      <input type="submit" onclick="setReg(params)" class="btn-submit-login"  value="create">
-      <input type="submit" onclick="" class="btn-clear-login margin-btn-login"  value="clear">
     </div>
   </form>
+  <router-outlet></router-outlet>
 </div>
-
-<router-outlet></router-outlet>
-
