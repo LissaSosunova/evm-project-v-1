@@ -5,21 +5,26 @@
   <div class=" div-logotype">
     <img src="src/img/logo_login_page.png" alt="EVENT messenger" class="login-logotype">
   </div>
-  <form class="">
+  <form class=""  >
 
     <div class="login-form">
-      <span>Login or e-mail: </span>
+      <span>Username or e-mail: </span>
       <input type="text"
              class="input-login"
-             id="login" ngModel="params.username" required>
+             id="login"
+             name="user"
+             [(ngModel)] = "username"
+             required>
       <span>Password: </span>
       <input type="password"
              class="input-login"
-             onfocus="hideErr()"
-             id="password" ngModel="params.password" >
+             id="pass"
+             name="password"
+             [(ngModel)] = "password"
+             required>
       <div class="login-btns-conteiner">
-        <input type="submit" onclick="setAuth(params)" class="btn-submit-login"  value="enter">
-        <input type="submit" onclick="" class="btn-clear-login margin-btn-login"  value="clear">
+        <input type="submit" (click)="setAuthConf(username, password)" class="btn-submit-login"  value="enter">
+        <!--<input type="submit" onclick="" class="btn-clear-login margin-btn-login"  value="clear">-->
       </div>
     </div>
 
@@ -28,7 +33,7 @@
     <div class="spacer-loginpage"></div>
   </div>
   <div class="login-content">
-    <a routerLink="registration" title="Create new accaunt" class="text-registration"><span>Registration new member</span></a>
+    <a routerLink="../registration" title="Create new accaunt" class="text-registration"><span>Registration new member</span></a>
   </div>
 <router-outlet></router-outlet>
 </div>

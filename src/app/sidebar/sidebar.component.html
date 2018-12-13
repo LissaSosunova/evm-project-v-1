@@ -1,4 +1,4 @@
-<nav>
+<nav *ngIf="router.url === '/login'">
   <ul>
     <li>
       <a routerLink="registration" title="Create new accaunt">
@@ -6,13 +6,70 @@
       </a>
     </li>
     <li>
-      <a routerLink="about">
+      <a routerLink="about" title="About project">
         <i class="material-icons">info</i>
       </a>
     </li>
     <li>
       <a routerLink="main">
         <i class="material-icons">call_split</i>
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav *ngIf="router.url == '/registration'">
+  <ul>
+    <li>
+      <a routerLink="login" title="Sign in">
+        <i class="material-icons">account_box</i>
+      </a>
+    </li>
+    <li>
+      <a routerLink="about" title="About project">
+        <i class="material-icons">info</i>
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav *ngIf="router.url == '/about'">
+  <ul>
+    <li>
+      <a routerLink="login" title="Sign in">
+        <i class="material-icons">account_box</i>
+      </a>
+    </li>
+    <li>
+      <a routerLink="registration" title="Create new accaunt">
+        <i class="material-icons">fiber_new</i>
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav *ngIf="router.url == '/main'">
+  <ul>
+    <li>
+      <a routerLink="contacts" title="contacts">
+        <i class="material-icons">contacts</i>
+      </a>
+    </li>
+    <li>
+      <a routerLink="chats" title="chats">
+        <i class="material-icons">chat</i>
+      </a>
+    </li>
+    <li>
+      <a routerLink="events" title="events">
+        <i class="material-icons">event</i>
+      </a>
+    </li>
+    <li>
+      <a routerLink="new_event" title="new_event">
+        <i class="material-icons">note_add</i>
+      </a>
+    </li>
+    <li>
+      <a routerLink="calendar" title="calendar">
+        <i class="material-icons">calendar_today</i>
       </a>
     </li>
   </ul>
