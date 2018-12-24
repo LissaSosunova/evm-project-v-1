@@ -15,13 +15,15 @@ export class MainComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private data: DataService) { }
 
   ngOnInit() {
-    this.data.getUser().subscribe<any>(
-      data => {
-        this.user = data
-        console.log("this.user", this.user)
-        console.log("data: ", data)
-      }
-    );
+    this.user = this.route.snapshot.data.userData; // используем резолвер для получения данных пользователя
+    console.log(this.user);
+    // this.data.getUser().subscribe(
+    //   data => {
+    //     this.user = data as types.user;
+    //     console.log("this.user", this.user);
+    //     console.log("data: ", data);
+    //   }
+    // );
   }
 
 }

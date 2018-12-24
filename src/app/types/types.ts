@@ -1,3 +1,5 @@
+import { constants } from "../constants/default-constants";
+
 export module types {
   export interface login {
   username: string;
@@ -23,4 +25,8 @@ export module types {
     avatar: object,
     notifications: [ object ]
   }
+  export const getURI = () => {
+    return `${constants.localBackEnd.protocol}://${constants.localBackEnd.host}:${constants.localBackEnd.port}`;
+  };
+  
 }

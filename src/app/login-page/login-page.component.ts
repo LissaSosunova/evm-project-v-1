@@ -26,16 +26,17 @@ export class LoginPageComponent implements OnInit {
         username,
         password
       };
-    this.data.setAuth(this.params).subscribe<any>(
-      data => { this.dataResp = data
-        if (this.dataResp.success == true) {
+    this.data.setAuth(this.params).subscribe(
+      data => {
+        console.log(data);
+        this.dataResp = data as types.loginResp;
+        if (this.dataResp.success === true) {
           this.token = this.dataResp.access_token;
           sessionStorage.setItem('_token', this.token);
           this.router.navigate(['../main']);
         }
       }
-
-    )
+    );
   }
 
 }

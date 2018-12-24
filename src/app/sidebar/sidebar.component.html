@@ -45,7 +45,12 @@
     </li>
   </ul>
 </nav>
-<nav *ngIf="router.url == '/main'">
+<nav *ngIf="router.url == '/main'
+|| router.url == '/main/chats'
+|| router.url == '/main/contacts'
+|| router.url == '/main/calendar'
+|| router.url == '/main/events'
+|| router.url == '/main/new_event'">
   <ul>
     <li>
       <a routerLink="contacts" title="contacts">

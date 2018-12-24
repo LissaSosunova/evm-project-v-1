@@ -9,6 +9,7 @@ import { EventsComponent } from './events/events.component';
 import { NewEventComponent } from './new-event/new-event.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { ChatsComponent } from './chats/chats.component';
+import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
 
 const routes: Routes = [
   {
@@ -29,28 +30,33 @@ const routes: Routes = [
     component: AboutComponent
   },
   {
-    path: 'events',
-    component: EventsComponent
-  },
-  {
-    path: 'new_event',
-    component: NewEventComponent
-  },
-  {
-    path: 'calendar',
-    component: CalendarComponent
-  },
-  {
-    path: 'chats',
-    component: ChatsComponent
-  },
-  {
-    path: 'contacts',
-    component: ContactsComponent
-  },
-  {
     path: 'main',
-    component: MainComponent
+    component: MainComponent,
+    resolve: {
+      userData: GetDataUserResolverService
+    },
+    children: [
+      {
+        path: 'calendar',
+        component: CalendarComponent
+      },
+      {
+        path: 'contacts',
+        component: ContactsComponent
+      },
+      {
+        path: 'chats/:chatId',
+        component: ChatsComponent
+      },
+      {
+        path: 'events',
+        component: EventsComponent
+      },
+      {
+        path: 'new_event',
+        component: NewEventComponent
+      }
+    ]
   },
 ];
 

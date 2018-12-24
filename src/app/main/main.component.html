@@ -1,2 +1,14 @@
 <img src="src/img/logo_login_page.png" alt="EVENT messenger" class="login-logotype">
 
+<div>
+    <router-outlet>
+<!--
+  Сюда будут рендерится компоненты CalendarComponent, ContactsComponent, 
+  ChatsComponent, EventsComponent, NewEventComponent в зависимости от маршрута.
+  Один раз загружается MainComponent, а потом с него будут передаваться данные вниз в
+  дочерние компоненты, которые будут сюда инициализироваться. Таким образом мы один
+  раз запросим данные пользователя с серверва и не будет каждый раз их запрашивать
+  при переходе на разные маршруты
+    -->
+    </router-outlet> 
+</div>
