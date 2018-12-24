@@ -10,12 +10,13 @@ import { RegistrationComponent } from './registration/registration.component';
 import { AboutComponent } from './about/about.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MainComponent } from './main/main.component';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ContactsComponent } from './contacts/contacts.component';
 import { EventsComponent } from './events/events.component';
 import { NewEventComponent } from './new-event/new-event.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { ChatsComponent } from './chats/chats.component';
+import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import { ChatsComponent } from './chats/chats.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [GetDataUserResolverService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
