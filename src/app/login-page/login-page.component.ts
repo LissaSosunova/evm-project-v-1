@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
+import { Observable } from 'rxjs';
+import { types} from '../types/types';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-login-page',
@@ -6,10 +11,31 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login-page.component.scss']
 })
 export class LoginPageComponent implements OnInit {
+  public params: types.login;
+  public token: string;
+  public dataResp: types.loginResp;
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, private router: Router, private data: DataService) { }
+
 
   ngOnInit() {
+  }
+
+  public setAuthConf(username, password) {
+      this.params = {
+        username,
+        password
+      };
+    this.data.setAuth(this.params).subscribe<any>(
+      data => { this.dataResp = data
+        if (this.dataResp.success == true) {
+          this.token = this.dataResp.access_token;
+          sessionStorage.setItem('_token', this.token);
+          this.router.navigate(['../main']);
+        }
+      }
+
+    )
   }
 
 }

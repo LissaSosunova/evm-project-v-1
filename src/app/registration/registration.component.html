@@ -16,24 +16,33 @@
       <span>Unique username: </span>
       <input type="text"
              class="input-login"
-             id="login" ngModel="params.username" required>
+             id="login"
+             name="user"
+             [(ngModel)] = "username"
+             required>
       <span>Your e-mail: </span>
-      <input type="text"
+      <input type="email"
              class="input-login"
              id="mail"
-             ngModel="params.email" required>
+             name="user"
+             [(ngModel)] = "email"
+             required>
       <span>Create password: </span>
       <input type="password"
              class="input-login"
-             onfocus="hideErr()"
-             id="password" ngModel="params.password" >
+             id="pass"
+             name="password"
+             [(ngModel)] = "password"
+             required>
       <span>Confirm password: </span>
       <input type="password"
              class="input-login"
-             onfocus="hideErr()"
-             id="password_conf" ngModel="params.passwordConf" >
+             id="passConf"
+             name="password"
+             [(ngModel)] = "passConf"
+             >
       <div class="login-btns-conteiner">
-        <input type="submit" onclick="setReg(params)" class="btn-submit-login"  value="create">
+        <input type="submit" (click)="setRegConf(username, email, password)" class="btn-submit-login"  value="create">
         <input type="submit" onclick="" class="btn-clear-login margin-btn-login"  value="clear">
       </div>
     </div>
