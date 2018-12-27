@@ -3,18 +3,23 @@ import { DataService } from '../data.service';
 import { Observable } from 'rxjs';
 import { types} from '../types/types';
 import { ActivatedRoute, Router } from '@angular/router';
+
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss']
 })
+
 export class RegistrationComponent implements OnInit {
-  public params: types.registration;
+  public params: types.Registration;
 
   constructor(private route: ActivatedRoute, private router: Router, private data: DataService) { }
-  ngOnInit() {
-  }
-  public setRegConf (username, email, password) {
+
+    ngOnInit() {
+
+    }
+
+  public setRegConf (username: string, email: string, password: string) {
     this.params = {
       username,
       email,
@@ -25,8 +30,7 @@ export class RegistrationComponent implements OnInit {
         console.log(data);
         this.router.navigate(['../login']);
       }
-
-  )
+    );
   }
 
 }

@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginPageComponent } from './login-page/login-page.component';
@@ -17,6 +16,8 @@ import { NewEventComponent } from './new-event/new-event.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { ChatsComponent } from './chats/chats.component';
 import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
+import { TransferService } from './services/transfer.service';
+import { FilterPipe } from './pipes/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.s
     EventsComponent,
     NewEventComponent,
     CalendarComponent,
-    ChatsComponent
+    ChatsComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -39,7 +41,9 @@ import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.s
     HttpClientModule,
     FormsModule
   ],
-  providers: [GetDataUserResolverService],
+  providers: [
+    GetDataUserResolverService,
+    TransferService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

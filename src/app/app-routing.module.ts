@@ -45,7 +45,7 @@ const routes: Routes = [
         component: ContactsComponent
       },
       {
-        path: 'chats/:chatId',
+        path: 'chats',
         component: ChatsComponent
       },
       {
