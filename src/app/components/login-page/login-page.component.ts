@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../data.service';
 import { Observable } from 'rxjs';
-import { types} from '../types/types';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { types } from 'src/app/types/types';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-login-page',

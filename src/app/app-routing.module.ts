@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginPageComponent } from './login-page/login-page.component';
-import { RegistrationComponent } from './registration/registration.component';
-import { AboutComponent } from './about/about.component';
-import { MainComponent } from './main/main.component';
-import { ContactsComponent } from './contacts/contacts.component';
-import { EventsComponent } from './events/events.component';
-import { NewEventComponent } from './new-event/new-event.component';
-import { CalendarComponent } from './calendar/calendar.component';
-import { ChatsComponent } from './chats/chats.component';
 import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
+import { LoginPageComponent } from './components/login-page/login-page.component';
+import { RegistrationComponent } from './components/registration/registration.component';
+import { AboutComponent } from './components/about/about.component';
+import { MainComponent } from './components/main/main.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { ContactsComponent } from './components/contacts/contacts.component';
+import { ChatsComponent } from './components/chats/chats.component';
+import { EventsComponent } from './components/events/events.component';
+import { NewEventComponent } from './components/new-event/new-event.component';
 
 const routes: Routes = [
   {

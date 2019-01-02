@@ -17,7 +17,7 @@ export module types {
     email: string;
     password: string;
   }
-  
+
   export interface User {
     username: string;
     email: string;
@@ -57,6 +57,28 @@ export module types {
     date: string;
     time: string; // дату и время надо будет поменять на timeStamp (to UTC)
   }
+
+  export interface FormPopupConfig {
+    position?: 'top-center'|'center-center';
+    cssClass?: string;
+    header?: string;
+    isHeaderCloseBtn?: boolean;
+    formId?: string;
+    isFooter?: boolean;
+    isHeader?: boolean;
+    footer?: {
+        isCloseBtn?: boolean;
+        closeBtnText?: string;
+        isSubmitBtn?: boolean;
+        submitBtnText?: string;
+        isSubmitLoading?: boolean;
+        isSubmitDisabled?: boolean;
+        isRemoveBtn?: boolean;
+        removeBtnText?: string;
+        isRemoveLoading?: boolean;
+        btnOrder?: string[];
+    };
+}
 
   export const getURI = () => {
     return `${constants.localBackEnd.protocol}://${constants.localBackEnd.host}:${constants.localBackEnd.port}`;

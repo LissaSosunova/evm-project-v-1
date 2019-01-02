@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { TransferService } from '../services/transfer.service';
-import { types } from '../types/types';
 import { ActivatedRoute, Router } from '@angular/router';
+import { types } from 'src/app/types/types';
+import { TransferService } from 'src/app/services/transfer.service';
 
 @Component({
   selector: 'app-contacts',
