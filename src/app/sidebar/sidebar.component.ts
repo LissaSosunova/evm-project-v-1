@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, Input } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { types } from '../types/types';
 
 @Component({
   selector: 'app-sidebar',
@@ -7,6 +8,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
+
+  @Input() public step: types.StepState;
 
   constructor(public router: Router) { }
 

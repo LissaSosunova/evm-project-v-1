@@ -8,11 +8,11 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
   providedIn: 'root'
 })
 
-export class GetDataUserResolverService implements Resolve<types.user> {
+export class GetDataUserResolverService implements Resolve<types.User> {
 
   constructor(private dataService: DataService) { }
 
-  public resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<types.user> {
+  public resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<types.User> {
     return this.dataService.getUser();
   }
 }

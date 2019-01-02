@@ -14,10 +14,10 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  public setAuth(params: types.login): Observable<any> {
+  public setAuth(params: types.Login): Observable<any> {
    return this.http.post(URL_BACK + '/login/', params);
   }
-  public setReg(params: types.registration): Observable<any> {
+  public setReg(params: types.Registration): Observable<any> {
     return this.http.post(URL_BACK + '/user/', params,  {responseType: 'text'});
   }
   public getUser(): Observable<any> {

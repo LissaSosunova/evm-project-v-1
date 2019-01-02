@@ -11,9 +11,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./login-page.component.scss']
 })
 export class LoginPageComponent implements OnInit {
-  public params: types.login;
+  public params: types.Login;
   public token: string;
-  public dataResp: types.loginResp;
+  public dataResp: types.LoginResp;
 
   constructor(private route: ActivatedRoute, private router: Router, private data: DataService) { }
 
@@ -29,7 +29,7 @@ export class LoginPageComponent implements OnInit {
     this.data.setAuth(this.params).subscribe(
       data => {
         console.log(data);
-        this.dataResp = data as types.loginResp;
+        this.dataResp = data as types.LoginResp;
         if (this.dataResp.success === true) {
           this.token = this.dataResp.access_token;
           sessionStorage.setItem('_token', this.token);
