@@ -1,0 +1,12 @@
+<app-popup 
+    *ngIf="popup.isOpened"
+    [config]="popupConfig"
+    (onClose)="onClose()"
+    >
+  <div>
+    This is popup for user info!
+  </div>
+</app-popup> 
+<!--
+    (onSubmit)="onSubmit()"
+-->

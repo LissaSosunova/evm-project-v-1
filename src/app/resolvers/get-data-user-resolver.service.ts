@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataService } from '../data.service';
+import { DataService } from '../services/data.service';
 import { Observable } from 'rxjs';
 import { types } from '../types/types';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
