@@ -24,10 +24,10 @@ export module types {
     name: string;
     phone: string;
     contacts: Contacts[];
-    events: [ object ]; // конкретизируй тип объекта, сделай как сделал для контактов
+    events: Events [];
     chats: Chats[];
     avatar: object;
-    notifications: [ object ]; // конкретизируй тип объекта, сделай как сделал для контактов
+    notifications: Notifications [];
   }
 
   export interface Contacts {
@@ -44,6 +44,24 @@ export module types {
     name: string;
     _id: string;
     id: string;
+  }
+
+  export interface Notifications {
+    type: string;
+    message: string;
+    _id: string;
+    id: string;
+    status: boolean;
+  }
+
+  export interface Events {
+    name: string;
+    status: boolean;
+    date: object;
+    place: object;
+    members: object;
+    additional: string;
+    notification: object;
   }
 
   export interface Message {
