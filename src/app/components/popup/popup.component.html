@@ -4,10 +4,11 @@
       <!-- Header -->
       <div class="g-form-popup__header" *ngIf="conf.isHeader">
         <div class="g-form-popup__close-btn-wrap" (click)="closePopup()">
-          <button class="close-btn"
+          <button class="close-btn m-btn"
                *ngIf="conf.isHeaderCloseBtn"
                [disabled]="conf.footer.isSubmitLoading || conf.footer.isRemoveLoading"
                   >
+            <i class="material-icons">close</i>
           </button>
         </div>
           <span>{{conf.header}}</span>
@@ -21,37 +22,37 @@
       <!-- Footer -->
       <div class="g-form-popup__footer" *ngIf="conf.isFooter">
           <!-- submit btn -->
-          <div class="g-form-popup__footer-submit-btn" 
-            [ngStyle]="{'order': submitBtnOrder}" 
+          <div class="g-form-popup__footer-submit-btn"
+            [ngStyle]="{'order': submitBtnOrder}"
             *ngIf="conf.footer.isSubmitBtn"
             >
             <button *ngIf="!conf.footer.isSubmitLoading"
                   md-raised-button
                   color="primary"
-                  class="m-btn"
+                  class="m-btn confirm"
                   (click)="submit()"
                   type="submit"
                   form="conf.formId"
                   [disabled]="conf.footer.isSubmitLoading || conf.footer.isRemoveLoading || submitDisabled"
                       >
-                <span>{{conf.footer.submitBtnText}}</span>
+              <i class="material-icons">check</i>
             </button>
           </div>
-          
+
           <!--/ submit btn -->
           <!-- close btn -->
           <div class="g-form-popup__footer-close-btn" [ngStyle]="{'order': closeBtnOrder}">
             <button md-raised-button
-                  class="m-btn"
+                  class="m-btn cancel"
                   *ngIf="conf.footer.isCloseBtn"
                   (click)="closePopup()"
                   [disabled]="conf.footer.isSubmitLoading"
                       >
-                {{conf.footer.closeBtnText}}
+              <i class="material-icons">close</i>
             </button>
           </div>
           <!--/ close btn -->
-          
+
       </div>
       <!--/ Footer -->
   </div>
