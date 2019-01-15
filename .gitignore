@@ -7,6 +7,8 @@
 
 # dependencies
 /node_modules
+backend_server/node_modules
+backend_server/package-lock.json
 package-lock.json
 # IDEs and editors
 /.idea

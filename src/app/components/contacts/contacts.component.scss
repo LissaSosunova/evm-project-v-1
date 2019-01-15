@@ -1,0 +1,29 @@
+.contactList-user, .chats-list {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+    .user-contactList-photo {
+      padding-left: 20px
+    }
+
+
+    img {
+      height: 30px;
+      align-self: center;
+      border-radius: 50%;
+    }
+
+
+    .user-contactList-name {
+      width: 50%;
+      font-size: 14px;
+      padding-left: 20px;
+        &:hover {
+          cursor: pointer;
+          color: white;
+        }
+    }
+
+}
+

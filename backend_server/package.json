@@ -1,0 +1,23 @@
+{
+    "name": "backend-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {},
+    "dependencies": {},
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "bcrypt": "^3.0.3",
+        "body-parser": "^1.18.2",
+        "express": "^4.16.3",
+        "fs": "0.0.1-security",
+        "jwt-simple": "^0.5.3",
+        "mongoose": "^5.2.17",
+        "morgan": "^1.9.1",
+        "multer": "^1.3.1",
+        "node-static": "^0.7.11",
+        "path": "^0.12.7",
+        "ws": "3.3.2"
+    }
+}
