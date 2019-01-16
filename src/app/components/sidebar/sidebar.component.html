@@ -40,7 +40,8 @@
     </li>
   </ul>
 </nav>
-<nav *ngIf="router.url == '/main/chats'
+<nav *ngIf="router.url == '/main'
+|| router.url == '/main/chats'
 || router.url == '/main/chats'
 || router.url == '/main/contacts'
 || router.url == '/main/calendar'
@@ -77,33 +78,9 @@
         <i class="material-icons">calendar_today</i>
       </a>
     </li>
-  </ul>
-</nav>
-<nav *ngIf="router.url == '/main'">
-  <ul>
     <li>
-      <a routerLink="main/contacts" title="contacts">
-        <i class="material-icons">contacts</i>
-      </a>
-    </li>
-    <li>
-      <a routerLink="main/chats" title="chats">
-        <i class="material-icons">chat</i>
-      </a>
-    </li>
-    <li>
-      <a routerLink="main/events" title="events">
-        <i class="material-icons">event</i>
-      </a>
-    </li>
-    <li>
-      <a routerLink="main/new_event" title="new_event">
-        <i class="material-icons">note_add</i>
-      </a>
-    </li>
-    <li>
-      <a routerLink="main/calendar" title="calendar">
-        <i class="material-icons">calendar_today</i>
+      <a routerLink="/login" title="exit" (click)="exit()">
+        <i class="material-icons">exit_to_app</i>
       </a>
     </li>
   </ul>

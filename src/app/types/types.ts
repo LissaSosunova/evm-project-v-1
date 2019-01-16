@@ -23,20 +23,25 @@ export module types {
     email: string;
     name: string;
     phone: string;
-    contacts: Contacts[];
+    contacts: Contact[];
     events: Events [];
     chats: Chats[];
     avatar: object;
     notifications: Notifications [];
   }
 
-  export interface Contacts {
+  export interface Contact {
     avatar: string;
     email: string;
     id: string;
     name: string;
     private_chat: string;
     _id: string;
+    status: number;
+  }
+
+  export interface Contacts {
+    contacts: Contact[];
   }
 
   export interface Chats {

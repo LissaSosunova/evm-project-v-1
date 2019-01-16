@@ -14,8 +14,9 @@ export class ContactsComponent implements OnInit {
 
   public user: types.User = {} as types.User;
   public test: String = 'This is test data';
-  public contacts: types.Contacts;
-
+  public contactsConfirmed: Array<types.Contact> = [];
+  public contactsAwaiting: Array<types.Contact> = [];
+  public contactsRequested: Array<types.Contact> = [];
   private subscription: Subscription;
 
   constructor(private transferService: TransferService,
@@ -32,6 +33,18 @@ export class ContactsComponent implements OnInit {
     const user = this.transferService.dataGet('userData');
     this.user = Object.assign(user);
     this.transferService.setDataObs(this.test);
+    for(let o of this.user.contacts){
+      if (o.status == 1){
+        this.contactsConfirmed.push(o);
+      } else if (o.status == 2){
+        this.contactsAwaiting.push(o);
+      } else if (o.status == 3){
+        this.contactsRequested.push(o);
+      }
+    }
   }
-
+  public switcher(currId: string) {
+    const el = <HTMLInputElement>document.getElementById("currId");
+  console.log(currId, el);
+}
 }

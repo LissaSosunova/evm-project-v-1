@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="router.url == '/main/chats'">
   <ul>
     <li *ngFor="let item of user.chats">
       <div>{{ item.name }}</div>

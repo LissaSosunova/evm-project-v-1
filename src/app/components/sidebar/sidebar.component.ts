@@ -13,5 +13,8 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
   }
+  public exit(): void {
+    sessionStorage.clear();
+  }
 
 }

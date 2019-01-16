@@ -1,10 +1,55 @@
-<div class="content-rows">
-  <div class="contactList-user">
-    <ul>
-      <li *ngFor="let item of user.contacts">
-        <img src="{{item.avatar.url}}">{{item.name}}
-      </li>
-    </ul>
+<div class="content-rows" *ngIf="router.url == '/main/contacts' && router.url !== '/main'">
+  <div id="menu-switcher" class="tabs-nav">
+    <span><a  (click)="switcher('contacts')">Contact list</a></span>
+    <span><a href="#avaiting">Awaiting for confirmation</a></span>
+    <span><a href="#requested">Requested</a></span>
+    <span><a href="#add">Add new contact</a></span>
   </div>
-</div>
+  <div class="div-with-all-contacts">
+
+    <div class="contactList-user1 tab is-vis-tab" id="contacts">
+      <ul class="contacts-ul">
+        <li *ngFor="let item of contactsConfirmed" class="direction-row">
+          <div class="col-xs-10"><img src="{{item.avatar.url}}">{{item.name}}</div>
+          <div class="col-xs-2">
+            <button class="m-btn confirm">
+              <i class="material-icons">visibility</i>
+            </button>
+            <button class="m-btn cancel">
+              <i class="material-icons">close</i>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="contactList-user1 tab" id="avaiting">
+      <ul class="contacts-ul">
+        <li *ngFor="let item of contactsAwaiting" class="direction-row">
+          <div class="col-xs-9"><img src="{{item.avatar.url}}">{{item.name}}</div>
+          <div class="col-xs-3">
+            <button class="m-btn cancel">
+              <i class="material-icons">close</i>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="contactList-user1 tab" id="requested">
+      <ul class="contacts-ul">
+        <li *ngFor="let item of contactsRequested" class="direction-row">
+          <div class="col-xs-9"><img src="{{item.avatar.url}}">{{item.name}}</div>
+          <div class="col-xs-3">
+            <button class="m-btn cancel">
+              <i class="material-icons">close</i>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="contactList-user1 tab" id="add">
+      here
+    </div>
+  </div>
+  </div>
+
 
