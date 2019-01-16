@@ -25,4 +25,9 @@ export class DataService {
     const headers = new HttpHeaders({'authorization': token});
     return this.http.get(URL_BACK + '/user/', {headers});
   }
+  public findUser(query: types.FindUser): Observable<any> {
+    const token = sessionStorage.getItem('_token');
+    const headers = new HttpHeaders({'authorization': token});
+    return this.http.post(URL_BACK + '/finduser/', query, {headers});
+  }
 }

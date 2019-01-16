@@ -1,3 +1,10 @@
-<p>
-  contacts works!
-</p>
+<div class="content-rows">
+  <div class="contactList-user">
+    <ul>
+      <li *ngFor="let item of user.contacts">
+        <img src="{{item.avatar.url}}">{{item.name}}
+      </li>
+    </ul>
+  </div>
+</div>
+

@@ -64,6 +64,9 @@ export module types {
     notification: object;
   }
 
+  export interface FindUser {
+    query: string;
+  }
   export interface Message {
     chatID: string;
     authorId: string;

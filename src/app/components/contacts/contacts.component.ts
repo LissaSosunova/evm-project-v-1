@@ -14,6 +14,7 @@ export class ContactsComponent implements OnInit {
 
   public user: types.User = {} as types.User;
   public test: String = 'This is test data';
+  public contacts: types.Contacts;
 
   private subscription: Subscription;
 
@@ -30,7 +31,6 @@ export class ContactsComponent implements OnInit {
   public init(): void {
     const user = this.transferService.dataGet('userData');
     this.user = Object.assign(user);
-    console.log(this.user); // Получили данные пользователя
     this.transferService.setDataObs(this.test);
   }
 
