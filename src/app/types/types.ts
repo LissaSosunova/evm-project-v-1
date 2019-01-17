@@ -72,6 +72,9 @@ export module types {
   export interface FindUser {
     query: string;
   }
+  export interface AddUser {
+    query: string;
+  }
   export interface Message {
     chatID: string;
     authorId: string;

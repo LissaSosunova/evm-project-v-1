@@ -26,8 +26,21 @@ export class DataService {
     return this.http.get(URL_BACK + '/user/', {headers});
   }
   public findUser(query: types.FindUser): Observable<any> {
+    console.log(typeof query.query);
     const token = sessionStorage.getItem('_token');
     const headers = new HttpHeaders({'authorization': token});
-    return this.http.post(URL_BACK + '/finduser/', query, {headers});
+    return this.http.post(URL_BACK + '/finduser/', query.query, {headers});
+  }
+  public addUser(query: types.AddUser): Observable<any> {
+    console.log(typeof query.query);
+    const token = sessionStorage.getItem('_token');
+    const headers = new HttpHeaders({'authorization': token});
+    return this.http.post(URL_BACK + '/adduser/', query.query, {headers});
+  }
+  public confUser(query: types.AddUser): Observable<any> {
+    console.log(typeof query.query);
+    const token = sessionStorage.getItem('_token');
+    const headers = new HttpHeaders({'authorization': token});
+    return this.http.post(URL_BACK + '/confirmuser/', query.query, {headers});
   }
 }

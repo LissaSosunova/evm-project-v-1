@@ -11,7 +11,8 @@ const contact = db.Schema({
   name: { type: String },
   avatar: { type: Object },
   private_chat: { type: String },
-  email: { type: String }
+  email: { type: String },
+  status: { type: Number}
 });
 const eventNotification = db.Schema({
   id: { type: String },
