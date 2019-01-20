@@ -29,7 +29,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user = this.route.snapshot.data.userData; // используем резолвер для получения данных пользователя
-    console.log(this.user.chats);
+    console.log(this.user);
     this.transferService.dataSet({name: 'userData', data: this.user});
   }
 
