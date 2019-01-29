@@ -163,7 +163,7 @@ router.post('/finduser', async function (req, res, next) {
     }
     res.json(resp);
   } catch (err) {
-    throw new Error(err);
+      res.sendStatus(500);
   }
 });
 
@@ -220,7 +220,7 @@ router.post('/adduser', async function (req, res, next) {
     //ответ сервера после обработки
     res.json(updateRes);
   } catch(err) {
-    throw new Error(err);
+    res.sendStatus(500);
   }
 });
 
@@ -277,9 +277,9 @@ router.post('/deleteContact', async function (req, res, next) {
   }
   try {
     const updateRes = await datareader(User, params, 'updateOne');
-    res.end();
+    res.sendStatus(200);
   } catch (err) {
-    throw new Error(err);
+    res.sendStatus(500);
   }
 
 })

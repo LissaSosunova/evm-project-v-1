@@ -1,8 +1,5 @@
 const db = require('./db');
 
-const deletedInfo = db.Schema({
-    any: {}
-}, { strict: false });
 
 const messageItem = db.Schema({
     chatID: {type: String},
@@ -13,7 +10,6 @@ const messageItem = db.Schema({
     read: {type: Boolean},
     date: {type: String},
     time: {type: String},
-    isDeleted: deletedInfo
 });
 
 const chat = db.Schema({
