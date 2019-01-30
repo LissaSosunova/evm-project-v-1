@@ -21,6 +21,7 @@ import { EventsComponent } from './components/events/events.component';
 import { NewEventComponent } from './components/new-event/new-event.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ChatsComponent } from './components/chats/chats.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
