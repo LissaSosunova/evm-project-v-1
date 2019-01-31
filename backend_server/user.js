@@ -144,7 +144,7 @@ router.get('/user', function (req, res, next) {
 
 router.post('/finduser', async function (req, res, next) {
   let auth;
-  const query = req.body;
+  const query = req.body.param;
   try {
     auth = jwt.decode(req.headers['authorization'], config.secretkey);
   } catch (err) {
@@ -163,7 +163,7 @@ router.post('/finduser', async function (req, res, next) {
     }
     res.json(resp);
   } catch (err) {
-    throw new Error(err);
+      res.sendStatus(500);
   }
 });
 
@@ -192,7 +192,7 @@ router.post('/adduser', async function (req, res, next) {
     if (query.id === auth.username) exsistCont = true;
     if (exsistCont) return res.json({message: "This contact is already exists"});
 
-    const findRes = await datareader(User, {username: query}, 'findOne');
+    const findRes = await datareader(User, {username: query.id}, 'findOne');
     findRes.private_chat = '0';
     findRes.status = 3;
     const contact = new ContactData(findRes);
@@ -218,9 +218,9 @@ router.post('/adduser', async function (req, res, next) {
     };
     const updateFindedUser = await datareader(User, addParams, 'updateOne');
     //ответ сервера после обработки
-    res.json(updateRes);
+    res.sendStatus(200);
   } catch(err) {
-    throw new Error(err);
+    res.sendStatus(500);
   }
 });
 
@@ -233,30 +233,37 @@ router.post('/confirmuser', async function (req, res, next) {
     return res.sendStatus(401)
   }
   const params1 = {username: auth.username};
-  const params2 = {username: query};
+  const params2 = {username: query.id}; // уточни какое поле переменной query тут нужно
+  // Я так понимаю, что ты шлёшь id
 
-  datareader(User, params2, 'findOne')
-    .then(response2 =>{
-      User.updateOne({"username" : response2.username, "contacts.id": auth.username},
-        {
-          $set : { "contacts.$.status" : 1 }
-        }, { upsert: true },
-        function(err, result){
-        }
-      );
-    });
-  datareader(User, params1, 'findOne')
-    .then(response1 =>{
-      User.updateOne({"username" : response1.username, "contacts.id": query},
-        {
-          $set : { "contacts.$.status" : 1 }
-        }, { upsert: true },
+  try {
+    const response2 = await datareader(User, params2, 'findOne');
+
+    User.updateOne({"username" : response2.username, "contacts.id": auth.username},
+      {
+        $set : { "contacts.$.status" : 1 }
+      }, { upsert: true },
+      function(err, result){
+      }
+    );
+
+    const response1 = await datareader(User, params1, 'findOne')
+    User.updateOne({"username" : response1.username, "contacts.id": query.id},
+    {
+      $set : { "contacts.$.status" : 1 }
+    }, { upsert: true },
         function(err, result){
           console.log(result);
           res.sendStatus(200)
         }
       );
-    })
+  } catch(err) {
+    res.sendStatus(500);
+  }
+  
+   
+  
+    
 });
 
 router.post('/deleteContact', async function (req, res, next) {
@@ -277,9 +284,9 @@ router.post('/deleteContact', async function (req, res, next) {
   }
   try {
     const updateRes = await datareader(User, params, 'updateOne');
-    res.end();
+    res.sendStatus(200);
   } catch (err) {
-    throw new Error(err);
+    res.sendStatus(500);
   }
 
 })
@@ -365,7 +372,7 @@ router.post('/profile', function (req, res, next){
       }
     })
     .then(response =>{
-      return res.json(response);
+      return res.sendStatus(200);
     })
 });
 

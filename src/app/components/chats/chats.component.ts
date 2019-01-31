@@ -9,7 +9,7 @@ import { TransferService } from 'src/app/services/transfer.service';
   templateUrl: './chats.component.html',
   styleUrls: ['./chats.component.scss']
 })
-export class ChatsComponent implements OnInit {
+export class ChatsComponent implements OnInit, OnDestroy {
   public user: types.User = {} as types.User;
   public test: String = 'This is test data';
   public chats: types.Chats;
@@ -19,6 +19,10 @@ export class ChatsComponent implements OnInit {
 
   ngOnInit() {
     this.init();
+  }
+
+  ngOnDestroy () {
+
   }
   public init(): void {
     const user = this.transferService.dataGet('userData');

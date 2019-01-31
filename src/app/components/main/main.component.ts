@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet, NavigationStart } from '@angular/router';
 import { UserInfoPopupComponent } from '../user-info-popup/user-info-popup.component';
 import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
@@ -16,10 +16,11 @@ export class MainComponent implements OnInit, OnDestroy {
 
   public user: types.User = {} as types.User;
   @ViewChild('userPopup') private userPopup: UserInfoPopupComponent;
+  @ViewChild(RouterOutlet) public outlet: RouterOutlet;
   private subscription: Subscription;
 
   constructor(private route: ActivatedRoute,
-    private router: Router,
+    public router: Router,
     private data: DataService,
     private transferService: TransferService) {
       this.subscription = this.transferService.getDataObs().subscribe(test => {

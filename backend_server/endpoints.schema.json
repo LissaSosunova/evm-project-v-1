@@ -1,0 +1,348 @@
+{
+    "endpoints": [
+        {
+            "endpoint": "new_private_chat",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "users": "String[]",
+                "email": "String[]"
+            },
+            "responseObject": {
+                "id": "String",
+                "users": "String[]",
+                "email": "String[]",
+                "messages": "MessageItem[]"
+            },
+            "MessageItem": {
+                "chatID": "String",
+                "authorId": "String",
+                "destination": "String",
+                "text": "String",
+                "edited": "Boolean",
+                "read": "Boolean",
+                "date": "String",
+                "time": "String"
+            }
+        },
+        {
+            "endpoint": "private_chat/:id",
+            "type": "get",
+            "headers": "authorization",
+            "requestObject": {
+    
+            },
+            "responseObject": {
+                "_id": "String",
+                "users": "String[]",
+                "email": "String[]",
+                "messages": "MessageItem[]"
+            },
+            "MessageItem": {
+                "chatID": "String",
+                "authorId": "String",
+                "destination": "String",
+                "text": "String",
+                "edited": "Boolean",
+                "read": "Boolean",
+                "date": "String",
+                "time": "String"
+            }
+        },
+        {
+            "endpoint": "account",
+            "type": "get",
+            "headers": "authorization",
+            "requestObject": {
+                
+            },
+            "responseObject": {
+                "_id": "String",
+                "contacts": "Contacts[]",
+                "events": "Events[]",
+                "chats": "Chats[]",
+                "notifications": "Notifications[]",
+                "username": "String",
+                "email": "String",
+                "name": "String",
+                "avatar": "String"
+            },
+            "Contacts": {
+                "id": "String",
+                "name": "String",
+                "avatar": { },
+                "private_chat": "String",
+                "email": "String",
+                "status": "Number"
+            },
+            "Events": {
+                "id": "String",
+                "name": "String",
+                "status": "Boolean",
+                "date": "[]",
+                "notification": {
+                    "id": "String",
+                    "type": "String",
+                    "message": "String"
+                }
+            },
+            "Chats": {
+                "id": "String",
+                "name": "String",
+                "avatar": { }
+            },
+            "Notifications": {
+                "id": "String",
+                "type": "String",
+                "message": "String",
+                "status":  "Boolean"
+            } 
+        },
+        {
+            "endpoint": "login",
+            "type": "post",
+            "requestObject": {
+                "username": "String",
+                "password": "String"
+            },
+            "responseObjectSuccess": {
+                "success": "Boolean", 
+                "access_token": "String"
+            },
+            "responseObjectError": {
+                "message": "String"
+            },
+            "sendStatusErr": "401"
+        }, 
+        {
+            "endpoint": "deleteContact",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "username": "String",
+                "contactUsername": "String"
+            },
+            "responseObject": {
+
+            },
+            "sendStatus": "200"
+        }, 
+        {
+            "endpoint": "deleteChat",
+            "type": "post",
+            "requestObject": {
+                "myId": "String",
+                "contactId": "String"
+            },
+            "responseObject": {
+
+            },
+            "sendStatus": "200"
+        },
+        {
+            "endpoint": "user",
+            "type": "post",
+            "requestObject": {
+                "username": "String",
+                "email": "String",
+                "password": "String",
+                "passwordConf": "String"
+            },
+            "responseObject": {
+
+            },
+            "sendStatus": "201",
+            "responseObjectError": {
+                "name": "String"
+            }
+        }, 
+        {
+            "endpoint": "user",
+            "type": "get",
+            "headers": "authorization",
+            "requestObject": {
+    
+            },
+            "responseObject": {
+                "username": "String",
+                "email": "String",
+                "name": "String",
+                "phone": "String",
+                "contacts": "Contacts[]",
+                "events": "Events[]",
+                "chats": "Chats[]",
+                "avatar": "String",
+                "notifications": "Notifications[]"
+            },
+            "Contacts": {
+                "id": "String",
+                "name": "String",
+                "avatar": { },
+                "private_chat": "String",
+                "email": "String",
+                "status": "Number"
+            },
+            "Events": {
+                "id": "String",
+                "name": "String",
+                "status": "Boolean",
+                "date": "[]",
+                "notification": {
+                    "id": "String",
+                    "type": "String",
+                    "message": "String"
+                }
+            },
+            "Chats": {
+                "id": "String",
+                "name": "String",
+                "avatar": { }
+            },
+            "Notifications": {
+                "id": "String",
+                "type": "String",
+                "message": "String",
+                "status":  "Boolean"
+            } 
+        },
+        {
+            "endpoint": "finduser",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "param": "String"
+            },
+            "responseArray": "User[]",
+            "User": {
+                "username": "String",
+                "email": "String",
+                "name": "String",
+                "phone": "String",
+                "contacts": "Contacts[]",
+                "events": "Events[]",
+                "chats": "Chats[]",
+                "avatar": "String",
+                "notifications": "Notifications[]"
+            },
+            "Contacts": {
+                "id": "String",
+                "name": "String",
+                "avatar": { },
+                "private_chat": "String",
+                "email": "String",
+                "status": "Number"
+            },
+            "Events": {
+                "id": "String",
+                "name": "String",
+                "status": "Boolean",
+                "date": "[]",
+                "notification": {
+                    "id": "String",
+                    "type": "String",
+                    "message": "String"
+                }
+            },
+            "Chats": {
+                "id": "String",
+                "name": "String",
+                "avatar": { }
+            },
+            "Notifications": {
+                "id": "String",
+                "type": "String",
+                "message": "String",
+                "status":  "Boolean"
+            } 
+        },
+        {
+            "endpoint": "adduser",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "id": "String",
+                "name": "String",
+                "avatar": "String"
+            },
+            "responseObject": {
+
+            },
+            "sendStatus": "200"
+        },
+        {
+            "endpoint": "profile",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "name": "String",
+                "phone": "String",
+                "email": "String",
+                "addmail": "String"
+            },
+            "responseObject": {
+
+            },
+            "sendStatus": "200" 
+        },
+        {
+            "endpoint": "confirmuser",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "id": "String"
+            },
+            "responseObject": {
+
+            },
+            "sendStatus": "200"
+        },
+        {
+            "endpoint": "new_event",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "name": "String",
+                "status": "Boolean",
+                "date": "Object, но потом будет Number, потому что время удобно переводить к формату UTC, потом с этого формата можно получить дату, время, год и т.п.",
+                "place": "Object, надо конкретизировать какой объект",
+                "members": "Object, надо конкретизировать какой объект",
+                "additional": "String",
+                "notification": "Object, надо конкретизировать какой объект"
+            },
+            "responseObject": {
+
+            },
+            "sendStatus": "200"
+        },
+        {
+            "endpoint": "change_status",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "id": "String, надо нам называть более конкретно поля, чтобы было понятно что за id, в данном случае я так понимаю, что это eventId"
+            },
+            "responseObject": {
+
+            },
+            "sendStatus": "200"
+        },
+        {
+            "endpoint": "event/:id",
+            "type": "get",
+            "headers": "authorization",
+            "requestObject": {
+
+            },
+            "requestObject": {
+                "name": "String",
+                "status": "Boolean",
+                "date": "Object, но потом будет Number",
+                "place": "Object, надо конкретизировать какой объект",
+                "members": "Object, надо конкретизировать какой объект",
+                "additional": "String",
+                "notification": "Object, надо конкретизировать какой объект"
+            }
+        }
+    ]
+    
+}

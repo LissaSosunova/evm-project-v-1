@@ -47,7 +47,7 @@ router.post('/new_event', function (req, res, next){
       datareader(User, params, 'findOne')
         .then((response) =>{
           User.updateOne({username: response.username}, {$push: {events:createdEvent}}, (e, d) => {
-            if (e) throw new Error();
+            if (e) throw new Error(e);
             else return response;
           })
         })
@@ -56,12 +56,12 @@ router.post('/new_event', function (req, res, next){
             event.notification.id = event._id;
             event.members.invited.forEach(function (item) {
               User.updateOne({username: item.username}, {$push: {events:createdEvent}}, (e, d) => {
-                if (e) throw new Error();
+                if (e) throw new Error(e);
                 else return response;
               });
               if(event.status === true){
                 User.updateOne({username: item.username}, {$push: {notifications:event.notification}}, (e, d) => {
-                  if (e) throw new Error();
+                  if (e) throw new Error(e);
                   else return response;
                 });
               }
@@ -78,10 +78,19 @@ router.post('/new_event', function (req, res, next){
 
 
 router.get('/event/:id/', function (req, res, next) {
+  let auth;
+  if(!req.headers['authorization']) {
+    return res.sendStatus(401)
+  }
+  try {
+    auth = jwt.decode(req.headers['authorization'], config.secretkey);
+  } catch (err) {
+    return res.sendStatus(401)
+  }
   Event.findOne({
     $or: [
       {_id: req.params.id},
-      {name: req.params.name}
+      {name: req.params.name} // не вижу, где ты передаёшь name в url
     ]
   }, function(err, event) {
     if (err) {

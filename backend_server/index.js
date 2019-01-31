@@ -57,8 +57,12 @@ app.route('/account')
 
 app.route('/change_status/')
   .post($event);
-app.route('/chat')
+
+app.route('/private_chat/:id/')
    .get($chat);
+
+app.route('/new_private_chat/')
+  .post($chat);
 
 app.listen(port);
 console.log("Backend server listening on port " + port);

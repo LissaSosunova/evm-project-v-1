@@ -1,4 +1,4 @@
-<nav *ngIf="router.url === '/login'">
+<nav *ngIf="currParentUrl === 'login'">
   <ul>
     <li>
       <a routerLink="registration" title="Create new accaunt">
@@ -12,7 +12,7 @@
     </li>
   </ul>
 </nav>
-<nav *ngIf="router.url == '/registration'">
+<nav *ngIf="currParentUrl == 'registration'">
   <ul>
     <li>
       <a routerLink="login" title="Sign in">
@@ -26,7 +26,7 @@
     </li>
   </ul>
 </nav>
-<nav *ngIf="router.url == '/about'">
+<nav *ngIf="currParentUrl == 'about'">
   <ul>
     <li>
       <a routerLink="login" title="Sign in">
@@ -40,40 +40,34 @@
     </li>
   </ul>
 </nav>
-<nav *ngIf="router.url == '/main'
-|| router.url == '/main/chats'
-|| router.url == '/main/chats'
-|| router.url == '/main/contacts'
-|| router.url == '/main/calendar'
-|| router.url == '/main/events'
-|| router.url == '/main/new_event'">
+<nav *ngIf="currParentUrl == 'main'">
   <ul>
-    <li *ngIf="router.url != '/main'">
+    <li *ngIf="currChildUrl != ''">
       <a routerLink="main" title="home page">
         <i class="material-icons">home</i>
       </a>
     </li>
-    <li *ngIf="router.url != '/main/contacts'">
+    <li *ngIf="currChildUrl != 'contacts'">
       <a routerLink="main/contacts" title="contacts">
         <i class="material-icons">contacts</i>
       </a>
     </li>
-    <li *ngIf="router.url != '/main/chats'">
+    <li *ngIf="currChildUrl != 'chats'">
       <a routerLink="main/chats" title="chats">
         <i class="material-icons">chat</i>
       </a>
     </li>
-    <li *ngIf="router.url != '/main/events'">
+    <li *ngIf="currChildUrl != 'events'">
       <a routerLink="main/events" title="events">
         <i class="material-icons">event</i>
       </a>
     </li>
-    <li *ngIf="router.url != '/main/new_event'">
+    <li *ngIf="currChildUrl != 'new_event'">
       <a routerLink="main/new_event" title="new_event">
         <i class="material-icons">note_add</i>
       </a>
     </li>
-    <li *ngIf="router.url != '/main/calendar'">
+    <li *ngIf="currChildUrl != 'calendar'">
       <a routerLink="main/calendar" title="calendar">
         <i class="material-icons">calendar_today</i>
       </a>
