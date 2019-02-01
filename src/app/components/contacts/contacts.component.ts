@@ -21,6 +21,8 @@ export class ContactsComponent implements OnInit {
   public query: types.FindUser;
   public querySearch: any;
   public result: any;
+  public currTab: string;
+  public search: string;
   private subscription: Subscription;
 
   constructor(private transferService: TransferService,
@@ -38,29 +40,32 @@ export class ContactsComponent implements OnInit {
     const user = this.transferService.dataGet('userData');
     this.user = Object.assign(user);
     this.transferService.setDataObs(this.test);
-    for(let o of this.user.contacts){
-      if (o.status == 1){
+    this.currTab = this.route.snapshot.queryParams.currTab;
+    console.log(this.currTab);
+    for (const o of this.user.contacts) {
+      if (o.status === 1) {
         this.contactsConfirmed.push(o);
-      } else if (o.status == 2){
+      } else if (o.status === 2) {
         this.contactsAwaiting.push(o);
-      } else if (o.status == 3){
+      } else if (o.status === 3) {
         this.contactsRequested.push(o);
       }
     }
   }
-  public switcher(currId: string) {
-    const currActiveElement = document.getElementsByClassName('is-vis-tab');
-    for (let i=0; i<currActiveElement.length; i++){
-      currActiveElement[i].classList.toggle('is-vis-tab');
-    }
-    document.getElementById(currId).classList.toggle('is-vis-tab');
-    console.log(currId);
+
+  public switcher(currId: string): void {
+    this.router.navigate([], {
+      queryParams: {
+        currTab: currId
+      }
+    });
+    this.currTab = currId;
   }
-  public setSearch(query: string) {
+
+  public setSearch(query: string): void {
     this.query = {
       query: query
     };
-    console.log(typeof query);
     this.data.findUser(this.query).subscribe(
       data => {
         this.querySearch = data;
@@ -69,20 +74,21 @@ export class ContactsComponent implements OnInit {
       }
     );
   }
-  public addNewUser(query: string) {
+
+  public addNewUser(query: string): void {
     this.query = {
       query: query
     };
-    console.log(typeof query);
     this.data.addUser(this.query).subscribe(
       data => {
-        this.querySearch = data;
-        console.log(this.querySearch);
+        // this.querySearch = data;
+        console.log(data);
 
       }
     );
   }
-  public confNewUser(query: string) {
+
+  public confNewUser(query: string): void {
     this.query = {
       query: query
     };

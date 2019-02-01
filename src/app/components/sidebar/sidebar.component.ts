@@ -21,6 +21,9 @@ export class SidebarComponent implements OnInit {
       const currUrl = url as NavigationStart;
       const urlSegments = currUrl.url.split('/');
       this.currParentUrl = urlSegments[1];
+      if (this.currParentUrl === '/' || !this.currParentUrl) {
+        this.currParentUrl = 'login';
+      }
       if (urlSegments.length > 2) {
         this.currChildUrl = urlSegments[2];
         const childSegments = this.currChildUrl.split('?');

@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterOutlet, NavigationStart } from '@angular/router';
-import { UserInfoPopupComponent } from '../user-info-popup/user-info-popup.component';
 import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
 import { DataService } from 'src/app/services/data.service';
@@ -15,8 +14,6 @@ import { DataService } from 'src/app/services/data.service';
 export class MainComponent implements OnInit, OnDestroy {
 
   public user: types.User = {} as types.User;
-  @ViewChild('userPopup') private userPopup: UserInfoPopupComponent;
-  @ViewChild(RouterOutlet) public outlet: RouterOutlet;
   private subscription: Subscription;
 
   constructor(private route: ActivatedRoute,
@@ -36,11 +33,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.userPopup.onClose();
   }
 
-  public onPopupOpen(): void {
-    this.userPopup.open();
-  }
 
 }

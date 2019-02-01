@@ -1,0 +1,86 @@
+<div class="content-rows">
+  <div class="block-with-btns col-xs-12 col-sm-12 col-md-12 col-lg-8">
+    <div class="col-xs-6
+              icon-left block-with-animation">
+      <div id="icon-event">
+        <i class="material-icons">event</i>
+      </div>
+      <div class="url-list-container-left">
+        <ul>
+          <li>
+            <a href="#">Calendar</a>
+          </li>
+          <li>
+            <a href="#">Create new event</a>
+          </li>
+          <li>
+            <a href="#">Current events</a>
+          </li>
+          <li>
+            <a href="#">Draft events</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-xs-6
+              icon-right block-with-animation">
+      <div id="icon-chat">
+        <i class="material-icons">chat</i>
+      </div>
+      <div class="url-list-container-right">
+        <ul>
+          <li>
+            <a href="#">Chat list</a>
+          </li>
+          <li>
+            <a href="#">Create new chat</a>
+          </li>
+          <li>
+            <a href="#">Group chats</a>
+          </li>
+          <li>
+            <a href="#">Event chats</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="block-with-btns col-xs-12 col-sm-12 col-md-12 col-lg-8">
+    <div class="col-xs-6
+              icon-left block-with-animation">
+      <div id="icon-contacts">
+        <i class="material-icons">contacts</i>
+      </div>
+      <div class="url-list-container-left">
+        <ul>
+          <li>
+            <a routerLink="/main/contacts">Open contact list</a>
+          </li>
+          <li>
+            <a href="#">Add new contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-xs-6
+              icon-right block-with-animation">
+      <div id="icon-settings">
+        <i class="material-icons">settings</i>
+      </div>
+      <div class="url-list-container-right">
+        <ul>
+          <li>
+            <a href="#">Edit your profile</a>
+          </li>
+          <li>
+            <a href="#">Settings</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div>
+  </div>
+</div>
+<button (click)="onPopupOpen()">Open pop-up</button>
+<app-user-info-popup #userPopup></app-user-info-popup>

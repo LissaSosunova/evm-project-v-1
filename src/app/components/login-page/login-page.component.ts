@@ -13,6 +13,9 @@ export class LoginPageComponent implements OnInit {
   public params: types.Login;
   public token: string;
   public dataResp: types.LoginResp;
+  public errorMessage: string;
+  public username: string;
+  public password: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private data: DataService) { }
 
@@ -20,7 +23,7 @@ export class LoginPageComponent implements OnInit {
   ngOnInit() {
   }
 
-  public setAuthConf(username, password) {
+  public setAuthConf(username: string, password: string): void {
       this.params = {
         username,
         password
@@ -32,7 +35,9 @@ export class LoginPageComponent implements OnInit {
         if (this.dataResp.success === true) {
           this.token = this.dataResp.access_token;
           sessionStorage.setItem('_token', this.token);
-          this.router.navigate(['../main']);
+          this.router.navigate(['/main/home']);
+        } else {
+          this.errorMessage = data.message;
         }
       }
     );

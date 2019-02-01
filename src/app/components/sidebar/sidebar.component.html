@@ -42,13 +42,17 @@
 </nav>
 <nav *ngIf="currParentUrl == 'main'">
   <ul>
-    <li *ngIf="currChildUrl != ''">
-      <a routerLink="main" title="home page">
+    <li *ngIf="currChildUrl != 'home'">
+      <a routerLink="main/home" title="home page">
         <i class="material-icons">home</i>
       </a>
     </li>
     <li *ngIf="currChildUrl != 'contacts'">
-      <a routerLink="main/contacts" title="contacts">
+      <a routerLink="main/contacts"
+      [queryParams]="{
+        currTab: 'contacts'
+        }" 
+      title="contacts">
         <i class="material-icons">contacts</i>
       </a>
     </li>

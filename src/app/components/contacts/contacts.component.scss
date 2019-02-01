@@ -1,4 +1,4 @@
-.contactList-user1, .contactList-user2, contactList-user3 {
+.contactList-user1, .contactList-user2, .contactList-user3 {
   height: 100%;
   width: 100%;
   flex-direction: column;
@@ -94,10 +94,6 @@
 }
 
 .tab {
-  display: none;
-}
-
-.is-vis-tab.tab {
   display: flex;
 }
 .tabs-nav {
@@ -131,3 +127,6 @@
   border: 1px solid #14200B;
 }
 
+.active {
+  color: white;
+}
