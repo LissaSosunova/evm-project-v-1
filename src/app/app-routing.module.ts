@@ -10,6 +10,7 @@ import { ContactsComponent } from './components/contacts/contacts.component';
 import { ChatsComponent } from './components/chats/chats.component';
 import { EventsComponent } from './components/events/events.component';
 import { NewEventComponent } from './components/new-event/new-event.component';
+import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
       userData: GetDataUserResolverService
     },
     children: [
+      {
+        path: 'home',
+        component: HomeComponent
+      },
       {
         path: 'calendar',
         component: CalendarComponent

@@ -1,15 +1,15 @@
-<div class="content-rows" *ngIf="router.url == '/main/contacts' && router.url !== '/main'">
+<div class="content-rows">
   <div id="menu-switcher" class="tabs-nav">
-    <span><a  (click)="switcher('contacts')">Contact list</a></span>
-    <span><a (click)="switcher('avaiting')">Awaiting for confirmation</a></span>
-    <span><a (click)="switcher('requested')">Requested</a></span>
-    <span><a (click)="switcher('add')">Add new contact</a></span>
+    <span [ngClass]="{'active': currTab === 'contacts'}"><a (click)="switcher('contacts')">Contact list</a></span>
+    <span [ngClass]="{'active': currTab === 'avaiting'}"><a (click)="switcher('avaiting')">Awaiting for confirmation</a></span>
+    <span [ngClass]="{'active': currTab === 'requested'}"><a (click)="switcher('requested')">Requested</a></span>
+    <span [ngClass]="{'active': currTab === 'add'}"><a (click)="switcher('add')">Add new contact</a></span>
   </div>
   <div class="div-with-all-contacts">
-    <div class="contactList-user1 tab is-vis-tab" id="contacts">
+    <div class="contactList-user1 tab is-vis-tab" id="contacts" *ngIf="currTab === 'contacts'">
       <ul class="contacts-ul">
         <li *ngFor="let item of contactsConfirmed" class="direction-row">
-          <div class="col-xs-8"><img src="{{item.avatar.url}}">{{item.name}}</div>
+          <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
           <div class="col-xs-4">
             <button class="m-btn confirm">
               <i class="material-icons">visibility</i>
@@ -21,10 +21,10 @@
         </li>
       </ul>
     </div>
-    <div class="contactList-user1 tab" id="avaiting">
+    <div class="contactList-user1 tab" id="avaiting" *ngIf="currTab === 'avaiting'">
       <ul class="contacts-ul">
         <li *ngFor="let item of contactsAwaiting" class="direction-row">
-          <div class="col-xs-8"><img src="{{item.avatar.url}}">{{item.name}}</div>
+          <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
           <div class="col-xs-4">
             <button class="m-btn confirm" (click)="confNewUser(item.id)">
               <i class="material-icons">check</i>
@@ -36,10 +36,10 @@
         </li>
       </ul>
     </div>
-    <div class="contactList-user1 tab" id="requested">
+    <div class="contactList-user1 tab" id="requested" *ngIf="currTab === 'requested'">
       <ul class="contacts-ul">
         <li *ngFor="let item of contactsRequested" class="direction-row">
-          <div class="col-xs-8"><img src="{{item.avatar.url}}">{{item.name}}</div>
+          <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
           <div class="col-xs-4">
             <button class="m-btn cancel">
               <i class="material-icons">close</i>
@@ -48,7 +48,7 @@
         </li>
       </ul>
     </div>
-    <div class="contactList-user2 tab" id="add">
+    <div class="contactList-user2 tab" id="add" *ngIf="currTab === 'add'">
       <div>
         <form class ="search">
           <input class="input-search"
@@ -56,13 +56,13 @@
                  placeholder="Search contact"
                  name="search"
                  [(ngModel)] = "search"
-                 (change)="setSearch(search)">
+                 (ngModelChange)="setSearch(search)">
         </form>
       </div>
       <div class="contactList-user2">
         <ul class="contacts-ul">
           <li *ngFor="let item of querySearch" class="direction-row">
-            <div class="col-xs-8"><img src="{{item.avatar.url}}">{{item.name}}</div>
+            <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
             <div class="col-xs-4">
               <button class="m-btn cancel" (click)="addNewUser(item.username)">
                 <i class="material-icons">check</i>
