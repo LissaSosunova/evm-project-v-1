@@ -19,10 +19,11 @@ import { MainComponent } from './components/main/main.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { EventsComponent } from './components/events/events.component';
 import { NewEventComponent } from './components/new-event/new-event.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
+import { EventCalendarComponent } from './components/event-calendar/event-calendar.component';
 import { ChatsComponent } from './components/chats/chats.component';
 import { RouterModule } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
+import { CalendarComponent } from './components/calendar/calendar';
 
 @NgModule({
   declarations: [
@@ -35,13 +36,14 @@ import { HomeComponent } from './components/home/home.component';
     ContactsComponent,
     EventsComponent,
     NewEventComponent,
-    CalendarComponent,
+    EventCalendarComponent,
     ChatsComponent,
     FilterPipe,
     PopupComponent,
     PageMaskComponent,
     UserInfoPopupComponent,
-    HomeComponent
+    HomeComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,

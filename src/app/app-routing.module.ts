@@ -5,7 +5,7 @@ import { LoginPageComponent } from './components/login-page/login-page.component
 import { RegistrationComponent } from './components/registration/registration.component';
 import { AboutComponent } from './components/about/about.component';
 import { MainComponent } from './components/main/main.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
+import { EventCalendarComponent } from './components/event-calendar/event-calendar.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { ChatsComponent } from './components/chats/chats.component';
 import { EventsComponent } from './components/events/events.component';
@@ -43,7 +43,7 @@ const routes: Routes = [
       },
       {
         path: 'calendar',
-        component: CalendarComponent
+        component: EventCalendarComponent
       },
       {
         path: 'contacts',
