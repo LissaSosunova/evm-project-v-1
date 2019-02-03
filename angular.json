@@ -27,7 +27,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/style_libs/flexboxgrid.css",
+              "src/style_libs/fullcalendar.min.css"
             ],
             "scripts": []
           },
