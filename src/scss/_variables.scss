@@ -20,4 +20,12 @@ $font-color: (
 
 $footer-height: 65px;
 $header-height: 70px;
-$error-mes: white;
+$error-mes: (
+  'white': white,
+  'red': red);
+$error-border: (
+  'red': red
+);
+$disabled: (
+  'grey': grey
+);  

@@ -24,6 +24,8 @@ import { ChatsComponent } from './components/chats/chats.component';
 import { RouterModule } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { CalendarComponent } from './components/calendar/calendar';
+import { ApplyErrMsgDirective } from './directives/apply-err-msg.directive';
+import { ErrMsgComponent } from './components/err-msg/err-msg.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import { CalendarComponent } from './components/calendar/calendar';
     PageMaskComponent,
     UserInfoPopupComponent,
     HomeComponent,
-    CalendarComponent
+    CalendarComponent,
+    ApplyErrMsgDirective,
+    ErrMsgComponent
   ],
   imports: [
     BrowserModule,
