@@ -2,8 +2,9 @@
     *ngIf="popup.isOpened"
     [config]="popupConfig"
     (onClose)="onClose()"
+    (onSubmit)="onSubmit()"
     >
   <div>
-    This is popup for user info!
+    Are you sure you want to leave? All unsaved changes will be lost.
   </div>
 </app-popup> 

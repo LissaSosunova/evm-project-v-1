@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { TokenService } from 'src/app/services/token.service';
+import { RouterService } from 'src/app/services/router.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,17 +14,21 @@ export class SidebarComponent implements OnInit {
   public currParentUrl: string;
   public currChildUrl: string;
 
-  constructor(public router: Router, private activateRouter: ActivatedRoute) { }
+  constructor(public router: Router,
+            private activateRouter: ActivatedRoute,
+            private tokenService: TokenService,
+            private routerService: RouterService) { }
 
   ngOnInit() {
-    this.router.events
-    .pipe(filter(event => event instanceof NavigationStart))
-    .subscribe(url => {
-      const currUrl = url as NavigationStart;
-      const urlSegments = currUrl.url.split('/');
+    this.routerService.getCurrentRoute$().subscribe(url => {
+      const urlSegments = url.split('/');
       this.currParentUrl = urlSegments[1];
       if (this.currParentUrl === '/' || !this.currParentUrl) {
         this.currParentUrl = 'login';
+        const token = this.tokenService.getToken();
+        if (token) {
+          this.currParentUrl = 'main';
+        }
       }
       if (urlSegments.length > 2) {
         this.currChildUrl = urlSegments[2];

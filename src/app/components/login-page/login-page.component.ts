@@ -5,6 +5,7 @@ import { types } from 'src/app/types/types';
 import { DataService } from 'src/app/services/data.service';
 import { AbstractEditor } from 'src/app/models/abstract-editor';
 import { NgForm } from '@angular/forms';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-login-page',
@@ -24,7 +25,10 @@ export class LoginPageComponent extends AbstractEditor implements OnInit, AfterV
   private formValueSub: Subscription;
   private validationSub: Subscription;
 
-  constructor(private route: ActivatedRoute, private router: Router, private data: DataService) {
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private data: DataService,
+              private tokenService: TokenService) {
     super();
    }
 
@@ -61,7 +65,7 @@ export class LoginPageComponent extends AbstractEditor implements OnInit, AfterV
         this.dataResp = data as types.LoginResp;
         if (this.dataResp.success === true) {
           this.token = this.dataResp.access_token;
-          sessionStorage.setItem('_token', this.token);
+          this.tokenService.setToken(this.token);
           this.router.navigate(['/main/home']);
         } else {
           this.errorMessage = data.message;

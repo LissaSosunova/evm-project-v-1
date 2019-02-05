@@ -1,4 +1,5 @@
 import { constants } from '../constants/default-constants';
+import { Observable } from 'rxjs';
 
 export module types {
 
@@ -114,5 +115,6 @@ export module types {
   };
 
   export type StepState = 'login' | 'registration' | 'about' | 'main';
+
 
 }

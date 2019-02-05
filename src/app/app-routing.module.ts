@@ -11,11 +11,13 @@ import { ChatsComponent } from './components/chats/chats.component';
 import { EventsComponent } from './components/events/events.component';
 import { NewEventComponent } from './components/new-event/new-event.component';
 import { HomeComponent } from './components/home/home.component';
+import { MainGuard } from './components/main/main.guard';
+import { NewEventGuard } from './components/new-event/new-event.guard';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'main/home',
     pathMatch: 'full'
   },
   {
@@ -33,6 +35,7 @@ const routes: Routes = [
   {
     path: 'main',
     component: MainComponent,
+    canActivate: [MainGuard],
     resolve: {
       userData: GetDataUserResolverService
     },
@@ -59,7 +62,8 @@ const routes: Routes = [
       },
       {
         path: 'new_event',
-        component: NewEventComponent
+        component: NewEventComponent,
+        canDeactivate: [NewEventGuard]
       }
     ]
   },
