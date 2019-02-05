@@ -10,42 +10,96 @@
   <div class=" div-logotype">
     <img src="src/img/logo_login_page.png" alt="EVENT messenger" class="login-logotype">
   </div>
-  <form class="">
+  <form class=""
+        name="registrationForm"
+        #registrationForm="ngForm"
+        novalidate>
 
     <div class="login-form">
-      <span>Unique username: </span>
-      <input type="text"
-             class="input-login"
-             id="login"
-             name="user"
-             [(ngModel)] = "username"
-             required>
-      <span>Your e-mail: </span>
-      <input type="email"
+      <div>
+        <div>Unique username: </div>
+        <input type="text"
+              class="input-login"
+              id="login"
+              name="user"
+              [(ngModel)]="username"
+              #userInput="ngModel"
+              required
+              appApplyErrMsg
+              [ngClass]="{'error-input': userInput.errors?.required && userInput.touched}"
+              >
+      </div>
+      <app-err-msg [inputModel]="userInput"
+                    inputId="login"
+                    [form]="registrationForm"
+                    requiredMsg="Username is required."
+                    >
+      </app-err-msg>
+      <div>
+        <div>Your e-mail: </div>
+        <input type="email"
              class="input-login"
              id="mail"
-             name="user"
-             [(ngModel)] = "email"
-             required>
-      <span>Create password: </span>
-      <input type="password"
+             name="email"
+             [(ngModel)]="email"
+             #emailInput="ngModel"
+             required
+             appApplyErrMsg
+            [ngClass]="{'error-input': emailInput.errors?.required && emailInput.touched}">
+      </div>
+      <app-err-msg [inputModel]="emailInput"
+                    inputId="mail"
+                    [form]="registrationForm"
+                    requiredMsg="Email is required."
+                    >
+      </app-err-msg>
+      <div>
+        <div>Create password: </div>
+        <input type="password"
              class="input-login"
              id="pass"
              name="password"
-             [(ngModel)] = "password"
-             required>
-      <span>Confirm password: </span>
-      <input type="password"
-             class="input-login"
-             id="passConf"
-             name="password"
-             [(ngModel)] = "passConf"
-             >
-      <div class="login-btns-conteiner">
-        <input type="submit" (click)="setRegConf(username, email, password)" class="btn-submit-login"  value="create">
-        <input type="submit" onclick="" class="btn-clear-login margin-btn-login"  value="clear">
+             [(ngModel)]="password"
+             #passwordInput="ngModel"
+             required
+             appApplyErrMsg
+             [ngClass]="{'error-input': passwordInput.errors?.required && passwordInput.touched}">
       </div>
+      <app-err-msg [inputModel]="passwordInput"
+                    inputId="pass"
+                    [form]="registrationForm"
+                    requiredMsg="Password is required."
+                    >
+      </app-err-msg>
+      <div>
+        <div>Confirm password: </div>
+        <input type="password"
+              class="input-login"
+              id="passConf"
+              name="passwordConf"
+              [(ngModel)]="passConf"
+              #passwordConfInput="ngModel"
+             required
+             appApplyErrMsg
+             [ngClass]="{'error-input': passwordConfInput.errors?.required && passwordConfInput.touched}"
+              >
+      </div>
+      <app-err-msg [inputModel]="passwordConfInput"
+                    inputId="passConf"
+                    [form]="registrationForm"
+                    requiredMsg="Password is required."
+                    >
+      </app-err-msg>
+      <div class="error-passwords">{{errorMes}}</div>
+      <div class="login-btns-conteiner">
+        <input type="submit" 
+              (click)="setRegConf(username, email, password, passConf)" 
+              class="btn-submit-login"  
+              value="create"
+              [disabled]="!isFormValid"
+              [ngClass]="{'disabled': !isFormValid}">
+        <input type="submit" (click)="clear($event)" class="btn-clear-login margin-btn-login"  value="clear">
+      </div> 
     </div>
   </form>
-  <router-outlet></router-outlet>
 </div>

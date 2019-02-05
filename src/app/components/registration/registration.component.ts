@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
 import { DataService } from 'src/app/services/data.service';
+import { NgForm } from '@angular/forms';
+import { AbstractEditor } from 'src/app/models/abstract-editor';
 
 @Component({
   selector: 'app-registration',
@@ -10,16 +12,52 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./registration.component.scss']
 })
 
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent extends AbstractEditor implements OnInit, AfterViewInit, OnDestroy {
   public params: types.Registration;
+  public username: string;
+  public email: string;
+  public password: string;
+  public passConf: string;
+  public isFormValid: boolean;
+  public errorMes: string;
+  @ViewChild('registrationForm') public registrationForm: NgForm;
+  private formValueSub: Subscription;
+  private validationSub: Subscription;
 
-  constructor(private route: ActivatedRoute, private router: Router, private data: DataService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private data: DataService) {
+    super();
+   }
 
     ngOnInit() {
 
     }
 
-  public setRegConf (username: string, email: string, password: string) {
+    ngAfterViewInit() {
+      this.formValueSub = this.registrationForm.valueChanges
+        .subscribe(value => {
+          this.doValidate();
+        });
+      this.validationSub =  this.isValid$.subscribe(valid => {
+          setTimeout(() => {
+            this.isFormValid = valid;
+          });
+        });
+    }
+
+    ngOnDestroy() {
+      this.formValueSub.unsubscribe();
+      this.validationSub.unsubscribe();
+    }
+
+  public clear(event: MouseEvent): void {
+    this.registrationForm.reset();
+  }
+
+  public setRegConf (username: string, email: string, password: string, passConf: string): void {
+    if (password !== passConf) {
+      this.errorMes = 'Passwords must be equal';
+      return;
+    }
     this.params = {
       username,
       email,
@@ -28,9 +66,21 @@ export class RegistrationComponent implements OnInit {
     this.data.setReg(this.params).subscribe(
       data => {
         console.log(data);
-        this.router.navigate(['../login']);
+        const response = JSON.parse(data);
+        if (response.name === 'MongoError') {
+          this.errorMes = 'User with such username is already exists. Try another username';
+        } else {
+          this.router.navigate(['../login']);
+        }
       }
     );
+  }
+
+  private doValidate(): void {
+    if (!this.registrationForm.valid) {
+      return this._isValid.next(false);
+    }
+    this._isValid.next(true);
   }
 
 }

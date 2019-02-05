@@ -1,3 +1,5 @@
+@import '../../../scss/variables';
+
 .login-logotype{
   max-width: 200px;
   height: auto;
@@ -110,4 +112,26 @@
       cursor: pointer;
     }
   }
+}
+
+app-err-msg {
+  display: block;
+  color: map-get($error-mes, 'red');
+  font-size: 12px;
+  min-height: 20px;
+}
+
+input.disabled:hover, button.disabled:hover, input.disabled, button.disabled {
+  cursor: default;
+  background-color: map-get($disabled, 'grey');
+  color: black;
+}
+
+.error-input {
+  border: 1px map-get($error-border, 'red' ) solid;
+}
+
+.error-passwords {
+  color: map-get($error-mes, 'red');
+  text-align: center;
 }
