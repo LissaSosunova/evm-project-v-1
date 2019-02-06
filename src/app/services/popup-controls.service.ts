@@ -45,5 +45,4 @@ export class PopupControlsService {
     public create(isPageMask?: boolean): PopupControls {
         return new PopupControls(this.pageMaskService, isPageMask);
     }
-
 }

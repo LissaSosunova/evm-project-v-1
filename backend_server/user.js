@@ -144,7 +144,7 @@ router.get('/user', function (req, res, next) {
 
 router.post('/finduser', async function (req, res, next) {
   let auth;
-  const query = req.body.param;
+  const query = req.body.query;
   try {
     auth = jwt.decode(req.headers['authorization'], config.secretkey);
   } catch (err) {
@@ -185,14 +185,14 @@ router.post('/adduser', async function (req, res, next) {
   try {
     const result = await datareader(User, params, 'findOne');
     result.contacts.forEach(item => {
-      if (query.id === auth.username || item.id === query.id ) {
+      if (query.query === auth.username || item.id === query.query ) {
         exsistCont = true;
         }
     });
-    if (query.id === auth.username) exsistCont = true;
+    if (query.query === auth.username) exsistCont = true;
     if (exsistCont) return res.json({message: "This contact is already exists"});
 
-    const findRes = await datareader(User, {username: query.id}, 'findOne');
+    const findRes = await datareader(User, {username: query.query}, 'findOne');
     findRes.private_chat = '0';
     findRes.status = 3;
     const contact = new ContactData(findRes);
@@ -233,7 +233,7 @@ router.post('/confirmuser', async function (req, res, next) {
     return res.sendStatus(401)
   }
   const params1 = {username: auth.username};
-  const params2 = {username: query.id}; // уточни какое поле переменной query тут нужно
+  const params2 = {username: query.query}; // уточни какое поле переменной query тут нужно
   // Я так понимаю, что ты шлёшь id
 
   try {
@@ -248,7 +248,7 @@ router.post('/confirmuser', async function (req, res, next) {
     );
 
     const response1 = await datareader(User, params1, 'findOne')
-    User.updateOne({"username" : response1.username, "contacts.id": query.id},
+    User.updateOne({"username" : response1.username, "contacts.id": query.query},
     {
       $set : { "contacts.$.status" : 1 }
     }, { upsert: true },

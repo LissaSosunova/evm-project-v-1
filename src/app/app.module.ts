@@ -26,6 +26,7 @@ import { HomeComponent } from './components/home/home.component';
 import { CalendarComponent } from './components/calendar/calendar';
 import { ApplyErrMsgDirective } from './directives/apply-err-msg.directive';
 import { ErrMsgComponent } from './components/err-msg/err-msg.component';
+import { NewEventLeavePopupComponent } from './components/new-event-leave-popup/new-event-leave-popup.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { ErrMsgComponent } from './components/err-msg/err-msg.component';
     HomeComponent,
     CalendarComponent,
     ApplyErrMsgDirective,
-    ErrMsgComponent
+    ErrMsgComponent,
+    NewEventLeavePopupComponent
   ],
   imports: [
     BrowserModule,
