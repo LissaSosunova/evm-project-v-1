@@ -1,0 +1,21 @@
+.input-wrap {
+    position: relative;
+}
+.input-message {
+    overflow: auto;
+    width: 100%;
+    border: grey solid 1px;
+    border-radius: 25px;
+    outline: none;
+    z-index: 2;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.placeholder {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    color: grey;
+}

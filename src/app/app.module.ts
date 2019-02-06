@@ -27,6 +27,8 @@ import { CalendarComponent } from './components/calendar/calendar';
 import { ApplyErrMsgDirective } from './directives/apply-err-msg.directive';
 import { ErrMsgComponent } from './components/err-msg/err-msg.component';
 import { NewEventLeavePopupComponent } from './components/new-event-leave-popup/new-event-leave-popup.component';
+import { ContenteditableModelDirective } from './directives/contenteditable-model.directive';
+import { MultiLineInputComponent } from './components/multi-line-input/multi-line-input.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { NewEventLeavePopupComponent } from './components/new-event-leave-popup/
     CalendarComponent,
     ApplyErrMsgDirective,
     ErrMsgComponent,
-    NewEventLeavePopupComponent
+    NewEventLeavePopupComponent,
+    ContenteditableModelDirective,
+    MultiLineInputComponent
   ],
   imports: [
     BrowserModule,

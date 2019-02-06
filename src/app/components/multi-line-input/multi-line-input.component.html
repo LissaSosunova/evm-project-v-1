@@ -1,0 +1,14 @@
+<section class="input-wrap">  
+  <div class="input-message"
+            contenteditable="true"
+            appContenteditableModel
+            (changeInput)="onChangeInput($event)"
+            [text]="text"
+            #input
+            (focus)="onFocus()"
+            (blur)="onBlur()">
+  </div>
+  <div class="placeholder" *ngIf="showPlaceholder">
+    {{placeholder}}
+  </div>
+</section>  
