@@ -99,7 +99,7 @@ router.post('/user', function (req, res, next){
             user.password = hash;
             user.save(err => {
               if (err) res.json(err)
-              else res.sendStatus(201)
+              else res.json({message: "Created"}).status(201)
             })
           }
         })
@@ -151,19 +151,20 @@ router.post('/finduser', async function (req, res, next) {
     return res.sendStatus(401)
   }
   const queryParam = {
-    $or:[{username: {$regex: query}}, {email: {$regex: query}}]
+    query: {$or:[{username: {$regex: query}}, {email: {$regex: query}}, {name: {$regex: query}}]},
+    elementMatch: {avatar: 1, username: 1, email: 1,name: 1}
   }
   try {
-    const result = await datareader(User, queryParam, 'find');
+    const result = await datareader(User, queryParam, 'findElementMatch');
     let resp = [];
-    for (let i=0; i<result.length; i++){
-      if(query != "" && auth.username !== result[i].username){
-        resp.push(result[i]);
+    result.forEach(item => {
+      if(query != "" && auth.username !== item.username){
+        resp.push(item);
       }
-    }
+    });
     res.json(resp);
   } catch (err) {
-      res.sendStatus(500);
+    res.sendStatus(500);
   }
 });
 
@@ -233,8 +234,7 @@ router.post('/confirmuser', async function (req, res, next) {
     return res.sendStatus(401)
   }
   const params1 = {username: auth.username};
-  const params2 = {username: query.query}; // уточни какое поле переменной query тут нужно
-  // Я так понимаю, что ты шлёшь id
+  const params2 = {username: query.query};
 
   try {
     const response2 = await datareader(User, params2, 'findOne');
@@ -260,10 +260,7 @@ router.post('/confirmuser', async function (req, res, next) {
   } catch(err) {
     res.sendStatus(500);
   }
-  
    
-  
-    
 });
 
 router.post('/deleteContact', async function (req, res, next) {

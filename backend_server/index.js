@@ -49,6 +49,9 @@ app.route('/deleteContact')
 app.route('/deleteChat')
   .post($chat);
 
+app.route('/renew_chat')
+  .post($chat);
+
 app.route('/login')
   .post($login);
 
