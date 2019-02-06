@@ -98,7 +98,7 @@ router.post('/deleteChat/', async function (req, res, next) {
   const dataObj = req.body;
   const deleteChatParams = {
     query: {"username" : dataObj.myId, "contacts.id" : dataObj.contactId},
-    objNew:{$set : { "contacts.$.private_chat" : null }} // как мы должны обозначить что пользователь удалил чат?
+    objNew:{$set : { "contacts.$.private_chat" : '-1' }}
   };
   const params = {
     query: {username: dataObj.myId},
@@ -113,6 +113,40 @@ router.post('/deleteChat/', async function (req, res, next) {
     return res.sendStatus(500)
   }
   res.sendStatus(200);
+})
+
+router.post('/renew_chat', async function(req, res, next) {
+  let auth;
+  let chatId;
+  if(!req.headers['authorization']) {
+    return res.sendStatus(401)
+  }
+  try {
+    auth = jwt.decode(req.headers['authorization'], config.secretkey);
+  } catch (err) {
+    return res.sendStatus(401)
+  }
+  const dataObj = req.body;
+  const params = {
+    query: {$and:[{users: dataObj.myId}, {users: dataObj.contactId}]},
+    elementMatch: {_id: 1}
+  };
+  try {
+    chatId = await datareader(Chat, params, 'findElementMatch');
+    const renewChatParams = {
+      query: {"username" : dataObj.myId, "contacts.id" : dataObj.contactId},
+      objNew:{$set : { "contacts.$.private_chat" : chatId[0]._id }}
+      // возвращаем id чата в документ
+    };
+    const renewChat = await datareader(User, renewChatParams, 'updateOne');
+    console.log(renewChat);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+  const response = {
+    chatId: chatId[0]._id
+  };
+  res.json(response);
 })
 
 module.exports = router;

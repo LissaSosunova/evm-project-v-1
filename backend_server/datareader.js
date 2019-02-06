@@ -24,7 +24,7 @@ function dbQuery (collection, params, action) {
         else resolve(d);
       })
     }
-    else if (action === 'findExField') {
+    else if (action === 'findExField') { // это тоже самое, что и findElementMatch
       collection.find(params.query1, params.query2,  (e, d) => {
         if (e) reject(e);
         else resolve(d);
