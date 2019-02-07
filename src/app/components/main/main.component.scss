@@ -8,7 +8,9 @@
   justify-content: flex-end;
 }
 
-
+.router-outlet {
+  height: calc(100vh - 221px);
+}
 
 .avatar {
   height: 30px;

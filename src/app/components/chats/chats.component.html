@@ -1,7 +1,16 @@
-<div>
-  <ul>
-    <li *ngFor="let item of user.chats">
-      <div>{{ item.name }}</div>
-    </li>
-  </ul>
-</div>
+<section class="chat-component-container">
+  <div>
+    <ul>
+      <li *ngFor="let item of user.chats">
+        <div>{{ item.name }}</div>
+      </li>
+    </ul>
+  </div>
+  <footer>
+    <app-multi-line-input [(ngModel)]="inputMes"
+                          [placeholder]="'Write a message'"
+                          [minHeight]="35"
+                          [maxHeight]="250">
+    </app-multi-line-input>
+  </footer>
+</section>

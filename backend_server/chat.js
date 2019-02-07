@@ -33,56 +33,72 @@ router.get('/private_chat/:id/', async function (req, res, next){
   }
 });
 
-router.post('/new_private_chat/', function (req, res, next) {
+router.post('/new_private_chat/', async function (req, res, next) {
   let auth;
   if(!req.headers['authorization']) {
     return res.sendStatus(401)
-  }
+  };
   try {
     auth = jwt.decode(req.headers['authorization'], config.secretkey);
   } catch (err) {
     return res.sendStatus(401)
-  }
+  };
   const params = {
     $or: [
       {username: auth.username},
       {email: auth.username}
     ]
   };
-  let chat = new Chat;
-  chat.users = req.body.users;
-  chat.email = req.body.email;
-  chat.messages = [];
-  chat.type = "private";
-  chat.save(err => {
-    if (err) { 
-      res.json(err);
-      }
-    else {
-      let createdChat = new ChatData(chat);
-      datareader(User, params, 'findOne')
-       .then(response => {
-        let user1 = '', user2 = '';
-        for (let i=0; i<chat.users.length;i++) {
-          user1 = chat.users[0];
-          user2 = chat.users[1];
+  const findChatParams = {
+    $and:[{users: req.body.users[0]}, {users: req.body.users[1]}]
+  };
+  try {
+    // добавим проверку, существует ли такой чат в базе
+    const findChat = await datareader(Chat, findChatParams, 'findOne');
+    if (findChat == null) {
+      const chat = new Chat;
+      chat.users = req.body.users;
+      chat.email = req.body.email;
+      chat.messages = [];
+      chat.type = "private";
+      chat.save((err, data) => {
+        if (err) { 
+          res.json(err);
+          }
+        else {
+          console.log('chat was saved', data);
+          let createdChat = new ChatData(chat);
+          datareader(User, params, 'findOne')
+           .then(response => {
+            let user1 = '', user2 = '';
+            for (let i=0; i<chat.users.length;i++) {
+              user1 = chat.users[0];
+              user2 = chat.users[1];
+            }
+            const updateUser1Params = {
+              query: {"username" : user1, "contacts.id" : user2},
+              objNew: {$set : { "contacts.$.private_chat" : createdChat.id }}
+            };
+            datareader(User, updateUser1Params, 'updateOne');
+            const updateUser2Params = {
+              query: {"username" : user2, "contacts.id" : user1},
+              objNew: {$set : { "contacts.$.private_chat" : createdChat.id }}
+            };
+            datareader(User, updateUser2Params, 'updateOne');
+            })
+            .then(response => {
+              res.json(createdChat);
+            })
         }
-        const updateUser1Params = {
-          query: {"username" : user1, "contacts.id" : user2},
-          objNew: {$set : { "contacts.$.private_chat" : createdChat.id }}
-        };
-        datareader(User, updateUser1Params, 'updateOne');
-        const updateUser2Params = {
-          query: {"username" : user2, "contacts.id" : user1},
-          objNew: {$set : { "contacts.$.private_chat" : createdChat.id }}
-        };
-        datareader(User, updateUser2Params, 'updateOne');
-        })
-        .then(response => {
-          res.json(createdChat);
-        })
+      })
+    } else {
+      res.json({message: "Exists"});
     }
-  })
+
+  } catch (err) {
+    res.sendStatus(500);
+  }
+
 });
 
 router.post('/deleteChat/', async function (req, res, next) {
