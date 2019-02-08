@@ -4,6 +4,8 @@ const config = require('./config');
 const User = require('./models/user');
 const Chat = require('./models/chats');
 const datareader = require('./datareader');
+const url = require('url');
+const queryString = require('querystring');
 
 class ChatData {
   constructor(chat) {
@@ -18,7 +20,6 @@ router.get('/private_chat/:id/', async function (req, res, next){
   if(!req.headers['authorization']) {
     return res.sendStatus(401)
   }
-  const params = req.params.id;
   let auth;
   try {
     auth = jwt.decode(req.headers['authorization'], config.secretkey);
@@ -26,8 +27,17 @@ router.get('/private_chat/:id/', async function (req, res, next){
     return res.sendStatus(401)
   }
   try {
-    const getUserChat = await datareader(Chat, params, 'findById');
-    res.json(getUserChat);
+    const chatId = req.params.id;
+    const param = url.parse(req.url).query;
+    const mesAmount = 20;
+    const queryNum = +queryString.parse(param).queryNum;
+    const n = queryNum * mesAmount; 
+    const getChatParams = {
+      query: {_id: chatId},
+      elementMatch: {messages: {$slice: [n, mesAmount]}}
+    };
+    const getUserChat = await datareader(Chat, getChatParams, 'findOneElementMatch');
+    res.json(getUserChat.messages);
   } catch (err) {
     res.sendStatus(500);
   }
@@ -52,8 +62,12 @@ router.post('/new_private_chat/', async function (req, res, next) {
   const findChatParams = {
     $and:[{users: req.body.users[0]}, {users: req.body.users[1]}]
   };
+  // req.body.users[0] - пусть это будет мой id, а req.body.users[1] - id того, кому пишу
+  // как по мне, то это немного костыльно
   try {
-    // добавим проверку, существует ли такой чат в базе
+    // Добавим проверку, существует ли такой чат в базе
+    // Если его нет, то создаём новый чат
+    // Если существует, то возвращаем сообщение об этом и id чата
     const findChat = await datareader(Chat, findChatParams, 'findOne');
     if (findChat == null) {
       const chat = new Chat;
@@ -61,6 +75,16 @@ router.post('/new_private_chat/', async function (req, res, next) {
       chat.email = req.body.email;
       chat.messages = [];
       chat.type = "private";
+      const chatItem = {};
+        const response = await datareader(User, {username: req.body.users[1]}, 'findOne');
+        chatItem.id = req.body.users[1];
+        chatItem.name = response.name;
+        chatItem.avatar = response.avatar;
+        chatItem.chatId = chat.id
+        const updateParams = {
+          query: params, 
+          objNew:  {$push: {chats: chatItem}}};
+        const updateChat = await datareader(User, updateParams, 'updateOne');
       chat.save((err, data) => {
         if (err) { 
           res.json(err);
@@ -92,7 +116,7 @@ router.post('/new_private_chat/', async function (req, res, next) {
         }
       })
     } else {
-      res.json({message: "Exists"});
+      res.json({message: "Exists", chatId: findChat._id});
     }
 
   } catch (err) {

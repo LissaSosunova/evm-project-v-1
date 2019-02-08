@@ -79,13 +79,11 @@ export module types {
   export interface Message {
     chatID: string;
     authorId: string;
-    destination: string;
     text: string;
     isSelected: boolean;
     edited: boolean;
-    read: boolean;
-    date: string;
-    time: string; // дату и время надо будет поменять на timeStamp (to UTC)
+    unread: string[];
+    date: number; // timeStamp (to UTC)
   }
 
   export interface FormPopupConfig {
@@ -108,6 +106,11 @@ export module types {
         isRemoveLoading?: boolean;
         btnOrder?: string[];
     };
+}
+
+export interface SocketMessage {
+  name: string;
+  payload: any;
 }
 
   export const getURI = () => {

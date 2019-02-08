@@ -1,8 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { TokenService } from 'src/app/services/token.service';
 import { RouterService } from 'src/app/services/router.service';
+import { SocketIoService } from 'src/app/services/socket.io.service';
+import { TransferService } from 'src/app/services/transfer.service';
+import { types } from 'src/app/types/types';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,7 +20,9 @@ export class SidebarComponent implements OnInit {
   constructor(public router: Router,
             private activateRouter: ActivatedRoute,
             private tokenService: TokenService,
-            private routerService: RouterService) { }
+            private routerService: RouterService,
+            private socketIoService: SocketIoService,
+            private transferService: TransferService) { }
 
   ngOnInit() {
     this.routerService.getCurrentRoute$().subscribe(url => {
@@ -39,7 +44,16 @@ export class SidebarComponent implements OnInit {
       }
     });
   }
+
   public exit(): void {
+    const userData  = this.transferService.dataGet('userData');
+    const token = this.tokenService.getToken();
+    const dataObj = {
+      userId: userData.username,
+      token: token
+    };
+    this.socketIoService.socketEmit(this.socketIoService.events.user_left, dataObj);
+    this.socketIoService.closeConnection();
     sessionStorage.clear();
   }
 

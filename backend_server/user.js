@@ -14,6 +14,7 @@ const Avatar = require('./models/avatar');
 const FoundContact = require('./models/findcontact');
 
 const datareader = require('./datareader');
+const Chat = require('./models/chats');
 
 // импортируем файл конфигурации (баловство, конечно, надо генерировать это на лету и хранить где-нибудь)
 const config = require('./config');
@@ -120,7 +121,7 @@ router.post('/user', function (req, res, next){
  */
 
 
-router.get('/user', function (req, res, next) {
+router.get('/user', async function (req, res, next) {
   let auth;
     if(!req.headers['authorization']) {
     return res.sendStatus(401)
@@ -136,13 +137,53 @@ router.get('/user', function (req, res, next) {
       {email: auth.username}
     ]
   };
-
-  const servicePromise = datareader(User, params, 'findOne');
-  servicePromise
-        .then(response =>{
-        const user = new UserData(response);
-          res.json(user);
-        })
+  
+  try {
+    const userDb = await datareader(User, params, 'findOne');
+    const user = new UserData(userDb);
+    const chatList = userDb.chats;
+    const promises = [];
+    chatList.forEach(chat => {
+      if(chat.chatId) {
+        let queryParams = {
+          query: {_id: chat.chatId},
+          elementMatch: {
+            messages:{
+              $elemMatch:{
+                unread: userDb.username
+              }
+            }
+          }
+        };
+      promises.push(datareader(Chat, queryParams, 'findElementMatch'));
+      }
+    });
+    const unreadMes = await Promise.all(promises);
+    console.log('unreadMes', unreadMes);
+    const unreadNumInChats = [];
+    unreadMes.forEach(item => {
+      const obj = {};
+      obj.chatId = String(item[0]._id);
+      obj.unreadMes = item[0].messages.length;
+      if (item[0].messages.length > 0) {
+        obj.lastMessage = item[0].messages[0];
+      }
+      unreadNumInChats.push(obj);
+    });
+    user.chats.forEach(item => {
+      unreadNumInChats.forEach(el => {
+        if (item.chatId && item.chatId === el.chatId) {
+          item.unreadMes = el.unreadMes;
+          item.lastMessage = el.lastMessage;
+        }
+      })
+    });
+    res.json(user);
+  } catch(err) {
+    res.sendStatus(500);
+  }
+  
+        
 });
 
 router.post('/finduser', async function (req, res, next) {

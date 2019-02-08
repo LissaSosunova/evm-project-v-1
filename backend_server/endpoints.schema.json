@@ -17,12 +17,12 @@
             "MessageItem": {
                 "chatID": "String",
                 "authorId": "String",
-                "destination": "String",
                 "text": "String",
+                "isSelected": "Boolean",
+                "users": "String[]",
                 "edited": "Boolean",
-                "read": "Boolean",
-                "date": "String",
-                "time": "String"
+                "unread": "String[]",
+                "date": "Number"
             }
         },
         {
@@ -30,24 +30,21 @@
             "type": "get",
             "headers": "authorization",
             "requestObject": {
-    
+                "queryNum": "String | Number"
             },
-            "responseObject": {
-                "_id": "String",
-                "users": "String[]",
-                "email": "String[]",
-                "messages": "MessageItem[]"
-            },
-            "MessageItem": {
-                "chatID": "String",
-                "authorId": "String",
-                "destination": "String",
-                "text": "String",
-                "edited": "Boolean",
-                "read": "Boolean",
-                "date": "String",
-                "time": "String"
-            }
+            "responseArray": [
+                {
+                    "_id": "String",
+                    "chatID": "String",
+                    "authorId": "String",
+                    "destination": "String",
+                    "text": "String",
+                    "edited": "Boolean",
+                    "read": "Boolean",
+                    "date": "String",
+                    "time": "String"
+                }
+            ]
         },
         {
             "endpoint": "account",
@@ -211,6 +208,17 @@
                 "avatar": {
                     "owner": "String",
                     "url": "String"
+                },
+                "unreadMes": "Number | String",
+                "lastMessage": {
+                    "chatID": "String",
+                    "authorId": "String",
+                    "text": "String",
+                    "isSelected": "Boolean",
+                    "users": "String[]",
+                    "edited": "Boolean",
+                    "unread": "String[]",
+                    "date": "Number"
                 }
             },
             "Notifications": {
