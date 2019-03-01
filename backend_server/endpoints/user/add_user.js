@@ -11,7 +11,7 @@ const config = require('../../config');
 
 // Для контатов поле статуза имеет значение:
 // status == 1 -- ПОДТВЕРДИЛИ ДОБАВЛЕНИЕ,
-// status == 2 -- ЖДУТ ПОДТВЕРЖДЕНИЕ (от контакта, у которого в бд висит этот статус), 
+// status == 2 -- ЖДУТ ПОДТВЕРЖДЕНИЕ (от контакта, у которого в бд висит этот статус),
 // status == 3 - ПРИГЛАШЕННЫЕ, НО НЕ ПОДТВЕРДИЛИ (контакт ждет, когда подтвердят добавление)
 
 class ContactData {
@@ -24,6 +24,20 @@ class ContactData {
       this.status = user.status;
     }
   }
+
+class UserData {
+  constructor(user) {
+    this.username = user.username;
+    this.email = user.email;
+    this.name = user.name;
+    this.phone = user.phone;
+    this.contacts = user.contacts;
+    this.events = user.events;
+    this.chats = user.chats;
+    this.avatar = user.avatar;
+    this.notifications = user.notifications;
+  }
+}
 
 router.post('/add_user', async function (req, res, next) {
     let auth;
@@ -49,7 +63,7 @@ router.post('/add_user', async function (req, res, next) {
       });
       if (query.query === auth.username) exsistCont = true;
       if (exsistCont) return res.json({message: "This contact is already exists"});
-  
+
       const findRes = await datareader(User, {username: query.query}, 'findOne');
       findRes.private_chat = '0';
       findRes.status = 3;
@@ -59,7 +73,7 @@ router.post('/add_user', async function (req, res, next) {
         objNew:  {$push: {contacts: contact}}
       };
       const updateRes = await datareader(User, updateParams, 'updateOne');
-  
+
       //добавить найденому другу тоже со статусом ожидания подтверждения с его стороны
       const params2 = {
         $or: [
@@ -76,7 +90,9 @@ router.post('/add_user', async function (req, res, next) {
       };
       const updateFindedUser = await datareader(User, addParams, 'updateOne');
       //ответ сервера после обработки
-      res.sendStatus(200);
+      const responseUser = await datareader(User, params, 'findOne');
+      const user = new UserData(responseUser);
+      res.json(user);
     } catch(err) {
       res.sendStatus(500);
     }

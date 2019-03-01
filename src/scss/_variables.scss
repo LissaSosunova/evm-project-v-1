@@ -1,20 +1,22 @@
 $bg-color: (
-  'primary': white,
-  'gray': rgba(214, 222, 217, 1),
   'dark': rgba(94, 116, 25, 1),
-  'lighter': rgba(183, 217, 77, 1),
   'darker': rgba(60, 74, 16, 1),
+  'gray': rgba(214, 222, 217, 1),
   'green': rgba(155, 176, 15, 1),
-  'orange': rgba(251, 195, 37, 1)
+  'light-olive': rgba(245, 255, 232, 1),
+  'lighter': rgba(183, 217, 77, 1),
+  'orange': rgba(251, 195, 37, 1),
+  'primary': white
 );
 
 $font-color: (
-  'primary': black,
-  'gray': rgba(214, 222, 217, 1),
   'dark-gray': rgba(82, 118, 95, 1),
   'dark': rgba(94, 116, 25, 1),
+  'gray': rgba(214, 222, 217, 1),
   'green': rgba(155, 176, 15, 1),
+  'light-olive': rgba(245, 255, 232, 1),
   'orange': rgba(251, 195, 37, 1),
+  'primary': black,
   'warning': white
 );
 
@@ -29,3 +31,7 @@ $error-border: (
 $disabled: (
   'grey': grey
 );  
+
+$border-color: (
+  'darker': rgba(20, 32, 11, 1)
+)
