@@ -10,6 +10,9 @@ const jwt = require('jwt-simple');
 const User = require('./models/user');
 const Event = require('./models/event');
 const Avatar = require('./models/avatar');
+// схема для поиска контактов в БД
+const FoundContact = require('./models/findcontact');
+
 const datareader = require('./datareader');
 
 // импортируем файл конфигурации (баловство, конечно, надо генерировать это на лету и хранить где-нибудь)
@@ -50,11 +53,11 @@ class ContactData {
 }
 
 class FindContact {
-  constructor(user) {
-    this.id = user.username;
-    this.email = user.email;
-    this.name = user.name;
-    this.avatar = user.avatar;
+  constructor(FoundContact) {
+    this.id = FoundContact.username;
+    this.email = FoundContact.email;
+    this.name = FoundContact.name;
+    this.avatar = FoundContact.avatar;
   }
 }
 
@@ -144,6 +147,7 @@ router.get('/user', function (req, res, next) {
 
 router.post('/finduser', async function (req, res, next) {
   let auth;
+  let contact;
   const query = req.body.query;
   try {
     auth = jwt.decode(req.headers['authorization'], config.secretkey);
@@ -153,13 +157,14 @@ router.post('/finduser', async function (req, res, next) {
   const queryParam = {
     query: {$or:[{username: {$regex: query}}, {email: {$regex: query}}, {name: {$regex: query}}]},
     elementMatch: {avatar: 1, username: 1, email: 1,name: 1}
-  }
+  };
   try {
     const result = await datareader(User, queryParam, 'findElementMatch');
     let resp = [];
     result.forEach(item => {
       if(query != "" && auth.username !== item.username){
-        resp.push(item);
+        contact = new FindContact(item);
+        resp.push(contact);
       }
     });
     res.json(resp);
@@ -260,7 +265,7 @@ router.post('/confirmuser', async function (req, res, next) {
   } catch(err) {
     res.sendStatus(500);
   }
-   
+
 });
 
 router.post('/deleteContact', async function (req, res, next) {
