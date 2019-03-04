@@ -37,9 +37,6 @@ function runWebsocketServer() {
             read?: string[]; надо будет поменять на масив строк, сейчас boolean
             date?: string;
             time:? string;
-            isDeleted: {
-              [id: string]: boolean
-            }
           }
           */
           const sender = JSON.parse(message);

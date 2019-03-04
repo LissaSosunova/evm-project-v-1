@@ -6,10 +6,13 @@ import {Observable, Subject} from 'rxjs';
 })
 export class TransferService {
 
-  private dataObj = new Subject<any>();
+  public dataObj$: Observable<any>;
+  private _dataObj$: Subject<any>  = new Subject<any>();
   private objData: {any} = {} as {any};
 
-  constructor() { }
+  constructor() {
+    this.dataObj$ = this._dataObj$.asObservable();
+  }
 
   // методы для передачи данных с родительского компонента в дочерний
 
@@ -17,7 +20,7 @@ export class TransferService {
     delete this.objData[name];
   }
 
-  public dataGet(name: string): {any} {
+  public dataGet(name: string) {
     return this.objData[name];
   }
 
@@ -28,16 +31,12 @@ export class TransferService {
 
   // методы для передачи данных с дочернего компонента в родительский
 
-  public clearData(): void {
-    this.dataObj.next();
-  }
-
-  public getDataObs(): Observable<any> {
-    return this.dataObj.asObservable();
+  public clearDataObs(): void {
+    this._dataObj$.next('');
   }
 
   public setDataObs(data: any): void {
-    this.dataObj.next(data);
+    this._dataObj$.next(data);
   }
 
 }

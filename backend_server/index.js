@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const http = require('http');
 const bodyParser = require('body-parser');
 const port = 5006;
 const $user = require('./user');
@@ -8,6 +9,8 @@ const $account = require('./account');
 const $event = require('./event');
 const $chat = require('./chat');
 const webSocketServer = require('./websockets');
+// const server = http.createServer(app);
+const socketIO = require('./socket.io');
 
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,7 +24,7 @@ app.use(function(req, res, next) {
 
 app.route('/profile')
   .post($user);
-//
+
 app.route('/event/:id/')
   .get($event);
 
@@ -67,9 +70,10 @@ app.route('/private_chat/:id/')
 app.route('/new_private_chat/')
   .post($chat);
 
-app.listen(port);
-console.log("Backend server listening on port " + port);
+const server = app.listen(port); 
+ console.info('Backend server listening on port ' + port);
 
-webSocketServer();
+socketIO(server, app);
+// webSocketServer();
 
 module.exports = { app };

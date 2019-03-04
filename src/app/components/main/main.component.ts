@@ -4,6 +4,8 @@ import { ActivatedRoute, Router, RouterOutlet, NavigationStart } from '@angular/
 import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
 import { DataService } from 'src/app/services/data.service';
+import { SocketIoService } from 'src/app/services/socket.io.service';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-main',
@@ -19,16 +21,25 @@ export class MainComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute,
     public router: Router,
     private data: DataService,
-    private transferService: TransferService) {
-      this.subscription = this.transferService.getDataObs().subscribe(test => {
-        console.log('test', test);
-      });
+    private transferService: TransferService,
+    private socketIoService: SocketIoService,
+    private tokenService: TokenService) {
     }
 
   ngOnInit() {
     this.user = this.route.snapshot.data.userData; // используем резолвер для получения данных пользователя
     console.log(this.user);
+    this.subscription = this.transferService.dataObj$.subscribe(res => {
+      console.log('test', res);
+    });
     this.transferService.dataSet({name: 'userData', data: this.user});
+    const token = this.tokenService.getToken();
+    this.socketIoService.socketConnect();
+    const dataObj = {
+      userId: this.user.username,
+      token: token
+    };
+    this.socketIoService.socketEmit(this.socketIoService.events.user, dataObj);
   }
 
   ngOnDestroy() {

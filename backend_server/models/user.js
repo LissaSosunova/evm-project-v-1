@@ -22,7 +22,10 @@ const eventNotification = db.Schema({
 const chat = db.Schema({
   id: { type: String },
   name: { type: String },
-  avatar: { type: Object }
+  avatar: { type: Object },
+  chatId: { type: String },
+  unreadMes: {type: Number},
+  lastMessage: {type: Object }
 });
 
 const event = db.Schema({
