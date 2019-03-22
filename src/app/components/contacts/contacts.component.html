@@ -55,8 +55,8 @@
                  type="text"
                  placeholder="Search contact"
                  name="search"
-                 [(ngModel)] = "search"
-                 (ngModelChange)="setSearch(search)">
+                 [formControl]="searchControl"
+                >
         </form>
       </div>
       <div class="contactList-user2">

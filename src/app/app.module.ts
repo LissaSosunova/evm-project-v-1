@@ -4,7 +4,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material';
 import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
 import { TransferService } from './services/transfer.service';
 import { FilterPipe } from './pipes/filter.pipe';
@@ -60,7 +61,9 @@ import { MultiLineInputComponent } from './components/multi-line-input/multi-lin
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    MatTooltipModule
   ],
   providers: [
     GetDataUserResolverService,

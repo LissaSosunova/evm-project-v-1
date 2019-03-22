@@ -1,5 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Subscription, observable } from 'rxjs';
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
 import { TransferService } from 'src/app/services/transfer.service';
@@ -11,7 +13,7 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./contacts.component.scss']
 })
 
-export class ContactsComponent implements OnInit {
+export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public user: types.User = {} as types.User;
   public test: String = 'This is test data';
@@ -22,8 +24,8 @@ export class ContactsComponent implements OnInit {
   public querySearch: any;
   public result: any;
   public currTab: string;
-  public search: string;
-  private subscription: Subscription;
+  private searchSubscription: Subscription;
+  public searchControl: FormControl;
 
   constructor(private transferService: TransferService,
               private route: ActivatedRoute,
@@ -34,9 +36,66 @@ export class ContactsComponent implements OnInit {
 
   ngOnInit() {
     this.init();
+    this.initSearchForm();
   }
 
-  public init(): void {
+  ngAfterViewInit() {
+
+  }
+
+  ngOnDestroy() {
+    this.searchSubscription.unsubscribe();
+  }
+
+
+  public addNewUser(query: string): void {
+    this.query = {
+      query: query
+    };
+    const sub = this.data.addUser(this.query).subscribe(
+      data => {
+        // this.querySearch = data;
+        console.log(data);
+        sub.unsubscribe();
+      }
+    );
+  }
+
+  public confNewUser(query: string): void {
+    this.query = {
+      query: query
+    };
+    const sub = this.data.confUser(this.query).subscribe(
+      data => {
+        console.log(data);
+        sub.unsubscribe();
+      }
+    );
+  }
+
+  public setSearch(query: string): void {
+    this.query = {
+      query: query
+    };
+    const sub = this.data.findUser(this.query).subscribe(
+      data => {
+        this.querySearch = data;
+        console.log(this.querySearch);
+        sub.unsubscribe();
+      }
+    );
+  }
+
+  public switcher(currId: string): void {
+    this.router.navigate([], {
+      queryParams: {
+        currTab: currId
+      }
+    });
+    this.currTab = currId;
+  }
+
+  private init(): void {
     const user = this.transferService.dataGet('userData');
     this.user = Object.assign(user);
     this.transferService.setDataObs(this.test);
@@ -53,49 +112,14 @@ export class ContactsComponent implements OnInit {
     }
   }
 
-  public switcher(currId: string): void {
-    this.router.navigate([], {
-      queryParams: {
-        currTab: currId
-      }
-    });
-    this.currTab = currId;
+  private initSearchForm(): void {
+    this.searchControl = new FormControl();
+    this.searchSubscription = this.searchControl.valueChanges
+      .pipe(debounceTime(500), distinctUntilChanged())
+      .subscribe(query => {
+        console.log(query);
+        this.setSearch(query);
+      });
   }
 
-  public setSearch(query: string): void {
-    this.query = {
-      query: query
-    };
-    this.data.findUser(this.query).subscribe(
-      data => {
-        this.querySearch = data;
-        console.log(this.querySearch);
-
-      }
-    );
-  }
-
-  public addNewUser(query: string): void {
-    this.query = {
-      query: query
-    };
-    this.data.addUser(this.query).subscribe(
-      data => {
-        // this.querySearch = data;
-        console.log(data);
-
-      }
-    );
-  }
-
-  public confNewUser(query: string): void {
-    this.query = {
-      query: query
-    };
-    this.data.confUser(this.query).subscribe(
-      data => {
-        console.log(data);
-      }
-    );
-  }
 }
