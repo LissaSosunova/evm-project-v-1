@@ -118,7 +118,9 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(query => {
         console.log(query);
-        this.setSearch(query);
+        if (query) {
+          this.setSearch(query);
+        }
       });
   }
 
