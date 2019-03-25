@@ -1,0 +1,38 @@
+const router = require('express').Router()
+const jwt = require('jwt-simple');
+const config = require('../../config');
+const User = require('../../models/user');
+const datareader = require('../../modules/datareader');
+
+
+router.post('/delete_chat/', async function (req, res, next) {
+    let auth;
+    if(!req.headers['authorization']) {
+      return res.sendStatus(401)
+    }
+    try {
+      auth = jwt.decode(req.headers['authorization'], config.secretkey);
+    } catch (err) {
+      return res.sendStatus(401)
+    }
+    const dataObj = req.body;
+    const deleteChatParams = {
+      query: {"username" : dataObj.myId, "contacts.id" : dataObj.contactId},
+      objNew:{$set : { "contacts.$.private_chat" : '-1' }}
+    };
+    const params = {
+      query: {username: dataObj.myId},
+      objNew: {$pull: {chats: {id: dataObj.contactId}}}
+    };
+    try {
+      const deleteChat = await datareader(User, deleteChatParams, 'updateOne');
+      console.log('deleteChat', deleteChat);
+      const updateRes = await datareader(User, params, 'updateOne');
+      console.log('updateRes', updateRes);
+    } catch (err) {
+      return res.sendStatus(500)
+    }
+    res.sendStatus(200);
+  })
+
+  module.exports = router;

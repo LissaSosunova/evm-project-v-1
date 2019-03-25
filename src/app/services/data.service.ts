@@ -31,18 +31,18 @@ export class DataService {
     console.log(typeof query.query);
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({'authorization': token});
-    return this.http.post(URL_BACK + '/finduser/', query, {headers});
+    return this.http.post(URL_BACK + '/find_user/', query, {headers});
   }
   public addUser(query: types.AddUser): Observable<any> {
     console.log(typeof query.query);
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({'authorization': token});
-    return this.http.post(URL_BACK + '/adduser/', query, {headers});
+    return this.http.post(URL_BACK + '/add_user/', query, {headers});
   }
   public confUser(query: types.AddUser): Observable<any> {
     console.log(typeof query.query);
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({'authorization': token});
-    return this.http.post(URL_BACK + '/confirmuser/', query, {headers});
+    return this.http.post(URL_BACK + '/confirm_user/', query, {headers});
   }
 }

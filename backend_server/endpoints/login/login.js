@@ -8,10 +8,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jwt-simple');
 
 // импортируем файл конфигурации
-const config = require('./config');
+const config = require('../../config');
 
 // импортируем модельку user
-const User = require('./models/user');
+const User = require('../../models/user');
 
 
 

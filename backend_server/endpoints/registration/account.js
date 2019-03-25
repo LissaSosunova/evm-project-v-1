@@ -5,10 +5,10 @@ const router = require('express').Router()
 const jwt = require('jwt-simple')
 
 // импортируем конфиг
-const config = require('./config')
+const config = require('../../config')
 
 // импортируем модель user
-const User = require('./models/user')
+const User = require('../../models/user')
 
 /**
  * Эта функция при попытке доступа к URL без корректного web-token'а возвращает 401. При наличии оного - возвращает имя пользователя.
