@@ -229,7 +229,7 @@
             } 
         },
         {
-            "endpoint": "finduser",
+            "endpoint": "find_user",
             "type": "post",
             "headers": "authorization",
             "requestObject": {
@@ -248,7 +248,7 @@
             }
         },
         {
-            "endpoint": "adduser",
+            "endpoint": "add_user",
             "type": "post",
             "headers": "authorization",
             "requestObject": {
@@ -275,7 +275,7 @@
             "sendStatus": "200" 
         },
         {
-            "endpoint": "confirmuser",
+            "endpoint": "confirm_user",
             "type": "post",
             "headers": "authorization",
             "requestObject": {

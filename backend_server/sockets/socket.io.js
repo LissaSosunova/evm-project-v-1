@@ -1,6 +1,6 @@
-const Chat = require('./models/chats');
-const datareader = require('./datareader');
-const User = require('./models/user');
+const Chat = require('../models/chats');
+const datareader = require('../modules/datareader');
+const User = require('../models/user');
 
 function loadSession(sid, callback) {
     sessionStore.load(sid, function (err, session) {
