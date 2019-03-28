@@ -15,13 +15,12 @@ const User = require('../../models/user')
  */
 
 router.get('/account', function(req, res, next){
-  console.log('req.headers: ' + req.headers, typeof  req);
   let username;
     if (!req.headers['authorization']) {
       console.log('Err 1');
       return res.sendStatus(401)}
     try {
-        username = jwt.decode(req.headers['authorization'], config.secretkey).username
+        username = jwt.decode(req.headers['authorization'], req.headers['token_key']).username
     } catch(err) {
       console.log('Err 2');
         return res.sendStatus(401)

@@ -3,6 +3,7 @@ import * as io from 'socket.io-client';
 import { types } from '../types/types';
 import { Socket } from 'dgram';
 import { Subject, Observable } from 'rxjs';
+import { SocketIO} from 'src/app/types/socket.io.types';
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +11,18 @@ import { Subject, Observable } from 'rxjs';
 
 export class SocketIoService {
 
-  public events = {
-    all_messages_counter: 'all_messages_counter',
-    chats_model: 'chats_model',
-    user_read_message: 'user_read_message',
-    message: 'message',
-    user: 'user',
-    user_in_chat: 'user_in_chat',
-    user_left_chat: 'user_left_chat',
-    user_is_typing: 'user_is_typing',
-    user_left: 'user_left',
-    all_online_users: 'all_online_users'
-  };
+  // public events = {
+  //   all_messages_counter: 'all_messages_counter',
+  //   chats_model: 'chats_model',
+  //   user_read_message: 'user_read_message',
+  //   message: 'message',
+  //   user: 'user',
+  //   user_in_chat: 'user_in_chat',
+  //   user_left_chat: 'user_left_chat',
+  //   user_is_typing: 'user_is_typing',
+  //   user_left: 'user_left',
+  //   all_online_users: 'all_online_users'
+  // };
 
   private socketInstance: SocketIOClient.Socket;
   private currentTrackedMessages = {};
@@ -29,9 +30,8 @@ export class SocketIoService {
 
   constructor() { }
 
-  public on(msgName: string): Observable<any> {
+  public on(msgName: SocketIO.events): Observable<any> {
     this.addToTrackedMessages(msgName);
-
     return new Observable(observer => {
         const sub = this.socketMessageBus.subscribe(msg => {
           if (msg.name === msgName) {
@@ -52,7 +52,7 @@ export class SocketIoService {
     }
   }
 
-  public send(msgName: string, payload: any): void {
+  public send(msgName: SocketIO.events, payload: any): void {
     if (this.socketInstance) {
       this.socketInstance.send(msgName, payload);
     }
@@ -73,7 +73,7 @@ export class SocketIoService {
     this.socketInstance.emit(event, data, cbFunction);
   }
 
-  public socketEmit(event: string, data: any): void {
+  public socketEmit(event: SocketIO.events, data: any): void {
     this.socketInstance.emit(event, data);
   }
 
@@ -83,7 +83,7 @@ export class SocketIoService {
 
   private async onSocketReconnect(): Promise<void> {
     if (this.socketInstance) {
-      Object.keys(this.currentTrackedMessages).forEach(msgName => {
+      Object.keys(this.currentTrackedMessages).forEach((msgName: SocketIO.events) => {
           if (this.currentTrackedMessages[msgName] > 0) {
             this.socketInstance.on(msgName, (payload) => {
               this.socketMessageBus.next({
@@ -96,7 +96,7 @@ export class SocketIoService {
     }
   }
 
-  private addToTrackedMessages(name: string): void {
+  private addToTrackedMessages(name: SocketIO.events): void {
     if (this.currentTrackedMessages[name] === undefined) {
       this.currentTrackedMessages[name] = 0;
       if (this.socketInstance) {
@@ -111,7 +111,7 @@ export class SocketIoService {
     this.currentTrackedMessages[name]++;
 }
 
-  private removeFromTrackedMessages(name: string): void {
+  private removeFromTrackedMessages(name: SocketIO.events): void {
     if (this.currentTrackedMessages[name]) {
       this.currentTrackedMessages[name]--;
       if (this.currentTrackedMessages[name] === 0) {

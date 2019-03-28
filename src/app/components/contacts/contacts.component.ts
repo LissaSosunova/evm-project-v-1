@@ -55,7 +55,6 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     const sub = this.data.addUser(this.query).subscribe(
       data => {
         // this.querySearch = data;
-        console.log(data);
         sub.unsubscribe();
       }
     );
@@ -67,7 +66,6 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     const sub = this.data.confUser(this.query).subscribe(
       data => {
-        console.log(data);
         sub.unsubscribe();
       }
     );
@@ -80,7 +78,6 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     const sub = this.data.findUser(this.query).subscribe(
       data => {
         this.querySearch = data;
-        console.log(this.querySearch);
         sub.unsubscribe();
       }
     );
@@ -116,7 +113,6 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.searchSubscription = this.searchControl.valueChanges
       .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(query => {
-        console.log(query);
         if (query) {
           this.setSearch(query);
         }

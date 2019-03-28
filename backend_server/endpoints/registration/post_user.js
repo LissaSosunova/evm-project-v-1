@@ -10,7 +10,6 @@ const jwt = require('jwt-simple');
 const User = require('../../models/user');
 const Avatar = require('../../models/avatar');
 // схема для поиска контактов в БД
-const FoundContact = require('../../models/findcontact');
 const datareader = require('../../modules/datareader');
 
 // импортируем файл конфигурации (баловство, конечно, надо генерировать это на лету и хранить где-нибудь)
@@ -24,15 +23,6 @@ const config = require('../../config');
    */
 
   router.post('/user', function (req, res, next){
-    let auth;
-    if(!req.headers['authorization']) {
-        return res.sendStatus(401)
-    }
-    try {
-        auth = jwt.decode(req.headers['authorization'], config.secretkey);
-    } catch (err) {
-        return res.sendStatus(401)
-    }
 
     const params = {
       $or: [

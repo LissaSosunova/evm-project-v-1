@@ -12,7 +12,7 @@ router.post('/renew_chat', async function(req, res, next) {
       return res.sendStatus(401)
     }
     try {
-      auth = jwt.decode(req.headers['authorization'], config.secretkey);
+      auth = jwt.decode(req.headers['authorization'], req.headers['token_key']);
     } catch (err) {
       return res.sendStatus(401)
     }

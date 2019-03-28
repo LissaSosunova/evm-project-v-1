@@ -110,7 +110,8 @@
             },
             "responseObjectSuccess": {
                 "success": "Boolean", 
-                "access_token": "String"
+                "access_token": "String",
+                "token_key": "String"
             },
             "responseObjectError": {
                 "message": "String"
