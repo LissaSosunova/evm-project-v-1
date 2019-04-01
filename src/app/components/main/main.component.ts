@@ -27,10 +27,8 @@ export class MainComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
-    this.user = this.route.snapshot.data.userData; // используем резолвер для получения данных пользователя
-    console.log(this.user);
+    this.user = this.route.snapshot.data.userData;
     this.subscription = this.transferService.dataObj$.subscribe(res => {
-      console.log('test', res);
     });
     this.transferService.dataSet({name: 'userData', data: this.user});
     const token = this.tokenService.getToken();
