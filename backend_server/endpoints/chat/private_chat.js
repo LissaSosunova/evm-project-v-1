@@ -21,7 +21,7 @@ router.get('/private_chat/:id/', async function (req, res, next){
     }
     let auth;
     try {
-      auth = jwt.decode(req.headers['authorization'], config.secretkey);
+      auth = jwt.decode(req.headers['authorization'], req.headers['token_key']);
     } catch (err) {
       return res.sendStatus(401)
     }

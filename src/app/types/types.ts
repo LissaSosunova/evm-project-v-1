@@ -11,6 +11,7 @@ export module types {
   export interface LoginResp {
     success: boolean;
     access_token: string;
+    token_key: string;
   }
 
   export interface Registration {

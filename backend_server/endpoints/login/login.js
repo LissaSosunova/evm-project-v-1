@@ -12,6 +12,8 @@ const config = require('../../config');
 
 // импортируем модельку user
 const User = require('../../models/user');
+// для генерации ключа
+const crypto = require('crypto');
 
 
 
@@ -23,12 +25,14 @@ const User = require('../../models/user');
  */
 
 router.post ('/login', function(req, res, next){
+    let username;
+    let password;
     if (!req.body.username || !req.body.password) {
         console.log('Bad auth');
         return res.json({message: "Bad auth"}).status(401);// если один или оба параметра запроса опущены, возвращаем 400 - Bad Request
     } else {
-        var username = req.body.username;
-        var password = req.body.password;
+        username = req.body.username;
+        password = req.body.password;
         User.findOne(
           {
             $or: [
@@ -52,8 +56,9 @@ router.post ('/login', function(req, res, next){
             if (!valid){
               return res.json({message: "Incorrect password"}).status(401);
             }
-            const token = jwt.encode({username: username}, config.secretkey)
-            res.json({"success": true, access_token: token});
+            const tokenKey = crypto.randomBytes(20).toString('hex');
+            const token = jwt.encode({username: username}, tokenKey); // config.secretkey 
+            res.json({success: true, access_token: token, token_key: tokenKey});
           })
         })
     }

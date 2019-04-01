@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { types } from '../types/types';
-import { TokenService } from './token.service';
+import { SessionStorageService } from './session.storage.service';
 
 const URL_BACK = types.getURI();
 
@@ -14,7 +14,7 @@ const URL_BACK = types.getURI();
 export class DataService {
 
   constructor(private http: HttpClient,
-            private tokenService: TokenService) { }
+            private sessionStorageService: SessionStorageService) { }
 
   public setAuth(params: types.Login): Observable<any> {
    return this.http.post(URL_BACK + '/login/', params);
@@ -23,23 +23,27 @@ export class DataService {
     return this.http.post(URL_BACK + '/user/', params,  {responseType: 'text'});
   }
   public getUser(): Observable<any> {
-    const token = this.tokenService.getToken();
-    const headers = new HttpHeaders({'authorization': token});
+    const token = this.sessionStorageService.getValue('_token');
+    const tokenKey = this.sessionStorageService.getValue('token_key');
+    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
     return this.http.get(URL_BACK + '/user/', {headers});
   }
   public findUser(query: types.FindUser): Observable<any> {
-    const token = this.tokenService.getToken();
-    const headers = new HttpHeaders({'authorization': token});
+    const token = this.sessionStorageService.getValue('_token');
+    const tokenKey = this.sessionStorageService.getValue('token_key');
+    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
     return this.http.post(URL_BACK + '/find_user/', query, {headers});
   }
   public addUser(query: types.AddUser): Observable<any> {
-    const token = this.tokenService.getToken();
-    const headers = new HttpHeaders({'authorization': token});
+    const token = this.sessionStorageService.getValue('_token');
+    const tokenKey = this.sessionStorageService.getValue('token_key');
+    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
     return this.http.post(URL_BACK + '/add_user/', query, {headers});
   }
   public confUser(query: types.AddUser): Observable<any> {
-    const token = this.tokenService.getToken();
-    const headers = new HttpHeaders({'authorization': token});
+    const token = this.sessionStorageService.getValue('_token');
+    const tokenKey = this.sessionStorageService.getValue('token_key');
+    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
     return this.http.post(URL_BACK + '/confirm_user/', query, {headers});
   }
 }

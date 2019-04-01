@@ -3,11 +3,11 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = 5006;
 const $login = require('./endpoints/login/login');
-const $account = require('./endpoints/registration/account');
+const $account = require('./endpoints/user/account');
 const $event = require('./endpoints/events/event');
 const $newEvent = require('./endpoints/events/new_event');
 const $changeStatus = require('./endpoints/events/change_status');
-const $postUser = require('./endpoints/user/post_user');
+const $postUser = require('./endpoints/registration/post_user');
 const $getUser = require('./endpoints/user/get_user');
 const $findUser = require('./endpoints/user/find_user');
 const $addUser = require('./endpoints/user/add_user');
@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, token_key');
   next();
 });
 

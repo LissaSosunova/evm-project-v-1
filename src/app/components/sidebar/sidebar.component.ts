@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { TokenService } from 'src/app/services/token.service';
+import { SessionStorageService } from 'src/app/services/session.storage.service';
 import { RouterService } from 'src/app/services/router.service';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
+import { SocketIO} from 'src/app/types/socket.io.types';
 
 @Component({
   selector: 'app-sidebar',
@@ -19,7 +20,7 @@ export class SidebarComponent implements OnInit {
 
   constructor(public router: Router,
             private activateRouter: ActivatedRoute,
-            private tokenService: TokenService,
+            private sessionStorageService: SessionStorageService,
             private routerService: RouterService,
             private socketIoService: SocketIoService,
             private transferService: TransferService) { }
@@ -30,7 +31,7 @@ export class SidebarComponent implements OnInit {
       this.currParentUrl = urlSegments[1];
       if (this.currParentUrl === '/' || !this.currParentUrl) {
         this.currParentUrl = 'login';
-        const token = this.tokenService.getToken();
+        const token = this.sessionStorageService.getValue('_token');
         if (token) {
           this.currParentUrl = 'main';
         }
@@ -47,12 +48,12 @@ export class SidebarComponent implements OnInit {
 
   public exit(): void {
     const userData  = this.transferService.dataGet('userData');
-    const token = this.tokenService.getToken();
+    const token = this.sessionStorageService.getValue('_token');
     const dataObj = {
       userId: userData.username,
       token: token
     };
-    this.socketIoService.socketEmit(this.socketIoService.events.user_left, dataObj);
+    this.socketIoService.socketEmit(SocketIO.events.user_left, dataObj);
     this.socketIoService.closeConnection();
     sessionStorage.clear();
   }
