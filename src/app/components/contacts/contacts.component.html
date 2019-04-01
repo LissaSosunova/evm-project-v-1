@@ -64,7 +64,7 @@
           <li *ngFor="let item of querySearch" class="direction-row">
             <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
             <div class="col-xs-4">
-              <button class="m-btn cancel" (click)="addNewUser(item.username)">
+              <button class="m-btn cancel" (click)="addNewUser(item.id)">
                 <i class="material-icons">check</i>
               </button>
             </div>

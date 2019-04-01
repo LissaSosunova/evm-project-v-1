@@ -27,10 +27,8 @@ export class MainComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
-    this.user = this.route.snapshot.data.userData; // ВСЕ ВРЕМЯ ЬБЕТ ОШИБКУ + НЕ МОЛГУ ИЗ КОНТАКТОВ ТОЛКНУТЬ НАЗАД НОВІЕ ДАННІЕ
-    console.log(this.user);
+    this.user = this.route.snapshot.data.userData;
     this.subscription = this.transferService.dataObj$.subscribe(res => {
-      console.log('test', res);
     });
     this.transferService.dataSet({name: 'userData', data: this.user});
     const token = this.tokenService.getToken();

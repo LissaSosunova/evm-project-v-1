@@ -100,7 +100,6 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.user = Object.assign(user);
     this.transferService.setDataObs(this.test);
     this.currTab = this.route.snapshot.queryParams.currTab;
-    console.log(this.currTab);
     for (const o of this.user.contacts) {
       if (o.status === 1) {
         this.contactsConfirmed.push(o);
