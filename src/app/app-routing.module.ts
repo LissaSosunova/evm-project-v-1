@@ -1,18 +1,20 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
-import { LoginPageComponent } from './components/login-page/login-page.component';
-import { RegistrationComponent } from './components/registration/registration.component';
 import { AboutComponent } from './components/about/about.component';
-import { MainComponent } from './components/main/main.component';
-import { EventCalendarComponent } from './components/event-calendar/event-calendar.component';
-import { ContactsComponent } from './components/contacts/contacts.component';
 import { ChatsComponent } from './components/chats/chats.component';
+import { ChatListComponent } from './components/chats/chat-list/chat-list.component'
+import { ChatWindowComponent } from './components/chats/chat-window/chat-window.component';
+import { ContactsComponent } from './components/contacts/contacts.component';
+import { EventCalendarComponent } from './components/event-calendar/event-calendar.component';
 import { EventsComponent } from './components/events/events.component';
-import { NewEventComponent } from './components/new-event/new-event.component';
+import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
 import { HomeComponent } from './components/home/home.component';
+import { LoginPageComponent } from './components/login-page/login-page.component';
+import { MainComponent } from './components/main/main.component';
 import { MainGuard } from './components/main/main.guard';
+import { NewEventComponent } from './components/new-event/new-event.component';
 import { NewEventGuard } from './components/new-event/new-event.guard';
+import { NgModule } from '@angular/core';
+import { RegistrationComponent } from './components/registration/registration.component';
+import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
@@ -57,7 +59,23 @@ const routes: Routes = [
       },
       {
         path: 'chats',
-        component: ChatsComponent
+        component: ChatsComponent,
+        children: [
+          {
+            path: 'chat-list',
+            component: ChatListComponent
+          }
+        ]
+      },
+      {
+        path: 'chat-window/:id',
+        component: ChatWindowComponent,
+        children: [
+          {
+            path: 'chat-list',
+            component: ChatListComponent
+          }
+        ]
       },
       {
         path: 'events',

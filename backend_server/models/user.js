@@ -25,7 +25,8 @@ const chat = db.Schema({
   avatar: { type: Object },
   chatId: { type: String },
   unreadMes: {type: Number},
-  lastMessage: {type: Object }
+  lastMessage: {type: Object },
+  type: { type: Number}
 });
 
 const event = db.Schema({

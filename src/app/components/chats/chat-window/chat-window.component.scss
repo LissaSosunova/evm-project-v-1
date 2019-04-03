@@ -1,5 +1,31 @@
-@import "../../../scss/_variables.scss";
-@import "../../../scss/_functions.scss";
+@import "../../../../scss/_variables.scss";
+@import "../../../../scss/_functions.scss";
+
+footer {
+  position: absolute;
+  bottom: 0;
+  min-height: 60px;
+  width: 85%;
+  padding: 16px 16px;
+  box-sizing: border-box;
+}
+
+.btn-submit-send{
+  background-color: map-get($bg-color, 'dark');
+  font-size: 12px;
+  height: 36px;
+  width: 36px;
+  padding-left: 5px;
+  padding-right: 5px;
+  align-items: center;
+  transition: 0.5s;
+  border: 0px;
+  border-radius: 50%;
+  cursor: pointer;
+  &:hover, &:active{
+    color: white;
+  }
+}
 
 .chat-component-container {
     height: 100%;
@@ -14,7 +40,7 @@
   background-color: map-get($bg-color, 'light-olive');
   border: 1px solid #5e7419;
   border-color: map-get($bg-color, 'dark');
-  padding: 10px;
+  padding: 5px;
   img {
     height: 30px;
     align-self: center;
@@ -37,13 +63,15 @@
 }
 
 .m-btn {
-  margin-left: 15px;
-  width: 40px;
-  height: 40px;
+  margin-left: 10px;
+  width: 20px;
+  height: 20px;
   border: 0px;
   border-radius: 50%;
-  box-shadow: 0 1px 8px rgba(28, 32, 1, 0.2);
+  box-shadow: 0 1px 6px rgba(28, 32, 1, 0.2);
+  padding: 2px;
   i {
+    font-size: 12px;
     color: #1c2001;
   }
 }
@@ -75,4 +103,16 @@ ul {
   li {
     list-style-type: none;
   }
+}
+
+.chat-window-conteiner {
+  height: 100%;
+  width: 100%;
+}
+
+.message-box{
+  background-color: map-get($bg-color, 'light-olive');
+  border: 1px solid #5e7419;
+  border-color: map-get($bg-color, 'dark');
+  padding: 5px;
 }

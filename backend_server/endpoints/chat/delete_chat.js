@@ -26,9 +26,7 @@ router.post('/delete_chat/', async function (req, res, next) {
     };
     try {
       const deleteChat = await datareader(User, deleteChatParams, 'updateOne');
-      console.log('deleteChat', deleteChat);
       const updateRes = await datareader(User, params, 'updateOne');
-      console.log('updateRes', updateRes);
     } catch (err) {
       return res.sendStatus(500)
     }

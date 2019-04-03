@@ -1,0 +1,53 @@
+@import "../../../../scss/_variables.scss";
+@import "../../../../scss/_functions.scss";
+
+.chat-component-container {
+    height: 100%;
+    width: 100%;
+}
+
+.block-with-chat-lists {
+  padding: 10px;
+}
+
+.block-chat-list {
+  padding: 10px;
+  img {
+    height: 30px;
+    align-self: center;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+}
+.on-click-one-chat {
+  padding: 8px;
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 1px 8px rgba(28, 32, 1, 0.2);
+    border-radius: 30px;
+  }
+}
+ul {
+  padding: 0px;
+  li {
+    list-style-type: none;
+      border-bottom: 1px solid map-get($bg-color, 'gray');
+      padding: 5px;
+      margin: 0px;
+  }
+}
+
+.chat-name {
+  font-size: 12px;
+  font-weight: 700;
+}
+.chat-message {
+  font-size: 11px;
+  font-weight: 400;
+  font-style: italic;
+  color: map-get($font-color,'dark-gray');
+}
+.chat-time {
+  font-size: 9px;
+  font-weight: 400;
+}

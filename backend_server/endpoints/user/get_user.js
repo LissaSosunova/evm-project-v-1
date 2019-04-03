@@ -29,7 +29,7 @@ class UserData {
       this.notifications = user.notifications;
     }
   }
-  
+
 
   /**
  * При поступлении запроса типа GET эта функция проверяет наличие заголовка типа X-Auth-Token, при его отсутствии
@@ -56,7 +56,7 @@ router.get('/user', async function (req, res, next) {
         {email: auth.username}
       ]
     };
-    
+
     try {
       const userDb = await datareader(User, params, 'findOne');
       const user = new UserData(userDb);
@@ -78,7 +78,6 @@ router.get('/user', async function (req, res, next) {
         }
       });
       const unreadMes = await Promise.all(promises);
-      console.log('unreadMes', unreadMes);
       const unreadNumInChats = [];
       unreadMes.forEach(item => {
         const obj = {};
@@ -101,8 +100,8 @@ router.get('/user', async function (req, res, next) {
     } catch(err) {
       res.sendStatus(500);
     }
-    
-          
+
+
   });
 
   module.exports = router;

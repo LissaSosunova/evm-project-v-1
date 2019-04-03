@@ -14,10 +14,9 @@ function filereader(fsRef, path) {
 function getCollectionsMetadata(req, res) {
     var path = './api/collections/metadata/get.json';
     var servicePromise = filereader(fs, path);
-    console.log(path);
+
     return servicePromise
         .then((response) => {
-            console.log("GET", path);
             return response;
         }, onError);
 }
@@ -33,7 +32,6 @@ function getSomeCollection(req, res) {
 
     servicePromise
         .then((response) => {
-            console.log("GET", path);
 
             return response;
         }, onError)

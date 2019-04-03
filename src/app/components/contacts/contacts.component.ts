@@ -1,14 +1,14 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
+import { PopupDetailsComponent } from './popup-details/popup-details.component';
 import { Subject } from 'rxjs';
+import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
 import { UserInfoPopupComponent } from '../user-info-popup/user-info-popup.component';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { PopupDetailsComponent } from './popup-details/popup-details.component';
-import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 
 @Component({
   selector: 'app-contacts',
@@ -18,8 +18,10 @@ import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 
 export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
 
+
+  private createNewChatParams: types.CreateNewChat;
   public actionName: string;
-  public isOpened: boolean;
+  public chatId: string;
   public contactsAwaiting: Array<types.Contact> = [];
   public contactsConfirmed: Array<types.Contact> = [];
   public contactsRequested: Array<types.Contact> = [];
@@ -27,12 +29,14 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   public isContactsAwaiting: boolean;
   public isContactsConfirmed: boolean;
   public iscontactsRequested: boolean;
+  public isOpened: boolean;
+  public private_chat: any;
   public query: types.FindUser;
   public querySearch: any;
   public result: any;
   public searchControl: FormControl;
   public test: String = 'This is test data';
-  public user: types.User = {} as types.User;
+  public user: types.User = {} as types.User
 
   @ViewChild('userPopup') private userPopup: UserInfoPopupComponent;
   @ViewChild('popupDetails') private confirmAction: PopupDetailsComponent;
@@ -96,6 +100,26 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  public goToChat(data): void {
+    this.private_chat = data.chatId;
+    this.createNewChatParams = {
+      users: [this.user.username, data.userId],
+      email: [this.user.email, data.email]
+    };
+    if(this.private_chat &&
+      this.private_chat != 0) {
+        this.router.navigate(['/main/chat-window', this.private_chat]);
+    } else {
+      this.data.createNewPrivateChat(this.createNewChatParams).subscribe(
+        resp => {
+          this.user = Object.assign({}, resp.user);
+          this.transferService.dataSet({name: 'userData', data: this.user});
+          this.private_chat = resp.chat._id;
+          this.router.navigate(['/main/chat-window', this.private_chat]);
+        }
+      )
+    }
+  }
   private init(): void {
     const user = this.transferService.dataGet('userData');
     this.user = Object.assign({}, user);
