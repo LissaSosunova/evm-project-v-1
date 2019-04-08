@@ -1,5 +1,4 @@
 import { constants } from '../constants/default-constants';
-import { Observable } from 'rxjs';
 
 export module types {
 
@@ -131,6 +130,28 @@ export module types {
 
   export interface eventMembers {
     invited: string[]
+  }
+
+  export interface DraftMessage {
+    chatID: string;
+    authorId: string;
+    text: string;
+    date: number;
+  }
+
+  export interface DraftMessageDeleteObj {
+    chatID: string;
+    authorId: string;
+  }
+
+  export interface Events {
+    name: string;
+    status: boolean;
+    date: object;
+    place: object;
+    members: object;
+    additional: string;
+    notification: object;
   }
 
   export interface FindUser {

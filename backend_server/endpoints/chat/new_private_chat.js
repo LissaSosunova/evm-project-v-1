@@ -4,6 +4,15 @@ const User = require('../../models/user');
 const Chat = require('../../models/chats');
 const datareader = require('../../modules/datareader');
 
+class ChatData {
+  constructor(chat) {
+    this.id = chat._id;
+    this.users = chat.users;
+    this.email = chat.email;
+    this.messages = chat.messages;
+  }
+}
+
 router.post('/new_private_chat/', async function (req, res, next) {
     let auth;
     if(!req.headers['authorization']) {

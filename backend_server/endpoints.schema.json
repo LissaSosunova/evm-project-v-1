@@ -357,6 +357,51 @@
             "responseObject": {
                 "chatId": "String"
             }
+        },
+        {
+            "endpoint": "set_draft_message",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "chatID": "String",
+                "authorId": "String",
+                "text": "String",
+                "date": "Number"
+            },
+            "responseObject": {
+                "code": "Number"
+            }
+        },
+        {
+            "endpoint": "delete_draft_message",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "chatID": "String",
+                "authorId": "String"
+            },
+            "responseObject": {
+                "code": "Number"
+            }
+        },
+        {
+            "endpoint": "get_draft_message/:id",
+            "type": "get",
+            "headers": "authorization",
+            "requestObject": {
+                "authorId": "String"
+            },
+            "responseObject": {
+                "_id": "String",
+                "draftMessages": [
+                    {
+                        "chatID": "String",
+                        "authorId": "String",
+                        "text": "String",
+                        "date": "Number"
+                    }
+                ] 
+            }
         }
     ]
 

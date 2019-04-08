@@ -12,6 +12,7 @@ import {
 import { types } from 'src/app/types/types';
 import { TransferService } from 'src/app/services/transfer.service';
 import { DataService } from 'src/app/services/data.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-chat-list',
@@ -59,4 +60,10 @@ export class ChatListComponent implements OnInit {
       this.deletedChats.push(item);
     })
   }
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
 }

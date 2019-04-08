@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { types } from '../types/types';
-import { Socket } from 'dgram';
 import { Subject, Observable } from 'rxjs';
 import { SocketIO} from 'src/app/types/socket.io.types';
 

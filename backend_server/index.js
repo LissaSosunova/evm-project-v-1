@@ -17,6 +17,9 @@ const $privateChat = require('./endpoints/chat/private_chat');
 const $newPrivateChat = require('./endpoints/chat/new_private_chat');
 const $deleteChat = require('./endpoints/chat/delete_chat');
 const $renewChat = require('./endpoints/chat/renew_chat');
+const $setDraftMessage = require('./endpoints/chat/set_draft_message');
+const $deleteDraftMessage = require('./endpoints/chat/delete_draft_message');
+const $getDraftMessage = require('./endpoints/chat/get_draft_message');
 const socketIO = require('./sockets/socket.io');
 
 app.use(bodyParser.text());
@@ -76,6 +79,15 @@ app.route('/private_chat/:id/')
 
 app.route('/new_private_chat/')
   .post($newPrivateChat);
+
+app.route('/set_draft_message')  
+  .post($setDraftMessage);
+
+app.route('/delete_draft_message')
+  .post($deleteDraftMessage);
+
+app.route('/get_draft_message/:id/')  
+  .get($getDraftMessage);
 
 const server = app.listen(port); 
  console.info('Backend server listening on port ' + port);

@@ -1,4 +1,4 @@
-import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Component({
@@ -11,7 +11,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
     multi: true
   }]
 })
-export class MultiLineInputComponent implements OnInit, ControlValueAccessor {
+export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueAccessor {
 
   public onChange: Function;
   public onTouched: Function;
@@ -19,6 +19,7 @@ export class MultiLineInputComponent implements OnInit, ControlValueAccessor {
   public showPlaceholder: boolean = true;
   public currText: string;
   @Input() public placeholder: string; // optional
+  @Input() public currMes: string;
   @ViewChild('input') public input: ElementRef;
   private inputElement: HTMLDivElement;
   @Input() private minHeight: string; // optional
@@ -32,6 +33,16 @@ export class MultiLineInputComponent implements OnInit, ControlValueAccessor {
     this.maxHeight = this.maxHeight || '200';
     this.inputElement.style.minHeight = `${this.minHeight}px`;
     this.inputElement.style.maxHeight = `${this.maxHeight}px`;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.inputElement && changes.currMes.currentValue === '' && !changes.currMes.isFirstChange()) {
+      this.inputElement.innerHTML = changes.currMes.currentValue;
+      this.showPlaceholder = true;
+      this.currText = '';
+    } else if (this.inputElement && changes.currMes.currentValue !== '' && !changes.currMes.isFirstChange()) {
+      this.showPlaceholder = false;
+    }
   }
 
   public onChangeInput(event: string): void {
@@ -65,6 +76,7 @@ export class MultiLineInputComponent implements OnInit, ControlValueAccessor {
   writeValue(val: string): void {
     if (val) {
       this.text = val;
+      this.showPlaceholder = false;
     }
   }
 }

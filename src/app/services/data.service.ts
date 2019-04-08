@@ -65,4 +65,24 @@ export class DataService {
               return this.http.post(URL_BACK + '/new_event/', event, {headers});
             }
 
+  public sendDraftMessage(query: types.DraftMessage): Observable<any> {
+    const token = this.sessionStorageService.getValue('_token');
+    const tokenKey = this.sessionStorageService.getValue('token_key');
+    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
+    return this.http.post(URL_BACK + '/set_draft_message', query, {headers});
+  }
+  public deleteDraftMessage(query: types.DraftMessageDeleteObj): Observable<any> {
+    const token = this.sessionStorageService.getValue('_token');
+    const tokenKey = this.sessionStorageService.getValue('token_key');
+    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
+    return this.http.post(URL_BACK + '/delete_draft_message', query, {headers});
+  }
+  public getDraftMessage(userId: string, chatId: string): Observable<any> {
+    const token = this.sessionStorageService.getValue('_token');
+    const tokenKey = this.sessionStorageService.getValue('token_key');
+    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
+    const query = {authorId: userId};
+    return this.http.get(`${URL_BACK}/get_draft_message/${chatId}`, {headers: headers, params: query});
+  }
+
 }

@@ -1,6 +1,7 @@
 @import "../../../scss/_variables.scss";
 @import "../../../scss/_functions.scss";
 
+
 .chat-component-container {
     height: 100%;
     width: 100%;
@@ -76,3 +77,31 @@ ul {
     list-style-type: none;
   }
 }
+
+form {
+  width: 100%;
+}
+
+.btn-submit-send{
+    background-color: #9bb00f;
+    font-size: 12px;
+    height: 36px;
+    padding-left: 10px;
+    padding-right: 10px;
+    align-items: center;
+    transition: 0.5s;
+    border: 0px;
+    border-radius: 50%;
+    cursor: pointer;
+    &:hover, &:active{
+      background-color: #1c2001;
+      color: white;
+    }
+  
+  }
+
+  .disabled, .disabled:hover {
+    cursor: default;
+    background-color: map-get($disabled, 'grey');
+    color: black;
+  }

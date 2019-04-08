@@ -6,6 +6,7 @@ import { ContactsComponent } from './components/contacts/contacts.component';
 import { EventCalendarComponent } from './components/event-calendar/event-calendar.component';
 import { EventsComponent } from './components/events/events.component';
 import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
+import { GetDraftMessagesResolverService } from './resolvers/get-draft-messages-resolver.service'
 import { HomeComponent } from './components/home/home.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { MainComponent } from './components/main/main.component';
@@ -73,10 +74,18 @@ const routes: Routes = [
       {
         path: 'chat-window/:id',
         component: ChatWindowComponent,
+        // for draft message implementation
+            // resolve: {
+            //  draftMessage: GetDraftMessagesResolverService
+            // }
         children: [
           {
             path: 'chat-list',
             component: ChatListComponent
+          },
+          {
+            path: 'chat-list',
+            component: ChatListComponent,
           }
         ]
       },

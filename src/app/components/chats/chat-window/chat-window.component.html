@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="row">
     <div class="messages-continer
     col-xs-9
@@ -66,3 +67,26 @@
     </div>
    
   </footer>
+=======
+<footer>
+  <form class="row">
+    <div class="col-sm-9">
+        <app-multi-line-input
+        [formControl]="control"
+        [placeholder]="'Write a message'"
+        [minHeight]="35"
+        [maxHeight]="250"
+        [currMes]="inputMes">
+        </app-multi-line-input>
+    </div>
+    <div class="col-sm-3">
+        <button class="btn-submit-send"
+        (click)="sendMessage()"
+        [disabled]="control.invalid"
+        [ngClass]="{'disabled': control.invalid}">
+            <i class="material-icons">send</i>
+        </button>
+    </div>
+  </form>  
+</footer>
+>>>>>>> draft messages
