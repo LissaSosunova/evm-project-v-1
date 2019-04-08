@@ -15,10 +15,11 @@ const datareader = require('../../modules/datareader');
 // импортируем файл конфигурации (баловство, конечно, надо генерировать это на лету и хранить где-нибудь)
 const config = require('../../config');
 
-  
+
   /**
    * При поступлении запроса типа POST эта функция шифрует пароль с помощью bcrypt и сохраняет результат в БД.
    * При любых ошибках выдает статус 500 - Internal Server Error
+   * 409 Conflict («конфликт») - при попытке добать юзера с уже существуещим емейлом или username
    * При удаче - возвращает 201
    */
 
@@ -31,7 +32,8 @@ const config = require('../../config');
       ]
     };
     const dublicate = {
-      name: 'MongoError'
+      name: 'MongoError',
+      statuscode: 409
     };
     const defaultAvatar = {
       owner: 'default',
@@ -40,7 +42,7 @@ const config = require('../../config');
     const user = new User;
     user.username = req.body.username;
     user.email = req.body.email;
-    user.name = "No name";
+    user.name = req.body.name;
     user.phone = "Set your phone number";
     user.avatar = defaultAvatar;
     user.events = [];
@@ -66,5 +68,5 @@ const config = require('../../config');
       })
   });
 
-  
+
   module.exports = router;

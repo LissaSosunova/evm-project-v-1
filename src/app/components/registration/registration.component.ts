@@ -13,13 +13,14 @@ import { AbstractEditor } from 'src/app/models/abstract-editor';
 })
 
 export class RegistrationComponent extends AbstractEditor implements OnInit, AfterViewInit, OnDestroy {
-  public params: types.Registration;
-  public username: string;
   public email: string;
-  public password: string;
-  public passConf: string;
-  public isFormValid: boolean;
   public errorMes: string;
+  public isFormValid: boolean;
+  public name: string;
+  public params: types.Registration;
+  public passConf: string;
+  public password: string;
+  public username: string;
   @ViewChild('registrationForm') public registrationForm: NgForm;
   private formValueSub: Subscription;
   private validationSub: Subscription;
@@ -53,21 +54,23 @@ export class RegistrationComponent extends AbstractEditor implements OnInit, Aft
     this.registrationForm.reset();
   }
 
-  public setRegConf (username: string, email: string, password: string, passConf: string): void {
+  public setRegConf (nameOfUser: string, username: string, email: string, password: string, passConf: string): void {
     if (password !== passConf) {
       this.errorMes = 'Passwords must be equal';
       return;
     }
+
     this.params = {
+      name: nameOfUser,
       username,
       email,
       password
     };
+
     this.data.setReg(this.params).subscribe(
       data => {
-        console.log(data);
         const response = JSON.parse(data);
-        if (response.name === 'MongoError') {
+        if (response.name === 'MongoError' || response.statuscode === 409) {
           this.errorMes = 'User with such username is already exists. Try another username';
         } else {
           this.router.navigate(['../login']);
