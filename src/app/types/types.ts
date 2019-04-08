@@ -15,6 +15,7 @@ export module types {
   }
 
   export interface Registration {
+    name: String;
     username: string;
     email: string;
     password: string;

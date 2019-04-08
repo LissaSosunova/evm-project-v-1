@@ -17,7 +17,28 @@
 
     <div class="login-form">
       <div>
-        <div>Unique username: </div>
+        <!-- Name field -->
+        <div>
+            <div class="input-name">Your name: </div>
+            <input type="text"
+                  class="input-login"
+                  id="nameOfUser"
+                  name="nameOfUser"
+                  [(ngModel)]="nameOfUser"
+                  #name="ngModel"
+                  required
+                  appApplyErrMsg
+                  [ngClass]="{'error-input': name.errors?.required && name.touched}"
+                  >
+          </div>
+          <app-err-msg [inputModel]="name"
+                        inputId="nameOfUser"
+                        [form]="registrationForm"
+                        requiredMsg="Name is required."
+                        >
+          </app-err-msg>
+           <!-- Username field -->
+        <div class="input-name">Unique username as ID: </div>
         <input type="text"
               class="input-login"
               id="login"
@@ -36,7 +57,8 @@
                     >
       </app-err-msg>
       <div>
-        <div>Your e-mail: </div>
+         <!-- E-mail field -->
+        <div class="input-name">Your e-mail: </div>
         <input type="email"
              class="input-login"
              id="mail"
@@ -54,7 +76,8 @@
                     >
       </app-err-msg>
       <div>
-        <div>Create password: </div>
+         <!-- Passwords fields -->
+        <div class="input-name">Create password: </div>
         <input type="password"
              class="input-login"
              id="pass"
@@ -72,7 +95,7 @@
                     >
       </app-err-msg>
       <div>
-        <div>Confirm password: </div>
+        <div class="input-name">Confirm password: </div>
         <input type="password"
               class="input-login"
               id="passConf"
@@ -93,7 +116,7 @@
       <div class="error-passwords">{{errorMes}}</div>
       <div class="login-btns-conteiner">
         <input type="submit" 
-              (click)="setRegConf(username, email, password, passConf)" 
+              (click)="setRegConf(nameOfUser, username, email, password, passConf)" 
               class="btn-submit-login"  
               value="create"
               [disabled]="!isFormValid"
