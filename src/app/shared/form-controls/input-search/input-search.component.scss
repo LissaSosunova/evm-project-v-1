@@ -1,0 +1,40 @@
+
+.input-search {
+  width: 100%;
+}
+
+.input-field {
+    width: 150px;
+    padding: 10px 25px 10px 10px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    border-radius: 18px;
+    border: 1px solid #14200B;
+  }
+
+.input-icon-wrapper.disabled {
+  cursor: default;
+}
+
+.input-icon-wrapper {
+    cursor: pointer;
+    display: inline-block;
+    transform: translate(-28px, 8px);
+}
+
+.disabled {
+    cursor: default;
+    opacity: 0.5;
+    background: url('/assets/icons/ride-editor/x.svg') no-repeat right center;
+    background-position-y: 5px;
+}
+
+.search-disabled {
+    background: url('/assets/icons/search-disabled.svg') no-repeat !important;
+    opacity: 1;
+    cursor: default;
+    background-size: 25px 25px;
+    width: 25px !important;
+    height: 25px !important;
+    right: 0; 
+}

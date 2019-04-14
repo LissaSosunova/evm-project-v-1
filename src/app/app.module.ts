@@ -30,6 +30,7 @@ import { ErrMsgComponent } from './components/err-msg/err-msg.component';
 import { NewEventLeavePopupComponent } from './components/new-event-leave-popup/new-event-leave-popup.component';
 import { ContenteditableModelDirective } from './directives/contenteditable-model.directive';
 import { MultiLineInputComponent } from './components/multi-line-input/multi-line-input.component';
+import { InputSearchComponent} from './shared/form-controls/input-search/input-search.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { MultiLineInputComponent } from './components/multi-line-input/multi-lin
     ErrMsgComponent,
     NewEventLeavePopupComponent,
     ContenteditableModelDirective,
-    MultiLineInputComponent
+    MultiLineInputComponent,
+    InputSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -70,4 +72,5 @@ import { MultiLineInputComponent } from './components/multi-line-input/multi-lin
     TransferService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
