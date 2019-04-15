@@ -94,7 +94,7 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private init(): void {
     const user = this.transferService.dataGet('userData');
-    this.user = Object.assign(user);
+    this.user = Object.assign({}, user);
     this.transferService.setDataObs(this.test);
     this.currTab = this.route.snapshot.queryParams.currTab;
     for (const o of this.user.contacts) {

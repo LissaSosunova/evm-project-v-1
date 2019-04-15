@@ -126,6 +126,10 @@
   }
 }
 
+.input-container {
+  width: 180px;
+}
+
 .error-login {
   color: map-get($error-mes, 'red');
   text-align: center;

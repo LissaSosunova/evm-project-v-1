@@ -139,3 +139,7 @@ input.disabled:hover, button.disabled:hover, input.disabled, button.disabled {
   color: map-get($error-mes, 'red');
   text-align: center;
 }
+
+.input-container {
+  width: 180px;
+}

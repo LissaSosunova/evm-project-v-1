@@ -23,9 +23,11 @@ export abstract class InputAbstract implements ControlValueAccessor, OnDestroy {
 
   @Input() public control?: FormControl;
 
-  @Input() public placeholder?: string;
+  @Input() public placeholder?: string = '';
   // for placeholder asterisk, will be hidden if true
   @Input() public noAsterisk?: boolean = false;
+
+  @Input() public requiredFieldError: string = 'Required field';
 
   @Input() public debounceTime?: number = 500;
 
