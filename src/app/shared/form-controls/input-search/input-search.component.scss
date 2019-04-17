@@ -1,0 +1,38 @@
+.input-search {
+  width: 100%;
+  position: relative;
+}
+
+.input-field {
+  padding: 10px 25px 10px 10px;
+  margin-bottom: 15px;
+  margin-top: 10px;
+  border-radius: 18px;
+  border: 1px solid #14200B;
+  width: 100%;
+  box-sizing: border-box;
+  display: inline-block;
+}
+
+.input-icon-wrapper.disabled {
+  cursor: default;
+}
+
+.input-icon-wrapper {
+  cursor: pointer;
+  position: absolute;
+  right: 5px;
+  top: 16px;
+}
+
+.disabled {
+  cursor: default;
+  opacity: 0.5;
+  color: grey;  
+}
+
+.search-disabled {
+  opacity: 0.5;
+  cursor: default;
+  color: grey; 
+}

@@ -1,0 +1,27 @@
+<div class="input-search">
+
+    <input class="input-field"
+      #searchInput type="text"
+      matInput
+      [placeholder]="placeholder" 
+      [formControl]="control"
+      (change)="$event.stopPropagation()" 
+      (input)="onChangeInput($event.target.value)"    
+      >
+
+      <div class="input-icon-wrapper"
+      [ngClass]="{'disabled': disabled}"
+      >
+        <i class="material-icons search-icon" [ngClass]="{'search-disabled': disabled}"
+          *ngIf="!isValue"
+          >
+          search
+        </i>
+        <i class="material-icons" [ngClass]="{'disabled': disabled}"
+          *ngIf="isValue"
+          (click)="onReset($event)"
+          > clear
+        </i>
+    </div>
+
+</div>

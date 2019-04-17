@@ -8,48 +8,30 @@
   <form class=""
         name="loginForm"
         #loginForm="ngForm"
-        novalidate>
+        >
 
     <div class="login-form">
-      <div>
+      <div class="input-container">
         <div class="input-name">Username or e-mail: </div>
-        <input  type="text"
-                 class="input-login"
-                 id="login"
-                 name="user"
-                 [(ngModel)]="username"
-                 #userInput="ngModel"
-                 required
-                 appApplyErrMsg
-                 [ngClass]="{'error-input': userInput.errors?.required && userInput.touched}"
-                 >
+        <app-input-text
+        name="userInput"
+        [(ngModel)]="username"
+        #userInput="ngModel"
+        [required]="true"
+        [requiredFieldError]="'Username is required'"
+        >
+        </app-input-text>
       </div>
-        <app-err-msg [inputModel]="userInput"
-                    inputId="login"
-                    [form]="loginForm"
-                    requiredMsg="Username is required."
-                    >
-        </app-err-msg>
-      <div>
+      <div class="input-container">
         <div class="input-name">Password: </div>
-        <input type="password"
-                class="input-login"
-                 id="password"
-                 name="password"
-                 [(ngModel)]="password"
-                 #passwordInput="ngModel"
-                 required
-                 appApplyErrMsg
-                 [ngClass]="{'error-input': passwordInput.errors?.required && passwordInput.touched}"
-                 >
-      </div>
-        <app-err-msg [inputModel]="passwordInput"
-                    inputId="password"
-                    [form]="loginForm"
-                    requiredMsg="Password is required."
-                    >
-        </app-err-msg>       
-      
+          <app-input-password name="passwordInput"
+                              [(ngModel)]="password"
+                              [required]="true"
+                              #passwordInput="ngModel"
+                              [requiredFieldError]="'Password is required'"
+                              >
+          </app-input-password>
+        </div>
       <div class="login-btns-conteiner">
         <input type="submit" 
               (click)="setAuthConf(username, password)" 
@@ -62,7 +44,6 @@
     <div class="error-login">
       {{errorMessage}}
     </div>
-
   </form>
   <div class="login-content">
     <div class="spacer-loginpage"></div>

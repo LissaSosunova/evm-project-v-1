@@ -32,10 +32,22 @@ class FindContact {
       query: {$or:[{username: {$regex: query}}, {email: {$regex: query}}, {name: {$regex: query}}]},
       elementMatch: {avatar: 1, username: 1, email: 1,name: 1}
     };
+    const params = {
+      query: {$or: [
+        {username: auth.username},
+        {email: auth.username}
+      ]},
+      elementMatch: {contacts: 1}
+    };
     try {
+      const userDb = await datareader(User, params, 'findElementMatch')
       const result = await datareader(User, queryParam, 'findElementMatch');
+      // убираем из результата поиска те контакты, которые уже есть в списке друзей у пользователья, который шлёт запрос
+      const user = result.filter(user => {
+        return userDb[0].contacts.every(contact => contact.id !== user.username)
+      });
       let resp = [];
-      result.forEach(item => {
+      user.forEach(item => {
         if(query != "" && auth.username !== item.username){
           contact = new FindContact(item);
           resp.push(contact);

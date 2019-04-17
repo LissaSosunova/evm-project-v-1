@@ -1,0 +1,20 @@
+<div class="input">
+  <input class="input-field"
+        type="text"
+        [formControl]="control"
+        [placeholder]="placeholder"
+        [required]="required"
+        [ngClass]="{'error-input': (control.invalid
+        || control.hasError('required')
+        || !!control.errors?.minlength?.requiredLength
+        || !!control.errors?.maxlength?.requiredLength)
+        && control.touched
+        }"
+        > 
+  <div class="error" *ngIf="control.hasError('required') && control.touched">
+    {{requiredFieldError}}
+  </div>
+  <div class="error" *ngIf="control.hasError('email')  && control.touched">
+    {{invalidEmailError}}
+  </div>
+</div>

@@ -5,7 +5,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatTooltipModule } from '@angular/material';
+import { MatTooltipModule, MatButtonModule, MatCheckboxModule } from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
 import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
 import { TransferService } from './services/transfer.service';
 import { FilterPipe } from './pipes/filter.pipe';
@@ -30,6 +31,10 @@ import { ErrMsgComponent } from './components/err-msg/err-msg.component';
 import { NewEventLeavePopupComponent } from './components/new-event-leave-popup/new-event-leave-popup.component';
 import { ContenteditableModelDirective } from './directives/contenteditable-model.directive';
 import { MultiLineInputComponent } from './components/multi-line-input/multi-line-input.component';
+import { InputSearchComponent} from './shared/form-controls/input-search/input-search.component';
+import { InputTextComponent } from './shared/form-controls/input-text/input-text.component';
+import { InputPasswordComponent } from './shared/form-controls/input-password/input-password.component';
+import { InputEmailComponent } from './shared/form-controls/input-email/input-email.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +59,11 @@ import { MultiLineInputComponent } from './components/multi-line-input/multi-lin
     ErrMsgComponent,
     NewEventLeavePopupComponent,
     ContenteditableModelDirective,
-    MultiLineInputComponent
+    MultiLineInputComponent,
+    InputSearchComponent,
+    InputTextComponent,
+    InputPasswordComponent,
+    InputEmailComponent
   ],
   imports: [
     BrowserModule,
@@ -63,11 +72,15 @@ import { MultiLineInputComponent } from './components/multi-line-input/multi-lin
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatInputModule
   ],
   providers: [
     GetDataUserResolverService,
     TransferService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

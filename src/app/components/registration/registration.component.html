@@ -13,106 +13,64 @@
   <form class=""
         name="registrationForm"
         #registrationForm="ngForm"
-        novalidate>
+        >
 
     <div class="login-form">
-      <div>
         <!-- Name field -->
-        <div>
+        <div class="input-container">
             <div class="input-name">Your name: </div>
-            <input type="text"
-                  class="input-login"
-                  id="nameOfUser"
-                  name="nameOfUser"
-                  [(ngModel)]="nameOfUser"
-                  #name="ngModel"
-                  required
-                  appApplyErrMsg
-                  [ngClass]="{'error-input': name.errors?.required && name.touched}"
-                  >
-          </div>
-          <app-err-msg [inputModel]="name"
-                        inputId="nameOfUser"
-                        [form]="registrationForm"
-                        requiredMsg="Name is required."
-                        >
-          </app-err-msg>
+            <app-input-text
+              name="nameUser"
+              [(ngModel)]="nameOfUser"
+              #nameUser="ngModel"
+              [required]="true"
+              [requiredFieldError]="'Name is required'"
+            >
+            </app-input-text>
+        </div>    
            <!-- Username field -->
+        <div class="input-container">   
         <div class="input-name">Unique username as ID: </div>
-        <input type="text"
-              class="input-login"
-              id="login"
+        <app-input-text
               name="user"
               [(ngModel)]="username"
-              #userInput="ngModel"
-              required
-              appApplyErrMsg
-              [ngClass]="{'error-input': userInput.errors?.required && userInput.touched}"
-              >
+              #user="ngModel"
+              [required]="true"
+              [requiredFieldError]="'Username is required'"
+            >
+        </app-input-text>
       </div>
-      <app-err-msg [inputModel]="userInput"
-                    inputId="login"
-                    [form]="registrationForm"
-                    requiredMsg="Username is required."
-                    >
-      </app-err-msg>
-      <div>
+      <div class="input-container">
          <!-- E-mail field -->
         <div class="input-name">Your e-mail: </div>
-        <input type="email"
-             class="input-login"
-             id="mail"
-             name="email"
-             [(ngModel)]="email"
-             #emailInput="ngModel"
-             required
-             appApplyErrMsg
-            [ngClass]="{'error-input': emailInput.errors?.required && emailInput.touched}">
+        <app-input-email [(ngModel)]="email"
+                        #emailInput="ngModel"
+                        name="emailInput"
+                        [required]="true"
+                        [requiredFieldError]="'E-mail is required'">
+        </app-input-email>
       </div>
-      <app-err-msg [inputModel]="emailInput"
-                    inputId="mail"
-                    [form]="registrationForm"
-                    requiredMsg="Email is required."
-                    >
-      </app-err-msg>
-      <div>
+      <div class="input-container">
          <!-- Passwords fields -->
         <div class="input-name">Create password: </div>
-        <input type="password"
-             class="input-login"
-             id="pass"
-             name="password"
-             [(ngModel)]="password"
-             #passwordInput="ngModel"
-             required
-             appApplyErrMsg
-             [ngClass]="{'error-input': passwordInput.errors?.required && passwordInput.touched}">
+        <app-input-password name="pass"
+                            #pass="ngModel"
+                            [(ngModel)]="password"
+                            [required]="true"
+                            [requiredFieldError]="'Password is required'"
+        >
+        </app-input-password>
       </div>
-      <app-err-msg [inputModel]="passwordInput"
-                    inputId="pass"
-                    [form]="registrationForm"
-                    requiredMsg="Password is required."
-                    >
-      </app-err-msg>
-      <div>
+      <div class="input-container">
         <div class="input-name">Confirm password: </div>
-        <input type="password"
-              class="input-login"
-              id="passConf"
-              name="passwordConf"
-              [(ngModel)]="passConf"
-              #passwordConfInput="ngModel"
-             required
-             appApplyErrMsg
-             [ngClass]="{'error-input': passwordConfInput.errors?.required && passwordConfInput.touched}"
-              >
+        <app-input-password name="confPass"
+                          #confPass="ngModel"
+                          [(ngModel)]="passConf"
+                          [required]="true"
+                          [requiredFieldError]="'Confirm password is required'"
+        >
+        </app-input-password>
       </div>
-      <app-err-msg [inputModel]="passwordConfInput"
-                    inputId="passConf"
-                    [form]="registrationForm"
-                    requiredMsg="Password is required."
-                    >
-      </app-err-msg>
       <div class="error-passwords">{{errorMes}}</div>
       <div class="login-btns-conteiner">
         <input type="submit" 
@@ -122,7 +80,7 @@
               [disabled]="!isFormValid"
               [ngClass]="{'disabled': !isFormValid}">
         <input type="submit" (click)="clear($event)" class="btn-clear-login margin-btn-login"  value="clear">
-      </div> 
-    </div>
+      </div>
+    </div>   
   </form>
 </div>

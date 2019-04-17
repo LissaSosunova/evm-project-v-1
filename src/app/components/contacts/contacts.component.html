@@ -49,14 +49,11 @@
       </ul>
     </div>
     <div class="contactList-user2 tab" id="add" *ngIf="currTab === 'add'">
-      <div>
+      <div class="input-search-container">
         <form class ="search">
-          <input class="input-search"
-                 type="text"
-                 placeholder="Search contact"
-                 name="search"
-                 [formControl]="searchControl"
-                >
+          <app-input-search [placeholder]="'Search contact'"
+                            [control]="searchControl">
+          </app-input-search>      
         </form>
       </div>
       <div class="contactList-user2">
