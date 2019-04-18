@@ -50,7 +50,10 @@ const routes: Routes = [
       },
       {
         path: 'contacts',
-        component: ContactsComponent
+        component: ContactsComponent,
+        resolve: {
+          userData: GetDataUserResolverService
+        }
       },
       {
         path: 'chats',

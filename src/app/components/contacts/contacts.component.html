@@ -1,53 +1,126 @@
-<div class="content-rows">
+<div class="content-rows-contacts row">
+  <!-- Menu -->
   <div id="menu-switcher" class="tabs-nav">
-    <span [ngClass]="{'active': currTab === 'contacts'}"><a (click)="switcher('contacts')">Contact list</a></span>
-    <span [ngClass]="{'active': currTab === 'avaiting'}"><a (click)="switcher('avaiting')">Awaiting for confirmation</a></span>
-    <span [ngClass]="{'active': currTab === 'requested'}"><a (click)="switcher('requested')">Requested</a></span>
-    <span [ngClass]="{'active': currTab === 'add'}"><a (click)="switcher('add')">Add new contact</a></span>
+    <div class="row row-nav">
+        <div class="col-xs-6
+                    col-sm-6
+                    col-md-3
+                    col-lg-3
+                    tab-expert-class
+                    border-right"
+        [ngClass]="{'not-active-tab': currTab !== 'contacts',  'active': currTab === 'contacts'}"
+                    (click)="switcher('contacts')"
+                    id="contacts">
+                    <span>
+                      Contact list
+                    </span>
+                  </div>
+        <div class="col-xs-6
+                    col-sm-6
+                    col-md-3
+                    col-lg-3
+                    tab-expert-class
+                    border-right"
+              [ngClass]="{'not-active-tab': currTab !== 'avaiting',  'active': currTab === 'avaiting'}"
+                    (click)="switcher('avaiting')">
+                    <span>
+                        Awaiting for confirmation
+                    </span>
+      </div>
+        <div class="col-xs-6
+                    col-sm-6
+                    col-md-3
+                    col-lg-3
+                    tab-expert-class
+                    border-right"
+              [ngClass]="{'not-active-tab': currTab !== 'requested',  'active': currTab === 'requested'}"
+                    (click)="switcher('requested')">
+                    <span>
+                        Requested
+                    </span>
+      </div>
+        <div class="col-xs-6
+                    col-sm-6
+                    col-md-3
+                    col-lg-3
+                    tab-expert-class"
+              [ngClass]="{'not-active-tab': currTab !== 'add',  'active': currTab === 'add'}"
+                    (click)="switcher('add')">
+                    <span>
+                        Add new contact
+                    </span>
+      </div>
+    </div>
   </div>
-  <div class="div-with-all-contacts">
-    <div class="contactList-user1 tab is-vis-tab" id="contacts" *ngIf="currTab === 'contacts'">
-      <ul class="contacts-ul">
-        <li *ngFor="let item of contactsConfirmed" class="direction-row">
-          <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
-          <div class="col-xs-4">
-            <button class="m-btn confirm">
-              <i class="material-icons">visibility</i>
-            </button>
-            <button class="m-btn cancel">
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-        </li>
-      </ul>
+  <!-- Exist contacts -->
+  <div class="div-with-all-contacts col-xs-12
+              col-sm-12
+              col-md-12
+              col-lg-12">
+    <div class="contactList-user1 tab is-vis-tab col-xs-12" id="contacts" *ngIf="currTab === 'contacts'">
+      <section *ngIf="!isContactsConfirmed">
+        <div class="empty-data">You don't have any contact</div>
+      </section>
+      <section *ngIf="isContactsConfirmed">
+          <ul class="contacts-ul">
+          <li *ngFor="let item of contactsConfirmed" class="direction-row">
+            <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
+            <div class="col-xs-4 btn-align">
+              <button class="m-btn confirm"
+                      (click)="onUserInfoPopupOpen()">
+                <i class="material-icons">visibility</i>
+              </button>
+              <button class="m-btn cancel"
+                      (click)="onConfirmActionPopupOpen('delete contact')">
+                <i class="material-icons">close</i>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </section>
     </div>
+<!-- Contacts awaiting for confirmation -->
     <div class="contactList-user1 tab" id="avaiting" *ngIf="currTab === 'avaiting'">
-      <ul class="contacts-ul">
-        <li *ngFor="let item of contactsAwaiting" class="direction-row">
-          <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
-          <div class="col-xs-4">
-            <button class="m-btn confirm" (click)="confNewUser(item.id)">
-              <i class="material-icons">check</i>
-            </button>
-            <button class="m-btn cancel">
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-        </li>
-      </ul>
+        <section *ngIf="!isContactsAwaiting">
+          <div class="empty-data">You don't have any requst from users</div>
+        </section>
+        <section *ngIf="isContactsAwaiting">
+            <ul class="contacts-ul">
+                <li *ngFor="let item of contactsAwaiting" class="direction-row">          
+                  <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
+                  <div class="col-xs-4 btn-align">
+                    <button class="m-btn confirm" (click)="confNewUser(item.id)">
+                      <i class="material-icons">check</i>
+                    </button>
+                    <button class="m-btn cancel"
+                            (click)="onConfirmActionPopupOpen('reject request')">
+                      <i class="material-icons">close</i>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+        </section>
     </div>
+<!-- Requested contacts -->
     <div class="contactList-user1 tab" id="requested" *ngIf="currTab === 'requested'">
-      <ul class="contacts-ul">
-        <li *ngFor="let item of contactsRequested" class="direction-row">
-          <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
-          <div class="col-xs-4">
-            <button class="m-btn cancel">
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-        </li>
-      </ul>
+        <section *ngIf="!iscontactsRequested">
+          <div  class="empty-data">You din't send request to any contact</div>
+        </section>
+        <section *ngIf="iscontactsRequested">
+            <ul class="contacts-ul">
+                <li *ngFor="let item of contactsRequested" class="direction-row">
+                  <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
+                  <div class="col-xs-4 btn-align">
+                    <button class="m-btn cancel"
+                            (click)="onConfirmActionPopupOpen('delete request')">
+                      <i class="material-icons">close</i>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+        </section>
     </div>
+<!-- Search new contacts -->
     <div class="contactList-user2 tab" id="add" *ngIf="currTab === 'add'">
       <div class="input-search-container">
         <form class ="search">
@@ -59,8 +132,8 @@
       <div class="contactList-user2">
         <ul class="contacts-ul">
           <li *ngFor="let item of querySearch" class="direction-row">
-            <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
-            <div class="col-xs-4">
+            <div class="col-xs-8"><img src="{{item.avatar.url}}">{{item.name}}</div>
+            <div class="col-xs-4 btn-align">
               <button class="m-btn cancel" (click)="addNewUser(item.id)">
                 <i class="material-icons">check</i>
               </button>
@@ -70,6 +143,8 @@
       </div>
     </div>
   </div>
-  </div>
+</div>
+<app-user-info-popup #userPopup></app-user-info-popup>
+<app-popup-details #popupDetails actionName={{actionName}}></app-popup-details>
 
 

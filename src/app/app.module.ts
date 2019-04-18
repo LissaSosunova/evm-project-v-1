@@ -35,6 +35,7 @@ import { InputSearchComponent} from './shared/form-controls/input-search/input-s
 import { InputTextComponent } from './shared/form-controls/input-text/input-text.component';
 import { InputPasswordComponent } from './shared/form-controls/input-password/input-password.component';
 import { InputEmailComponent } from './shared/form-controls/input-email/input-email.component';
+import { PopupDetailsComponent } from './components/contacts/popup-details/popup-details.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { InputEmailComponent } from './shared/form-controls/input-email/input-em
     InputSearchComponent,
     InputTextComponent,
     InputPasswordComponent,
-    InputEmailComponent
+    InputEmailComponent,
+    PopupDetailsComponent
   ],
   imports: [
     BrowserModule,

@@ -51,7 +51,7 @@
             "type": "get",
             "headers": "authorization",
             "requestObject": {
-                
+
             },
             "responseObject": {
                 "_id": "String",
@@ -99,7 +99,7 @@
                 "type": "String",
                 "message": "String",
                 "status":  "Boolean"
-            } 
+            }
         },
         {
             "endpoint": "login",
@@ -109,7 +109,7 @@
                 "password": "String"
             },
             "responseObjectSuccess": {
-                "success": "Boolean", 
+                "success": "Boolean",
                 "access_token": "String",
                 "token_key": "String"
             },
@@ -117,7 +117,7 @@
                 "message": "String"
             },
             "sendStatusErr": "401"
-        }, 
+        },
         {
             "endpoint": "deleteContact",
             "type": "post",
@@ -130,7 +130,7 @@
 
             },
             "sendStatus": "200"
-        }, 
+        },
         {
             "endpoint": "deleteChat",
             "type": "post",
@@ -159,13 +159,13 @@
             "responseObjectError": {
                 "name": "String"
             }
-        }, 
+        },
         {
             "endpoint": "user",
             "type": "get",
             "headers": "authorization",
             "requestObject": {
-    
+
             },
             "responseObject": {
                 "username": "String",
@@ -227,7 +227,7 @@
                 "type": "String",
                 "message": "String",
                 "status":  "Boolean"
-            } 
+            }
         },
         {
             "endpoint": "find_user",
@@ -256,7 +256,18 @@
                 "query": "String"
             },
             "responseObject": {
-
+              "username": "String",
+              "email": "String",
+              "name": "String",
+              "phone": "String",
+              "contacts": "Contacts[]",
+              "events": "Events[]",
+              "chats": "Chats[]",
+              "avatar": {
+                "owner": "String",
+                "url": "String"
+              },
+              "notifications": "Notifications[]"
             },
             "sendStatus": "200"
         },
@@ -273,7 +284,7 @@
             "responseObject": {
 
             },
-            "sendStatus": "200" 
+            "sendStatus": "200"
         },
         {
             "endpoint": "confirm_user",
@@ -347,5 +358,5 @@
             }
         }
     ]
-    
+
 }
