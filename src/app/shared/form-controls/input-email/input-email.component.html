@@ -6,8 +6,7 @@
         [required]="required"
         [ngClass]="{'error-input': (control.invalid
         || control.hasError('required')
-        || !!control.errors?.minlength?.requiredLength
-        || !!control.errors?.maxlength?.requiredLength)
+        || control.hasError('email'))
         && control.touched
         }"
         > 

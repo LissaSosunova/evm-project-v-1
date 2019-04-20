@@ -90,11 +90,10 @@ export abstract class InputAbstract implements ControlValueAccessor, OnDestroy {
   }
 
   writeValue(val: string): void {
-    if (val) {
+    if (val !== undefined) {
         this.control.setValue(val);
     }
   }
-
 }
 
 export function MakeProvider(type: any) {

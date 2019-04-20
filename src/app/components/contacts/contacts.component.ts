@@ -2,12 +2,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import { FormControl } from '@angular/forms';
-import { Subscription, observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
 import { UserInfoPopupComponent } from '../user-info-popup/user-info-popup.component';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { PopupDetailsComponent } from './popup-details/popup-details.component';
+import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 
 @Component({
   selector: 'app-contacts',
@@ -16,9 +17,7 @@ import { PopupDetailsComponent } from './popup-details/popup-details.component';
 })
 
 export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('userPopup') private userPopup: UserInfoPopupComponent;
-  @ViewChild('popupDetails') private confirmAction: PopupDetailsComponent;
-  private searchSubscription: Subscription;
+
   public actionName: string;
   public isOpened: boolean;
   public contactsAwaiting: Array<types.Contact> = [];
@@ -35,10 +34,16 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   public test: String = 'This is test data';
   public user: types.User = {} as types.User;
 
+  @ViewChild('userPopup') private userPopup: UserInfoPopupComponent;
+  @ViewChild('popupDetails') private confirmAction: PopupDetailsComponent;
+
+  private unsubscribe$: Subject<void> = new Subject();
+
   constructor(private transferService: TransferService,
               private route: ActivatedRoute,
               private router: Router,
-              private data: DataService) {
+              private data: DataService,
+              private toastService: ToastService) {
 
             }
 
@@ -52,7 +57,8 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.searchSubscription.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
     this.userPopup.onClose();
     this.confirmAction.onClose();
   }
@@ -62,7 +68,7 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.query = {
       query: query
     };
-    const sub = this.data.addUser(this.query).subscribe(
+    this.data.addUser(this.query).subscribe(
       data => {
         for(let i =0; i < this.querySearch.length; i++){
           if(this.querySearch[i].id == this.query.query){
@@ -73,7 +79,6 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.transferService.dataSet({name: 'userData', data: this.user});
         this.initSortContactLists();
         console.log(this.user);
-        sub.unsubscribe();
       }
     );
   }
@@ -82,13 +87,13 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.query = {
       query: query
     };
-    const sub = this.data.confUser(this.query).subscribe(
+    this.data.confUser(this.query).subscribe(
       data => {
         this.user = Object.assign({}, data);
         this.transferService.dataSet({name: 'userData', data: this.user});
         this.initSortContactLists();
+        this.toastService.openToastSuccess('Confirmed!');
         console.log(this.user);
-        sub.unsubscribe();
       }
     );
   }
@@ -127,8 +132,8 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private initSearchForm(): void {
     this.searchControl = new FormControl();
-    this.searchSubscription = this.searchControl.valueChanges
-      .pipe(debounceTime(500), distinctUntilChanged())
+    this.searchControl.valueChanges
+      .pipe(debounceTime(500), distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe(query => {
         if (query) {
           this.setSearch(query);
@@ -150,10 +155,9 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.query = {
       query: query
     };
-    const sub = this.data.findUser(this.query).subscribe(
+    this.data.findUser(this.query).subscribe(
       data => {
         this.querySearch = data;
-        sub.unsubscribe();
       }
     );
   }

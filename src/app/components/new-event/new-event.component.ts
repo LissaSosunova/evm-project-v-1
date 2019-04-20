@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { NewEventLeavePopupComponent } from '../new-event-leave-popup/new-event-leave-popup.component';
 import { types } from 'src/app/types/types';
 import { Observable } from 'rxjs';
+import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 
 
 @Component({
@@ -16,13 +17,25 @@ export class NewEventComponent implements OnInit, OnDestroy {
   // При сохранении ивента в случае успешного ответа от сервера ставим false
   @ViewChild('eventLeavePopup') public eventLeavePopup: NewEventLeavePopupComponent;
 
-  constructor() { }
+  constructor(private toastService: ToastService) { }
 
   ngOnInit() {
   }
 
   ngOnDestroy () {
     this.eventLeavePopup.onClose();
+  }
+
+  public openToastSuccess(): void {
+    this.toastService.openToastSuccess('test success');
+  }
+
+  public openToastFail(): void {
+    this.toastService.openToastFail('test fail');
+  }
+
+  public openToastWarning(): void {
+    this.toastService.openToastWarning('test warning');
   }
 
 }

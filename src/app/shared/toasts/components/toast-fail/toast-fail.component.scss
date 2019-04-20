@@ -1,0 +1,7 @@
+@import '../../../../../scss/variables';
+
+.toast-fail {
+    background-color: map-get($error-mes, 'red');
+    color: white;
+    padding: 16px 16px;
+}
