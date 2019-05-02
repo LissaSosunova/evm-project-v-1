@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import {
+  MatSnackBar,
+  MatSnackBarConfig,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition, } from '@angular/material';
 import { TransferService } from 'src/app/services/transfer.service';
 import { ToastSuccessComponent } from '../components/toast-succes/toast-success.component';
 import { ToastFailComponent } from '../components/toast-fail/toast-fail.component';
@@ -9,23 +13,40 @@ import { ToastWarningComponent } from '../components/toast-warning/toast-warning
   providedIn: 'root'
 })
 export class ToastService {
-
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  duration: number = 3000;
+  message: string;
   constructor(private snackBar: MatSnackBar,
               private transferService: TransferService) { }
 
-  public openToastFail(message: string, duration: number = 3000): void {
+  public openToastFail(message: string): void {
     this.transferService.dataSet({name: 'toastMessage', data: message});
-    this.snackBar.openFromComponent(ToastFailComponent, { duration: duration, panelClass: ['toast-box'] });
+    const config = new MatSnackBarConfig();
+    config.verticalPosition = this.verticalPosition;
+    config.horizontalPosition = this.horizontalPosition;
+    config.duration = this.duration;
+    config.panelClass = ['toast-box'];
+    this.snackBar.openFromComponent(ToastFailComponent, config);
   }
 
-  public openToastSuccess(message: string, duration: number = 3000): void {
+  public openToastSuccess(message: string): void {
+    const config = new MatSnackBarConfig();
+    config.verticalPosition = this.verticalPosition;
+    config.horizontalPosition = this.horizontalPosition;
+    config.duration = this.duration;
+    config.panelClass = ['toast-box'];
     this.transferService.dataSet({name: 'toastMessage', data: message});
-    this.snackBar.openFromComponent(ToastSuccessComponent, { duration: duration, panelClass: ['toast-box'] });
+    this.snackBar.openFromComponent(ToastSuccessComponent, config);
   }
 
-  public openToastWarning(message: string, duration: number = 3000): void {
+  public openToastWarning(message: string): void {
+    const config = new MatSnackBarConfig();
+    config.verticalPosition = this.verticalPosition;
+    config.horizontalPosition = this.horizontalPosition;
+    config.duration = this.duration;
+    config.panelClass = ['toast-box'];
     this.transferService.dataSet({name: 'toastMessage', data: message});
-    this.snackBar.openFromComponent(ToastWarningComponent, { duration: duration, panelClass: ['toast-box'] });
+    this.snackBar.openFromComponent(ToastWarningComponent, config);
   }
-
 }

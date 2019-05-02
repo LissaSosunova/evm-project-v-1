@@ -78,7 +78,6 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.user = Object.assign({}, data);
         this.transferService.dataSet({name: 'userData', data: this.user});
         this.initSortContactLists();
-        console.log(this.user);
       }
     );
   }
@@ -93,7 +92,6 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.transferService.dataSet({name: 'userData', data: this.user});
         this.initSortContactLists();
         this.toastService.openToastSuccess('Confirmed!');
-        console.log(this.user);
       }
     );
   }

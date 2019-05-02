@@ -6,11 +6,6 @@ body {
 }
 
 #container {
-//  display: grid;
-//  grid-template-columns: 70px auto;
-//  height: 100%;
-
-
   #content {
     padding: 30px 50px 30px 80px;
   }
@@ -21,6 +16,9 @@ input, button {
 }
 
 .mat-snack-bar-container {
-  width: auto !important;
-  margin: 8px auto !important;
+  position: absolute;
+  top: -20px;
+  left: 30%;
+  display: flex;
+  justify-content: center;
 }
