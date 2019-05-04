@@ -58,6 +58,7 @@ private showErrorMessages(inputValueLength: number, maxLength: number | undefine
 
 private subscribeForShowingErrorMessages(): void {
   const subscription: Subscription = this.control.valueChanges.subscribe(value => {
+    value = value || '';
     const inputValueLength: number = value.length;
     this.showErrorMessages(inputValueLength, this.maxLength);
   });

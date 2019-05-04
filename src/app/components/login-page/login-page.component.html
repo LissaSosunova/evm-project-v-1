@@ -37,8 +37,8 @@
               (click)="setAuthConf(username, password)" 
               class="btn-submit-login"  
               value="enter"
-              [disabled]="!isFormValid"
-              [ngClass]="{'disabled': !isFormValid}">
+              [disabled]="loginForm.invalid"
+              [ngClass]="{'disabled': loginForm.invalid}">
       </div>
     </div>
     <div class="error-login">
@@ -51,5 +51,4 @@
   <div class="login-content">
     <a routerLink="../registration" title="Create new accaunt" class="text-registration"><span>Registration new member</span></a>
   </div>
-<router-outlet></router-outlet>
 </div>

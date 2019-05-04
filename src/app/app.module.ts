@@ -7,8 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule, MatButtonModule, MatCheckboxModule } from '@angular/material';
 import { MatInputModule } from '@angular/material/input';
-import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
-import { TransferService } from './services/transfer.service';
+import { MatSnackBarModule } from '@angular/material';
 import { FilterPipe } from './pipes/filter.pipe';
 import { PopupComponent } from './components/popup/popup.component';
 import { PageMaskComponent } from './components/page-mask/page-mask.component';
@@ -36,6 +35,9 @@ import { InputTextComponent } from './shared/form-controls/input-text/input-text
 import { InputPasswordComponent } from './shared/form-controls/input-password/input-password.component';
 import { InputEmailComponent } from './shared/form-controls/input-email/input-email.component';
 import { PopupDetailsComponent } from './components/contacts/popup-details/popup-details.component';
+import { ToastFailComponent } from './shared/toasts/components/toast-fail/toast-fail.component';
+import { ToastWarningComponent } from './shared/toasts/components/toast-warning/toast-warning.component';
+import { ToastSuccessComponent } from './shared/toasts/components/toast-succes/toast-success.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,10 @@ import { PopupDetailsComponent } from './components/contacts/popup-details/popup
     InputTextComponent,
     InputPasswordComponent,
     InputEmailComponent,
-    PopupDetailsComponent
+    PopupDetailsComponent,
+    ToastSuccessComponent,
+    ToastFailComponent,
+    ToastWarningComponent
   ],
   imports: [
     BrowserModule,
@@ -77,11 +82,15 @@ import { PopupDetailsComponent } from './components/contacts/popup-details/popup
     MatTooltipModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatInputModule
+    MatInputModule,
+    MatSnackBarModule
   ],
-  providers: [
-    GetDataUserResolverService,
-    TransferService],
+  entryComponents: [
+    ToastSuccessComponent,
+    ToastFailComponent,
+    ToastWarningComponent
+  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 

@@ -1,10 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
 import { DataService } from 'src/app/services/data.service';
 import { NgForm } from '@angular/forms';
-import { AbstractEditor } from 'src/app/models/abstract-editor';
 
 @Component({
   selector: 'app-registration',
@@ -12,7 +10,7 @@ import { AbstractEditor } from 'src/app/models/abstract-editor';
   styleUrls: ['./registration.component.scss']
 })
 
-export class RegistrationComponent extends AbstractEditor implements OnInit, AfterViewInit, OnDestroy {
+export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
   public email: string;
   public errorMes: string;
   public isFormValid: boolean;
@@ -22,32 +20,20 @@ export class RegistrationComponent extends AbstractEditor implements OnInit, Aft
   public password: string;
   public username: string;
   @ViewChild('registrationForm') public registrationForm: NgForm;
-  private formValueSub: Subscription;
-  private validationSub: Subscription;
 
-  constructor(private route: ActivatedRoute, private router: Router, private data: DataService) {
-    super();
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private data: DataService) {
+
    }
 
     ngOnInit() {
-
     }
 
     ngAfterViewInit() {
-      this.formValueSub = this.registrationForm.valueChanges
-        .subscribe(value => {
-          this.doValidate();
-        });
-      this.validationSub =  this.isValid$.subscribe(valid => {
-          setTimeout(() => {
-            this.isFormValid = valid;
-          });
-        });
     }
 
     ngOnDestroy() {
-      this.formValueSub.unsubscribe();
-      this.validationSub.unsubscribe();
     }
 
   public clear(event: MouseEvent): void {
@@ -77,13 +63,6 @@ export class RegistrationComponent extends AbstractEditor implements OnInit, Aft
         }
       }
     );
-  }
-
-  private doValidate(): void {
-    if (!this.registrationForm.valid) {
-      return this._isValid.next(false);
-    }
-    this._isValid.next(true);
   }
 
 }

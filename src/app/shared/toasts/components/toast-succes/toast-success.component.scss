@@ -1,0 +1,12 @@
+@import '../../../../../scss/variables';
+
+.toast-success {
+  display: flex;
+  background-color: map-get($bg-color, 'green');
+  color: white;
+  font-size: 15px;
+  padding: 16px 16px;
+  border-radius: 10px;
+  justify-content: center;
+  opacity: 0.6;
+}

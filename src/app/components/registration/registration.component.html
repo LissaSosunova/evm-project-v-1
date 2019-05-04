@@ -77,8 +77,8 @@
               (click)="setRegConf(nameOfUser, username, email, password, passConf)" 
               class="btn-submit-login"  
               value="create"
-              [disabled]="!isFormValid"
-              [ngClass]="{'disabled': !isFormValid}">
+              [disabled]="registrationForm.invalid"
+              [ngClass]="{'disabled': registrationForm.invalid}">
         <input type="submit" (click)="clear($event)" class="btn-clear-login margin-btn-login"  value="clear">
       </div>
     </div>   
