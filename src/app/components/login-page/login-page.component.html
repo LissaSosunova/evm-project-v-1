@@ -37,8 +37,8 @@
               (click)="setAuthConf(username, password)" 
               class="btn-submit-login"  
               value="enter"
-              [disabled]="!isFormValid"
-              [ngClass]="{'disabled': !isFormValid}">
+              [disabled]="loginForm.invalid"
+              [ngClass]="{'disabled': loginForm.invalid}">
       </div>
     </div>
     <div class="error-login">

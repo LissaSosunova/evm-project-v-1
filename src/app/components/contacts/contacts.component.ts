@@ -141,7 +141,6 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public onConfirmActionPopupOpen(actionName: string): void {
     this.actionName = actionName;
-    // debugger;
     this.confirmAction.open();
   }
 

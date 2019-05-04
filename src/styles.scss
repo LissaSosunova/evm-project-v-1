@@ -1,3 +1,5 @@
+@import '~@angular/cdk/overlay-prebuilt.css';
+
 body {
   margin: 0;
   background: #F2F2F2;
@@ -13,12 +15,4 @@ body {
 
 input, button {
   outline: none;
-}
-
-.mat-snack-bar-container {
-  position: absolute;
-  top: -20px;
-  left: 30%;
-  display: flex;
-  justify-content: center;
 }

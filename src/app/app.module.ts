@@ -8,8 +8,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule, MatButtonModule, MatCheckboxModule } from '@angular/material';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material';
-import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
-import { TransferService } from './services/transfer.service';
 import { FilterPipe } from './pipes/filter.pipe';
 import { PopupComponent } from './components/popup/popup.component';
 import { PageMaskComponent } from './components/page-mask/page-mask.component';
