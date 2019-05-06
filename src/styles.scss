@@ -1,4 +1,6 @@
 @import '~@angular/cdk/overlay-prebuilt.css';
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import './scss/variables';
 
 body {
   margin: 0;
@@ -15,4 +17,29 @@ body {
 
 input, button {
   outline: none;
+}
+
+.mat-snack-bar-container {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.mat-calendar-body-selected {
+  background-color: map-get($bg-color, 'green') !important;
+}
+
+.mat-ripple-element, 
+.mat-checkbox-checked.mat-primary .mat-checkbox-background,
+.mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-radio-button.mat-accent .mat-radio-inner-circle,
+.mat-form-field.mat-focused .mat-form-field-ripple {
+  background-color: map-get($bg-color, 'green') !important;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: map-get($bg-color, 'green') !important;
+}
+
+.mat-form-field.mat-focused .mat-form-field-label {
+  color: map-get($bg-color, 'green') !important;
 }

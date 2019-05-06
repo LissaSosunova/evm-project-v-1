@@ -15,6 +15,7 @@ export class FilterPipe implements PipeTransform {
     }
 
     query = query.toLowerCase();
+    value = value.filter(item => !!item[field]);
     result = value.filter(item => {
       return item[field].toLowerCase().includes(query);
     });

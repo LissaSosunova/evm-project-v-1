@@ -1,0 +1,86 @@
+.app-dropdown {
+    &__wrap {
+        position: relative;
+        width: 100%;
+        display: inline-block;
+    }
+    &__arrow, &__text, &__label {
+      // display: inline-block;
+    }
+    &__label {
+      margin-right: 6px;
+      color: #b3b3b3;
+    }
+    &__trigger {
+        cursor: pointer;
+        padding: 13px;
+        min-width: 140px;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background-color: white;
+        border-radius: 18px;
+        border: 1px solid #14200B;
+        box-sizing: border-box;
+    }
+  
+    &__text {
+      min-width: 30px;
+      margin-right: 7px;
+    }
+  
+    &__text-item {
+        margin-left: 10px;
+    }
+  
+    &__arrow {
+      position: relative;
+      
+      &-icon {
+        &.active {
+          
+          margin-bottom: 2px;
+        }
+        &.disabled {
+         
+          margin-bottom: 2px;
+        }
+      }
+    }
+  
+    &__option {
+      cursor: pointer;
+      min-height: 25px;
+      padding: 10px;
+      font-weight: 600;
+      &:hover {
+        background: rgb(247, 247, 247);
+      }
+      &.selected {
+        color: #97CB31;
+      }
+      & label {
+          cursor: pointer;
+      }
+    }
+  
+    &__panel {
+      width: 100%;
+      position: absolute;
+      background: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      max-height: 370px;
+      overflow-y: auto;
+      z-index: 5;
+      top: 50px;
+
+    }
+  }
+  
+  .disabled {
+    color: rgba(204, 204, 204, 0.8);
+  }
+  
+  .input-wrap {
+      margin: 20px 10px 10px;
+  }

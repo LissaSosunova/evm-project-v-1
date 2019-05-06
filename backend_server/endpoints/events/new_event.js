@@ -11,6 +11,7 @@ class EventData {
       this.name = event.name;
       this.status = event.status;
       this.date = event.date;
+      this.date_type = event.date_type;
       this.notification = event.notification;
     }
   }
@@ -34,6 +35,7 @@ class EventData {
     const event = new Event;
     event.name = req.body.name;
     event.status = req.body.status;
+    event.date_type = req.body.date_type;
     event.date = req.body.date;
     event.place = req.body.place;
     event.members = req.body.members;
@@ -68,7 +70,7 @@ class EventData {
             }
           })
           .then((response) => {
-          res.sendStatus(200);
+          res.json({status: 200});
           })
       }
     })

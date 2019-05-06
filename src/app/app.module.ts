@@ -1,4 +1,3 @@
-import { AboutComponent } from './components/about/about.component';
 import { AppComponent } from './app.component';
 import { ApplyErrMsgDirective } from './directives/apply-err-msg.directive';
 import { AppRoutingModule } from './app-routing.module';
@@ -9,6 +8,9 @@ import { ChatGroupsComponent } from './components/chats/chat-groups/chat-groups.
 import { ChatListComponent } from './components/chats/chat-list/chat-list.component';
 import { ChatsComponent } from './components/chats/chats.component';
 import { ChatWindowComponent } from './components/chats/chat-window/chat-window.component';
+import { MatIconModule, MatNativeDateModule, MatSelectModule } from '@angular/material';
+import { MatDatepickerModule, MatRadioModule } from '@angular/material';
+import { AboutComponent } from './components/about/about.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { ContenteditableModelDirective } from './directives/contenteditable-model.directive';
 import { ErrMsgComponent } from './components/err-msg/err-msg.component';
@@ -40,6 +42,11 @@ import { ToastFailComponent } from './shared/toasts/components/toast-fail/toast-
 import { ToastSuccessComponent } from './shared/toasts/components/toast-succes/toast-success.component';
 import { ToastWarningComponent } from './shared/toasts/components/toast-warning/toast-warning.component';
 import { UserInfoPopupComponent } from './components/user-info-popup/user-info-popup.component';
+import { InputDatepickerComponent } from './shared/form-controls/input-datepicker/input-datepicker.component';
+import { DatePipe } from '@angular/common';
+import { CheckboxDropdownComponent } from './shared/components/checkbox-dropdown/checkbox-dropdown.component';
+import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
+import { SelectComponent } from './shared/form-controls/select/select.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +82,12 @@ import { UserInfoPopupComponent } from './components/user-info-popup/user-info-p
     ToastFailComponent,
     ToastSuccessComponent,
     ToastWarningComponent,
-    UserInfoPopupComponent
+    UserInfoPopupComponent,
+    ToastWarningComponent,
+    InputDatepickerComponent,
+    CheckboxDropdownComponent,
+    ClickOutsideDirective,
+    SelectComponent
   ],
   imports: [
     BrowserModule,
@@ -88,14 +100,19 @@ import { UserInfoPopupComponent } from './components/user-info-popup/user-info-p
     MatButtonModule,
     MatCheckboxModule,
     MatInputModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDatepickerModule,
+    MatIconModule,
+    MatNativeDateModule,
+    MatRadioModule,
+    MatSelectModule
   ],
   entryComponents: [
     ToastSuccessComponent,
     ToastFailComponent,
     ToastWarningComponent
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 
