@@ -20,29 +20,33 @@
       </mat-radio-button>
     </mat-radio-group>
   </div>
-  <div class="input-container" *ngIf="event.dateType === dateTypesForTemplate.DIAPASON_OF_DATES"> 
-    <app-input-datepicker [max]="event.date.endDate"
-                          [placeholder]="'Select start date'"
-                          [floatLabel]="'auto'"
-                          [(ngModel)]="event.date.startDate"
-                          name="startDate">
-    </app-input-datepicker>
-    <app-input-datepicker [min]="event.date.startDate"
-                          [placeholder]="'Select end date'"
-                          [floatLabel]="'auto'"
-                          [(ngModel)]="event.date.endDate"
-                          name="endDate">
-    </app-input-datepicker>
+
+  <div *ngIf="event.dateType === dateTypesForTemplate.DIAPASON_OF_DATES">
+    <div class="input-container"> 
+      <app-input-datepicker [max]="event.date.endDate"
+                            [placeholder]="'Select start date'"
+                            [floatLabel]="'auto'"
+                            [(ngModel)]="event.date.startDate"
+                            name="startDate">
+      </app-input-datepicker>
+      <app-input-datepicker [min]="event.date.startDate"
+                            [placeholder]="'Select end date'"
+                            [floatLabel]="'auto'"
+                            [(ngModel)]="event.date.endDate"
+                            name="endDate">
+      </app-input-datepicker>
+    </div>
   </div>
+
   <div *ngIf="event.dateType === dateTypesForTemplate.DIAPASON_OF_DATES_WITH_TIME">
     <div class="line">
-    <div class="input-container" >
-      <app-input-datepicker
-        [placeholder]="'Select start date'"
-        [floatLabel]="'auto'"
-        [(ngModel)]="event.date.startDate"
-        name="startDate">
-      </app-input-datepicker>
+      <div class="input-container" >
+        <app-input-datepicker [max]="event.date.endDate"
+                              [placeholder]="'Select start date'"
+                              [floatLabel]="'auto'"
+                              [(ngModel)]="event.date.startDate"
+                              name="startDate">
+        </app-input-datepicker>
       </div>
       <div class="select-container">
         <app-select [options]="hours"
@@ -61,7 +65,7 @@
     </div>
     <div class="line">
       <div class="input-container">
-        <app-input-datepicker
+        <app-input-datepicker [min]="event.date.startDate"
                               [placeholder]="'Select end date'"
                               [floatLabel]="'auto'"
                               [(ngModel)]="event.date.endDate"
@@ -77,48 +81,52 @@
       </div>
       <div class="select-container">
         <app-select [options]="minutes"
-          [placeholder]="'Select minutes'"
-          [(ngModel)]="event.date.endMinutes"
-          name="endMinutes">
+                    [placeholder]="'Select minutes'"
+                    [(ngModel)]="event.date.endMinutes"
+                    name="endMinutes">
+        </app-select>
+      </div> 
+    </div>
+  </div>
+
+  <div *ngIf="event.dateType === dateTypesForTemplate.EXACT_DATE">
+    <div class="input-container">
+      <app-input-datepicker
+                            [placeholder]="'Select date'"
+                            [floatLabel]="'auto'"
+                            [(ngModel)]="event.date.startDate"
+                            name="startDate">
+      </app-input-datepicker>
+    </div>
+  </div>
+
+  <div *ngIf="event.dateType === dateTypesForTemplate.EXACT_DATE_WITH_TIME">
+    <div class="line">
+      <div class="input-container">
+        <app-input-datepicker
+                                [placeholder]="'Select date'"
+                                [floatLabel]="'auto'"
+                                [(ngModel)]="event.date.startDate"
+                                name="startDate">
+        </app-input-datepicker>
+      </div>
+      <div class="select-container">
+        <app-select [options]="hours"
+                    [placeholder]="'Select hour'"
+                    [(ngModel)]="event.date.startHours"
+                    name="startHour">
         </app-select>
       </div>
-      
+      <div class="select-container">  
+        <app-select [options]="minutes"
+                    [placeholder]="'Select minutes'"
+                    [(ngModel)]="event.date.startMinutes"
+                    name="startMinutes">
+        </app-select>
+      </div>
     </div>
   </div>
 
-  <div class="input-container" *ngIf="event.dateType === dateTypesForTemplate.EXACT_DATE">
-    <app-input-datepicker
-      [placeholder]="'Select date'"
-      [floatLabel]="'auto'"
-      [(ngModel)]="event.date.startDate"
-      name="startDate">
-    </app-input-datepicker>
-  </div>
-
-  <div class="line" *ngIf="event.dateType === dateTypesForTemplate.EXACT_DATE_WITH_TIME">
-    <div class="input-container">
-        <app-input-datepicker
-              [placeholder]="'Select date'"
-              [floatLabel]="'auto'"
-              [(ngModel)]="event.date.startDate"
-              name="startDate">
-        </app-input-datepicker>
-    </div>
-    <div class="select-container">
-      <app-select [options]="hours"
-                  [placeholder]="'Select hour'"
-                  [(ngModel)]="event.date.startHours"
-                  name="startHour">
-      </app-select>
-    </div>
-    <div class="select-container">  
-      <app-select [options]="minutes"
-                  [placeholder]="'Select minutes'"
-                  [(ngModel)]="event.date.startMinutes"
-                  name="startMinutes">
-      </app-select>
-    </div>
-  </div>
   <div class="input-container">
     <app-checkbox-dropdown [options]="contactsForDropDown"
                             [label]="'Participants'"

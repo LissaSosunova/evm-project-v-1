@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnDestroy, Output, EventEmitter, forwardRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnDestroy, Output, EventEmitter, forwardRef, AfterViewInit } from '@angular/core';
 import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { FormControl, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs/operators';
               useExisting: forwardRef(() => InputDatepickerComponent),
               multi: true}]
 })
-export class InputDatepickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class InputDatepickerComponent implements ControlValueAccessor, OnInit, OnDestroy, AfterViewInit {
 
   /**
    * Floating strategy
@@ -52,6 +52,10 @@ export class InputDatepickerComponent implements ControlValueAccessor, OnInit, O
 
   ngOnInit() {
     this.init();
+  }
+
+  ngAfterViewInit() {
+
   }
 
   ngOnDestroy() {

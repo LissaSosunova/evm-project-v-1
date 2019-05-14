@@ -66,5 +66,8 @@ mat-form-field ::ng-deep  {
     .mat-datepicker-toggle-active {
         color: map-get($bg-color, 'green') !important;
     }
+    .mat-form-field-flex {
+        width: 107% !important;
+    }
 }
 

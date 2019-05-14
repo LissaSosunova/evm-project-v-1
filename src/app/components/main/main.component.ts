@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ActivatedRoute, Router, RouterOutlet, NavigationStart } from '@angular/router';
 import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
@@ -17,7 +17,6 @@ import { SocketIO} from 'src/app/types/socket.io.types';
 export class MainComponent implements OnInit, OnDestroy {
 
   public user: types.User = {} as types.User;
-  private subscription: Subscription;
 
   constructor(private route: ActivatedRoute,
     public router: Router,
@@ -29,8 +28,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user = this.route.snapshot.data.userData; // используем резолвер для получения данных пользователя
-    this.subscription = this.transferService.dataObj$.subscribe(res => {
-    });
     this.transferService.dataSet({name: 'userData', data: this.user});
     const token = this.sessionStorageService.getValue('_token');
     this.socketIoService.socketConnect();
@@ -42,7 +39,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+
   }
 
 

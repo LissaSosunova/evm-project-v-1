@@ -48,7 +48,10 @@ const routes: Routes = [
       },
       {
         path: 'calendar',
-        component: EventCalendarComponent
+        component: EventCalendarComponent,
+        resolve: {
+          userData: GetDataUserResolverService
+        }
       },
       {
         path: 'contacts',

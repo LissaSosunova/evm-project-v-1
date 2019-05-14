@@ -75,6 +75,7 @@ export module types {
   }
 
   export interface EventDb {
+    _id?: string;
     name: string;
     status: boolean;
     date_type: string;
