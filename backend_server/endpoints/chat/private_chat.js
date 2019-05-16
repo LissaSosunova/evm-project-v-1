@@ -12,6 +12,7 @@ class ChatData {
     this.users = chat.users;
     this.email = chat.email;
     this.messages = chat.messages;
+    this.type = chat.type;
   }
 }
 
@@ -30,7 +31,7 @@ router.get('/private_chat/:id/', async function (req, res, next){
       const param = url.parse(req.url).query;
       const mesAmount = 20;
       const queryNum = +queryString.parse(param).queryNum;
-      const n = queryNum * mesAmount; 
+      const n = queryNum * mesAmount;
       const getChatParams = {
         query: {_id: chatId},
         elementMatch: {messages: {$slice: [n, mesAmount]}}

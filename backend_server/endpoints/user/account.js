@@ -17,24 +17,18 @@ const User = require('../../models/user')
 router.get('/account', function(req, res, next){
   let username;
     if (!req.headers['authorization']) {
-      console.log('Err 1');
       return res.sendStatus(401)}
     try {
         username = jwt.decode(req.headers['authorization'], req.headers['token_key']).username
     } catch(err) {
-      console.log('Err 2');
         return res.sendStatus(401)
     }
     User.findOne({username: username}, function(err, user){
-      console.log('user: ' + user);
         if (err) {
-          console.log('Err 3');
             return res.sendStatus(500)
         } // ошибка БД, возвращаем 500 - Internal Server Error
         if (!user) {
-          console.log('Err 4');
           return res.sendStatus(401)} // пользователя нет в БД, возвращаем 401 - Unauthorized
-      console.log('res: ' +res);
         res.json(user) // если всё в порядке, возвращаем JSON с user
     })
 })

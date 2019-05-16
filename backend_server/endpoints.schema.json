@@ -12,7 +12,8 @@
                 "id": "String",
                 "users": "String[]",
                 "email": "String[]",
-                "messages": "MessageItem[]"
+                "messages": "MessageItem[]",
+                "type": "Number"
             },
             "MessageItem": {
                 "chatID": "String",

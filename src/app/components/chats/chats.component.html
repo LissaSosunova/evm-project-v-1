@@ -1,16 +1,43 @@
 <section class="chat-component-container">
-  <div>
-    <ul>
-      <li *ngFor="let item of user.chats">
-        <div>{{ item.name }}</div>
-      </li>
-    </ul>
+  <div class="row">
+    <div class="col-xs-12
+                col-sm-12
+                col-md-6
+                col-lg-6
+                block-with-chat-lists">
+        <div class="block-chat-list">
+          <span class="block-header">Privat chat list</span>
+          <div class="btns-block">
+              <button class="m-btn confirm">
+                  <i class="material-icons">search</i>
+                </button>
+                <button class="m-btn confirm">
+                    <i class="material-icons">add</i>
+                  </button>
+          </div>
+          <app-chat-list flag='private' size='normal'></app-chat-list>
+        </div>
+    </div>
+    <div class="col-xs-12
+                col-sm-12
+                col-md-6
+                col-lg-6
+                block-with-chat-lists">
+        <div class="block-chat-list">
+            <span class="block-header">Group chat list</span>
+          <div class="btns-block">
+              <button class="m-btn confirm">
+                  <i class="material-icons">search</i>
+                </button>
+                <button class="m-btn confirm">
+                    <i class="material-icons">add</i>
+                  </button>
+          </div>
+          <app-chat-list flag='group' size='normal'></app-chat-list>
+            
+        </div>
+    </div>
   </div>
-  <footer>
-    <app-multi-line-input [(ngModel)]="inputMes"
-                          [placeholder]="'Write a message'"
-                          [minHeight]="35"
-                          [maxHeight]="250">
-    </app-multi-line-input>
-  </footer>
 </section>
+<router-outlet>
+</router-outlet>

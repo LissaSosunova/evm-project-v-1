@@ -57,9 +57,7 @@ router.post('/confirm_user', async function (req, res, next) {
                   const user = new UserData(resp);
                   res.json(user);
                 })
-
             }
-
           }
         );
     } catch(err) {

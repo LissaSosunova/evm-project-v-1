@@ -1,6 +1,7 @@
-@mixin set-border($border-size, $border-radius){
+@mixin set-border($border-size, $border-radius, $border-color){
   border: $border-size;
   border-radius: $border-radius;
+  border-color: $border-color;
 };
 
 @mixin set-border-mes($border-size, $border-radius1, $border-radius2, $border-radius3, $border-radius4){

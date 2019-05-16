@@ -1,6 +1,5 @@
 const router = require('express').Router()
 const jwt = require('jwt-simple');
-const config = require('../../config');
 const User = require('../../models/user');
 const Chat = require('../../models/chats');
 const datareader = require('../../modules/datareader');
@@ -15,76 +14,153 @@ router.post('/new_private_chat/', async function (req, res, next) {
     } catch (err) {
       return res.sendStatus(401)
     };
+    // Params for search in Chat DB (exist chat): req.body.users[0] - id autorisated user, а req.body.users[1] - id of second user
+    const findChatParams = {
+      $and:[{users: req.body.users[0]}, {users: req.body.users[1]}]
+    };
+    
+    // Params for search users in User DB
     const params = {
       $or: [
         {username: auth.username},
         {email: auth.username}
       ]
     };
-    const findChatParams = {
-      $and:[{users: req.body.users[0]}, {users: req.body.users[1]}]
+    const params2 = {
+      $or: [
+        {username: req.body.users[1]},
+        {email: req.body.users[1]}
+      ]
     };
-    // req.body.users[0] - пусть это будет мой id, а req.body.users[1] - id того, кому пишу
-    // как по мне, то это немного костыльно
+    
     try {
-      // Добавим проверку, существует ли такой чат в базе
-      // Если его нет, то создаём новый чат
-      // Если существует, то возвращаем сообщение об этом и id чата
+      /* findChat - try to find exist private chat
+      If chat exist - add exist chat ID to contacts.$.private_chat (both users).
+      If chat doesn't exist - create new chat and add to contacts.$.private_chat (both users).*/
+
       const findChat = await datareader(Chat, findChatParams, 'findOne');
-      if (findChat == null) {
+
+      if(findChat == null){
+        // Create new private chat and add ID to users
         const chat = new Chat;
         chat.users = req.body.users;
         chat.email = req.body.email;
         chat.messages = [];
-        chat.type = "private";
-        const chatItem = {};
-          const response = await datareader(User, {username: req.body.users[1]}, 'findOne');
-          chatItem.id = req.body.users[1];
-          chatItem.name = response.name;
-          chatItem.avatar = response.avatar;
-          chatItem.chatId = chat.id
-          const updateParams = {
-            query: params, 
-            objNew:  {$push: {chats: chatItem}}};
-          const updateChat = await datareader(User, updateParams, 'updateOne');
+        chat.type = 1;
+        const chatItem1 = {};
+        const response1 = await datareader(User, {username: req.body.users[1]}, 'findOne');
+        chatItem1.id = req.body.users[1];
+        chatItem1.name = response1.name;
+        chatItem1.avatar = response1.avatar;
+        chatItem1.chatId = chat.id;
+        chatItem1.type = chat.type;
+        //Create chat for second User
+        const chatItem2 = {};
+        const response2 = await datareader(User, {username: auth.username}, 'findOne');
+        chatItem2.id = response2.username;
+        chatItem2.name = response2.name;
+        chatItem2.avatar = response2.avatar;
+        chatItem2.chatId = chat.id;
+        chatItem2.type = chat.type;
+
+        const updateParams = {
+          query: params,
+          objNew:  {$push: {chats: chatItem1}}};
+        const updateChat = await datareader(User, updateParams, 'updateOne');
+        const updateParams2 = {
+          query: params2,
+          objNew:  {$push: {chats: chatItem2}}};
+        const updateChat2 = await datareader(User, updateParams2, 'updateOne');
         chat.save((err, data) => {
-          if (err) { 
+          if (err) {
             res.json(err);
-            }
+          }
           else {
-            console.log('chat was saved', data);
-            let createdChat = new ChatData(chat);
+            let createdChat = new Chat(chat);
             datareader(User, params, 'findOne')
-             .then(response => {
-              let user1 = '', user2 = '';
-              for (let i=0; i<chat.users.length;i++) {
-                user1 = chat.users[0];
-                user2 = chat.users[1];
-              }
-              const updateUser1Params = {
-                query: {"username" : user1, "contacts.id" : user2},
-                objNew: {$set : { "contacts.$.private_chat" : createdChat.id }}
-              };
-              datareader(User, updateUser1Params, 'updateOne');
-              const updateUser2Params = {
-                query: {"username" : user2, "contacts.id" : user1},
-                objNew: {$set : { "contacts.$.private_chat" : createdChat.id }}
-              };
-              datareader(User, updateUser2Params, 'updateOne');
+              .then(response => {
+                let user1 = '', user2 = '';
+                for (let i=0; i<chat.users.length;i++) {
+                  user1 = chat.users[0];
+                  user2 = chat.users[1];
+                }
+                const updateUser1Params = {
+                  query: {"username" : user1, "contacts.id" : user2},
+                  objNew: {$set : { "contacts.$.private_chat" : createdChat.id }}
+                };
+                datareader(User, updateUser1Params, 'updateOne');
+                const updateUser2Params = {
+                  query: {"username" : user2, "contacts.id" : user1},
+                  objNew: {$set : { "contacts.$.private_chat" : createdChat.id }}
+                };
+                datareader(User, updateUser2Params, 'updateOne');
               })
               .then(response => {
-                res.json(createdChat);
+                datareader(User, params, 'findOne')
+                  .then((user => {
+                    const resp = {user: user, chat: createdChat};
+                    res.json(resp);
+                  }));
               })
           }
         })
       } else {
-        res.json({message: "Exists", chatId: findChat._id});
+        // Add exist chat ID to contacts.$.private_chat (both users)
+        const response1 = await datareader(User, {username: req.body.users[1]}, 'findOne');
+        const response2 = await datareader(User, {username: auth.username}, 'findOne');
+        const updateUser1Params = {
+          query: {"username" : response1.username, "contacts.id" : response2.username},
+          objNew: {$set : { "contacts.$.private_chat" : findChat.id }}
+        };
+        datareader(User, updateUser1Params, 'updateOne');
+        const updateUser2Params = {
+          query: {"username" : response2.username, "contacts.id" : response1.username},
+          objNew: {$set : { "contacts.$.private_chat" : findChat.id }}
+        };
+        datareader(User, updateUser2Params, 'updateOne');
+        // Add exist chat to array "chats" (both users)
+        // Check in array "chats"
+        const checkUser1ChatsParams = {"username" : response1.username, "chats._id" : findChat._id};
+        const checkUser2ChatsParams = {"username" : response2.username, "chats._id" : findChat._id};
+        // User 1
+        const resultFindChatUser1 = await datareader(User, checkUser1ChatsParams, 'findOne');
+        if (!resultFindChatUser1) {
+          const chatItem1 = {};
+          chatItem1.id = response2.username;
+          chatItem1.name = response2.name;
+          chatItem1.avatar = response2.avatar;
+          chatItem1.chatId = findChat._id;
+          chatItem1.type = findChat.type;
+          const updateParams = {
+            query: params2,
+            objNew:  {$push: {chats: chatItem1}}};
+          const updateChat = await datareader(User, updateParams, 'updateOne');
+        }
+        // User 2
+        const resultFindChatUser2 = await datareader(User, checkUser2ChatsParams, 'findOne');
+        if (!resultFindChatUser2) {
+          const chatItem2 = {};
+          chatItem2.id = response1.username;
+          chatItem2.name = response1.name;
+          chatItem2.avatar = response1.avatar;
+          chatItem2.chatId = findChat._id;
+          chatItem2.type = findChat.type;
+          const updateParams2 = {
+            query: params,
+            objNew:  {$push: {chats: chatItem2}}};
+          const updateChat = await datareader(User, updateParams2, 'updateOne');
+        }
+
+        datareader(User, params, 'findOne')
+          .then((user => {
+            const resp = {user: user, chat: findChat};
+            res.json(resp);
+          }));
       }
-  
     } catch (err) {
+      console.log('err 500');
       res.sendStatus(500);
     }
-  
   });
 
   module.exports = router;

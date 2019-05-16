@@ -9,8 +9,7 @@
                     tab-expert-class
                     border-right"
         [ngClass]="{'not-active-tab': currTab !== 'contacts',  'active': currTab === 'contacts'}"
-                    (click)="switcher('contacts')"
-                    id="contacts">
+                    (click)="switcher('contacts')">
                     <span>
                       Contact list
                     </span>
@@ -70,6 +69,10 @@
                       (click)="onUserInfoPopupOpen()">
                 <i class="material-icons">visibility</i>
               </button>
+              <button class="m-btn confirm"
+                    (click)="goToChat({chatId: item.private_chat, userId: item.id, email: item.email})">
+                      <i class="material-icons">chat_bubble_outline</i>
+                    </button>
               <button class="m-btn cancel"
                       (click)="onConfirmActionPopupOpen('delete contact')">
                 <i class="material-icons">close</i>
@@ -86,7 +89,7 @@
         </section>
         <section *ngIf="isContactsAwaiting">
             <ul class="contacts-ul">
-                <li *ngFor="let item of contactsAwaiting" class="direction-row">          
+                <li *ngFor="let item of contactsAwaiting" class="direction-row">
                   <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
                   <div class="col-xs-4 btn-align">
                     <button class="m-btn confirm" (click)="confNewUser(item.id)">
@@ -126,7 +129,7 @@
         <form class ="search">
           <app-input-search [placeholder]="'Search contact'"
                             [control]="searchControl">
-          </app-input-search>      
+          </app-input-search>
         </form>
       </div>
       <div class="contactList-user2">

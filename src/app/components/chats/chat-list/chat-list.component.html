@@ -1,0 +1,46 @@
+<div class="block-chat-list">
+    <section *ngIf="flag === 'private'">
+            <ul>
+            <li *ngFor="let item of privateChats">
+                    <div class="row on-click-one-chat"
+                    (click)= "goToChat(item._id)">
+                            <div class="col-sm-1">
+                                    <img src="{{item.avatar.url}}">
+                            </div>
+                            <div class="col-sm-9">
+                                    <span class="chat-name">{{item.name}}</span>
+                                    <br>
+                                    <span class="chat-message">{{item.id}}</span>
+                            </div>
+                            <div class="col-sm-2"  *ngIf="size === 'normal'">
+                                    <br>
+                                    <span class="chat-time">01.01.2019</span>
+                            </div>   
+                        </div>
+            </li>
+            </ul>
+    </section>
+    <section *ngIf="flag === 'group'">
+        <ul>
+            <li *ngFor="let item of groupChats">
+                        <div class="row on-click-one-chat"
+                        (click)= "goToChat(item._id)">
+                                <div class="col-sm-1">
+                                        <img src="{{item.avatar.url}}">
+                                </div>
+                                <div class="col-sm-9">
+                                        <span class="chat-name">{{item.name}}</span>
+                                        <br>
+                                        <span class="chat-message">{{item.id}}</span>
+                                </div>
+                                <div class="col-sm-2" *ngIf="size === 'normal'">
+                                        <br>
+                                        <span class="chat-time">01.01.2019</span>
+                                </div>   
+                        </div>
+            </li>
+        </ul>
+    </section>
+  </div>
+  <router-outlet>
+</router-outlet>

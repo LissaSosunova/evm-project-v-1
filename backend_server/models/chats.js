@@ -12,11 +12,12 @@ const messageItem = db.Schema({
     time: {type: String},
 });
 
+//Chat types: 1 - private chat, 2 - group chat | event chat, 3 - blocked chat, 4 - deleted chat
 const chat = db.Schema({
     users:[String],
     email:[String],
     messages: [messageItem],
-    type: {type: String}
+    type: {type: Number}
 });
 
 module.exports = db.model('Chat', chat);

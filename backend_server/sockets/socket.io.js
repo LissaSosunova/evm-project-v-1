@@ -34,7 +34,7 @@ function runWebsocketsIO(server, expressApp) {
     const io = require('socket.io').listen(server);
     expressApp.set('io', io);
     // io.set('origins', 'localhost:*');
-    console.info('socket.io is running');
+
     // данный код не даёт подключится к сокетам неавторизированным пользователям
     // io.use(function (socket, next) {
     //     const handshakeData = socket.request;
@@ -111,14 +111,13 @@ function runWebsocketsIO(server, expressApp) {
             /**
             obj = {
                userId: string;
-               token: string; 
-            } 
+               token: string;
+            }
              */
             if (!onlineClients[obj.userId]) {
                 onlineClients[obj.userId] = {};
               }
               onlineClients[obj.userId][obj.token] = socket;
-              console.log(onlineClients);
               socket.emit("all_online_users", Object.keys(onlineClients));
               socket.broadcast.emit("user", {userId: obj.userId});
         });
@@ -126,12 +125,11 @@ function runWebsocketsIO(server, expressApp) {
             /**
             obj = {
                userId: string;
-               token: string; 
-            } 
+               token: string;
+            }
              */
             delete onlineClients[obj.userId][obj.token];
             socket.broadcast.emit("user_left", {userId: obj.userId});
-            console.log("user_left", onlineClients);
         });
 
         socket.on("message", obj => {
@@ -148,7 +146,7 @@ function runWebsocketsIO(server, expressApp) {
             }
              */
 
-            
+
             if (clientsInChat[obj.chatIdCurr]) {
                 // Находим пользователей, которые не в чате
                 Object.keys(clientsInChat[obj.chatIdCurr]).forEach(userId => {
@@ -159,7 +157,7 @@ function runWebsocketsIO(server, expressApp) {
                         obj.unread.push(userId);
                     }
                 });
-            }    
+            }
             if (clientsInChat[obj.chatIdCurr]) {
                 // Шлём сообщения всем, кто в чате
                 Object.keys(clientsInChat[obj.chatIdCurr]).forEach(userId => {
@@ -168,15 +166,14 @@ function runWebsocketsIO(server, expressApp) {
                     });
                 });
             }
-            
+
             const updateParams = {
                 query: {_id: obj.chatID},
                 objNew: {$push: {messages: {$each: [obj], $position: 0}}}
             };
             datareader(Chat, updateParams, 'updateOne') // Сохраняем в базу данных сообщение, причём записываем его в начало массива
             .then(res => {
-              console.log('chats update', res);
-            // Шлём всем кто в онлайн обновленную модель списка чатов 
+            // Шлём всем кто в онлайн обновленную модель списка чатов
               obj.users.forEach(user => {
                 Object.keys(onlineClients).forEach(async onlineUser => {
                     if(user === onlineUser) {
@@ -203,7 +200,6 @@ function runWebsocketsIO(server, expressApp) {
                                 }
                             });
                             const unreadMes = await Promise.all(promises);
-                            console.log('unreadMes', unreadMes);
                             const unreadNumInChats = [];
                             unreadMes.forEach(item => {
                             const obj = {};
@@ -228,10 +224,10 @@ function runWebsocketsIO(server, expressApp) {
                         } catch(err) {
                             console.error(new Error(err));
                         }
-                                                
+
                         }
                     })
-                                        
+
                 })
             })
         })
@@ -279,12 +275,11 @@ function runWebsocketsIO(server, expressApp) {
         });
 
         io.on("disconnect", () => {
-            console.log("disconnect");
             delete onlineClients[obj.userId][obj.token]
         });
     });
 
-   
+
 }
 
 module.exports = runWebsocketsIO;

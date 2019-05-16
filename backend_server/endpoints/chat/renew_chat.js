@@ -29,7 +29,6 @@ router.post('/renew_chat', async function(req, res, next) {
         // возвращаем id чата в документ
       };
       const renewChat = await datareader(User, renewChatParams, 'updateOne');
-      console.log(renewChat);
     } catch (err) {
       res.sendStatus(500);
     }
@@ -38,5 +37,5 @@ router.post('/renew_chat', async function(req, res, next) {
     };
     res.json(response);
   })
-  
+
   module.exports = router;
