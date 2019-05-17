@@ -23,13 +23,13 @@
 
   <div *ngIf="event.dateType === dateTypesForTemplate.DIAPASON_OF_DATES">
     <div class="input-container"> 
-      <app-input-datepicker [max]="event.date.endDate"
+      <app-input-datepicker 
                             [placeholder]="'Select start date'"
                             [floatLabel]="'auto'"
                             [(ngModel)]="event.date.startDate"
                             name="startDate">
       </app-input-datepicker>
-      <app-input-datepicker [min]="event.date.startDate"
+      <app-input-datepicker 
                             [placeholder]="'Select end date'"
                             [floatLabel]="'auto'"
                             [(ngModel)]="event.date.endDate"
@@ -41,7 +41,7 @@
   <div *ngIf="event.dateType === dateTypesForTemplate.DIAPASON_OF_DATES_WITH_TIME">
     <div class="line">
       <div class="input-container" >
-        <app-input-datepicker [max]="event.date.endDate"
+        <app-input-datepicker 
                               [placeholder]="'Select start date'"
                               [floatLabel]="'auto'"
                               [(ngModel)]="event.date.startDate"
@@ -65,7 +65,7 @@
     </div>
     <div class="line">
       <div class="input-container">
-        <app-input-datepicker [min]="event.date.startDate"
+        <app-input-datepicker 
                               [placeholder]="'Select end date'"
                               [floatLabel]="'auto'"
                               [(ngModel)]="event.date.endDate"
