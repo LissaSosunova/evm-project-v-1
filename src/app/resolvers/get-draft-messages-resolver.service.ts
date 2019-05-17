@@ -14,9 +14,9 @@ export class GetDraftMessagesResolverService implements Resolve<types.DraftMessa
   constructor(private dataService: DataService,
               private transferService: TransferService) { }
 
-  public resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<types.DraftMessage> {
+  public async resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<types.DraftMessage> {
     const chatId = route.params.chatId;
-    const userData: types.User = this.transferService.dataGet('userData');
-    return this.dataService.getDraftMessage(userData.username, chatId);
+    const userData: types.User = await this.dataService.getUser().toPromise();
+    return this.dataService.getDraftMessage(userData.username, chatId).toPromise();
   }
 }

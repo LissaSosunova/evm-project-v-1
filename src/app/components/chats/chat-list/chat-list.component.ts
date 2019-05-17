@@ -12,7 +12,6 @@ import {
 import { types } from 'src/app/types/types';
 import { TransferService } from 'src/app/services/transfer.service';
 import { DataService } from 'src/app/services/data.service';
-import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-chat-list',
@@ -54,16 +53,12 @@ export class ChatListComponent implements OnInit {
   public getChatList(): void {
     //Chat types: 1 - private chat, 2 - group chat | event chat, 3 - blocked chat, 4 - deleted chat
     this.user.chats.forEach(item => {
-      (item.type === 1) ? this.privateChats.push(item) :
-      (item.type === 2) ? this.groupChats.push(item) :
-      (item.type === 3) ? this.blockedChats.push(item):
+      (item.type === types.ChatType.PRIVATE_CHAT) ? this.privateChats.push(item) :
+      (item.type === types.ChatType.GROUP_OR_EVENT_CHAT) ? this.groupChats.push(item) :
+      (item.type === types.ChatType.BLOCKED_CHAT) ? this.blockedChats.push(item):
       this.deletedChats.push(item);
     })
   }
 
-  constructor() { }
-
-  ngOnInit() {
-  }
 
 }

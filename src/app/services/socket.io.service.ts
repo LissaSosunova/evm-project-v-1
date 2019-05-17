@@ -68,7 +68,7 @@ export class SocketIoService {
     this.socketInstance.on('connect', this.onSocketReconnect.bind(this));
   }
 
-  public socketEmitCallback(event: string, data: any, cbFunction: Function): void {
+  public socketEmitCallback(event: SocketIO.events, data: any, cbFunction: Function): void {
     this.socketInstance.emit(event, data, cbFunction);
   }
 

@@ -72,12 +72,11 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'chat-window/:id',
+        path: 'chat-window/:chatId',
         component: ChatWindowComponent,
-        // for draft message implementation
-            // resolve: {
-            //  draftMessage: GetDraftMessagesResolverService
-            // }
+        resolve: {
+          draftMessage: GetDraftMessagesResolverService
+         },
         children: [
           {
             path: 'chat-list',

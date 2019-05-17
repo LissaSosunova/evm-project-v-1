@@ -11,14 +11,9 @@ import { ChatsComponent } from './components/chats/chats.component';
 import { ChatWindowComponent } from './components/chats/chat-window/chat-window.component';
 import { MatIconModule, MatNativeDateModule, MatSelectModule } from '@angular/material';
 import { MatDatepickerModule, MatRadioModule } from '@angular/material';
-import { AboutComponent } from './components/about/about.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { ContenteditableModelDirective } from './directives/contenteditable-model.directive';
-import { ChatListComponent } from './components/chats/chat-list/chat-list.component';
 import { ChatMainComponent } from './components/chats/chat-main/chat-main.component';
-import { ChatsComponent } from './components/chats/chats.component';
-import { ChatWindowComponent } from './components/chats/chat-window/chat-window.component';
-import { ContactsComponent } from './components/contacts/contacts.component';
 import { ErrMsgComponent } from './components/err-msg/err-msg.component';
 import { EventCalendarComponent } from './components/event-calendar/event-calendar.component';
 import { EventsComponent } from './components/events/events.component';
@@ -29,10 +24,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { InputEmailComponent } from './shared/form-controls/input-email/input-email.component';
 import { InputPasswordComponent } from './shared/form-controls/input-password/input-password.component';
 import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
-import { HomeComponent } from './components/home/home.component';
-import { HttpClientModule } from '@angular/common/http';
-import { LoginPageComponent } from './components/login-page/login-page.component';
-import { MainComponent } from './components/main/main.component';
 import { MatTooltipModule, MatButtonModule, MatCheckboxModule, MatInputModule } from '@angular/material';
 import { MultiLineInputComponent } from './components/multi-line-input/multi-line-input.component';
 import { NewEventComponent } from './components/new-event/new-event.component';
@@ -41,7 +32,6 @@ import { InputSearchComponent} from './shared/form-controls/input-search/input-s
 import { InputTextComponent } from './shared/form-controls/input-text/input-text.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { MainComponent } from './components/main/main.component';
-import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material';
 import { NgModule } from '@angular/core';
 import { PopupComponent } from './components/popup/popup.component';
@@ -58,9 +48,7 @@ import { ClickOutsideDirective } from './shared/directives/click-outside.directi
 import { SelectComponent } from './shared/form-controls/select/select.component';
 import { PageMaskComponent } from './components/page-mask/page-mask.component';
 import { RouterModule } from '@angular/router';
-import { ContenteditableModelDirective } from './directives/contenteditable-model.directive';
 import { UserInfoPopupComponent } from './components/user-info-popup/user-info-popup.component';
-import { ChatGroupsComponent } from './components/chats/chat-groups/chat-groups.component';
 import { TransferService } from './services/transfer.service';
 
 
@@ -103,7 +91,7 @@ import { TransferService } from './services/transfer.service';
     InputDatepickerComponent,
     CheckboxDropdownComponent,
     ClickOutsideDirective,
-    SelectComponent
+    SelectComponent,
     InputPasswordComponent,
     InputEmailComponent,
     ChatWindowComponent,

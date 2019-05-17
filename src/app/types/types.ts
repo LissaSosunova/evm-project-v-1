@@ -208,5 +208,11 @@ export interface CreateNewChat {
 
   export type StepState = 'login' | 'registration' | 'about' | 'main';
 
+  export enum ChatType {
+    PRIVATE_CHAT = 1,
+    GROUP_OR_EVENT_CHAT = 2,
+    BLOCKED_CHAT = 3,
+    DELETED_CHAT = 4
+  }
 
 }
