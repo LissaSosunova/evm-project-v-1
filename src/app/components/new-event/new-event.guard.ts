@@ -14,7 +14,7 @@ export class NewEventGuard implements CanDeactivate<NewEventComponent> {
   }
 
   canDeactivate(component: NewEventComponent): Observable<boolean> | boolean {
-      if (component.openConfrimPopup) {
+      if (component.openConfirmPopup) {
         return component.eventLeavePopup.onOpen();
       } else {
       return true;

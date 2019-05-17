@@ -1,0 +1,73 @@
+@import '../../../../scss/variables';
+
+.app-datepicker {
+
+    &__container {
+        width: 100%;
+    }
+
+    &__date-input {
+        padding: 10px;
+        background-color: white !important;
+        border-radius: 18px;
+        border: 1px solid #14200B;
+        width: 100%;
+        box-sizing: border-box;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    &__date-input-hidden {
+        height: 0;
+    }
+
+    &__error {
+        font-size: 11px;
+    }
+
+}
+
+.error-input {
+    border: 1px map-get($error-border, 'red' ) solid !important;
+}
+
+.mat-error {
+    color: map-get($error-border, 'red' );
+    font-size: 12px;
+}
+
+.disabled {
+    cursor: default;
+    color: #b3b3b3;
+}
+
+.mat-form-field {
+    display: block !important;
+}
+
+mat-form-field ::ng-deep  {
+    .mat-form-field-underline {
+        display: none;
+    }
+    .mat-form-field-infix {
+        width: auto !important;
+    }
+    .mat-form-field-suffix {
+        bottom: 11px;
+        right: 30px;
+    }
+    .mat-form-field-label {
+        margin-top: 9px;
+        margin-left: 10px;
+    }
+    .mat-form-field-wrapper {
+        padding-bottom: 0 !important;
+    }
+    .mat-datepicker-toggle-active {
+        color: map-get($bg-color, 'green') !important;
+    }
+    .mat-form-field-flex {
+        width: 107% !important;
+    }
+}
+

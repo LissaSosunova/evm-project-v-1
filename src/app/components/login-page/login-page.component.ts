@@ -29,6 +29,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnInit() {
+
   }
 
   ngAfterViewInit() {

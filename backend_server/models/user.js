@@ -33,7 +33,8 @@ const event = db.Schema({
   id: { type: String },
   name: { type: String },
   status: { type: Boolean },
-  date: { type: Array },
+  date: { type: Object },
+  date_type: {type: String},
   notification: { eventNotification }
 });
 

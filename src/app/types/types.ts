@@ -60,7 +60,7 @@ export module types {
     name: string;
     phone: string;
     contacts: Contact[];
-    events: Events [];
+    events: EventDb [];
     chats: Chats[];
     avatar: object;
     notifications: Notifications [];
@@ -74,14 +74,63 @@ export module types {
     status: boolean;
   }
 
-  export interface Events {
+  export interface EventDb {
+    _id?: string;
     name: string;
     status: boolean;
-    date: object;
-    place: object;
-    members: object;
+    date_type: string;
+    date: EventDateDb;
+    place: eventPlace;
+    members: eventMembers;
     additional: string;
-    notification: object;
+    notification?: eventNotification;
+  }
+
+  export interface EventDateDb {
+    startDate: number;
+    endDate?: number;
+  }
+
+  export interface EventUI {
+    name: string;
+    status: boolean;
+    dateType: dateTypeEvent;
+    date: eventDate;
+    place: eventPlace;
+    members: eventMembers;
+    additional: string;
+    notification?: eventNotification;
+  }
+
+  export enum dateTypeEvent {
+    EXACT_DATE = 'exact date',
+    EXACT_DATE_WITH_TIME = 'exact date with time',
+    DIAPASON_OF_DATES = 'diapason of dates',
+    DIAPASON_OF_DATES_WITH_TIME = 'diapason of dates with time'
+  }
+
+  export interface eventDate {
+    startDate: Date;
+    startHours?: number;
+    startMinutes?: number;
+    endDate?: Date;
+    endHours?: number;
+    endMinutes?: number;
+  }
+
+  export interface eventPlace {
+    location: string
+  }
+
+  export interface eventNotification {
+    type: string;
+    message: string;
+    id: string;
+    status: boolean
+  }
+
+  export interface eventMembers {
+    invited: string[]
   }
 
   export interface FindUser {

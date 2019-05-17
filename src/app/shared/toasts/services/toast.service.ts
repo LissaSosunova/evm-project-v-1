@@ -17,34 +17,34 @@ export class ToastService {
   
   private horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   private verticalPosition: MatSnackBarVerticalPosition = 'top';
+  private duration: number = 3000;
   
   constructor(private snackBar: MatSnackBar,
               private transferService: TransferService) { }
 
-  public openToastFail(message: string, duration: number = 3000): void {
+  public openToastFail(message: string, config?: MatSnackBarConfig): void {
     this.transferService.dataSet({name: 'toastMessage', data: message});
-    const config: MatSnackBarConfig = this.initToastConfig(duration);
+    config = this.initToastConfig(config);
     this.snackBar.openFromComponent(ToastFailComponent, config);
   }
 
-  public openToastSuccess(message: string, duration: number = 3000): void {
-    const config: MatSnackBarConfig = this.initToastConfig(duration);
+  public openToastSuccess(message: string, config?: MatSnackBarConfig): void {
+    config = this.initToastConfig(config);
     this.transferService.dataSet({name: 'toastMessage', data: message});
     this.snackBar.openFromComponent(ToastSuccessComponent, config);
   }
 
-  public openToastWarning(message: string, duration: number = 3000): void {
-    const config: MatSnackBarConfig = this.initToastConfig(duration);
+  public openToastWarning(message: string, config?: MatSnackBarConfig): void {
+    config = this.initToastConfig(config);
     this.transferService.dataSet({name: 'toastMessage', data: message});
     this.snackBar.openFromComponent(ToastWarningComponent, config);
   }
 
-  private initToastConfig(duration: number): MatSnackBarConfig {
-    const config: MatSnackBarConfig = {
-      verticalPosition: this.verticalPosition,
-      horizontalPosition: this.horizontalPosition,
-      duration: duration
-    }
+  private initToastConfig(config?: MatSnackBarConfig): MatSnackBarConfig {
+    config = config || {} as MatSnackBarConfig; 
+    config.verticalPosition = config.verticalPosition || this.verticalPosition;
+    config.horizontalPosition = config.horizontalPosition || this.horizontalPosition;
+    config.duration = config.duration || this.duration;
     return config;
   }
 

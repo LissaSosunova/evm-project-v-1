@@ -1,0 +1,41 @@
+<div class="app-dropdown__wrap">
+  <!-- Trigger -->
+  <div class="app-dropdown__trigger"
+    [ngClass]="{ 'disabled': disabled }"
+    (click)="open($event);"
+  >
+    <div class="app-dropdown__label">
+      {{label}}
+    </div>
+    <div class="app-dropdown__text">{{ selectedStr }}</div>
+    <div *ngIf="!hideArrow" class="app-dropdown__arrow">
+      <div class="app-dropdown__arrow-icon"
+        [ngClass]="{
+          'active': !disabled,
+          'disabled': disabled
+        }"
+      >
+      </div>
+    </div>
+  </div>
+  <!-- Panel -->
+  <div *ngIf="isPanelShown" class="app-dropdown__panel" appClickOutside (mClickOutside)="clickOutside()">
+    <div *ngIf="isSearchable" class="input-wrap">
+        <app-input-search [placeholder]="'Search'"
+                          (valueChange)="onSearchChange($event)"
+                        >
+        </app-input-search> 
+    </div>
+      
+      <div *ngFor="let option of options | filter :filterQuery: 'text'" class="app-dropdown__option">
+        <label>
+          <mat-checkbox color="primary"
+          name="{{option.id}}"
+          [ngModel]="option.isChecked"
+          (ngModelChange)="select(option, $event)"
+          ></mat-checkbox>
+          <span class="app-dropdown__text-item">{{option.text}}</span>
+        </label>
+      </div>    
+  </div>
+</div>

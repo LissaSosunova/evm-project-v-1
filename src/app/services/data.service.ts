@@ -58,4 +58,11 @@ export class DataService {
              public setReg(params: types.Registration): Observable<any> {
                return this.http.post(URL_BACK + '/user/', params,  {responseType: 'text'});
              }
+            public saveEvent(event: types.EventDb): Observable<any> {
+              const token = this.sessionStorageService.getValue('_token');
+              const tokenKey = this.sessionStorageService.getValue('token_key');
+              const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
+              return this.http.post(URL_BACK + '/new_event/', event, {headers});
+            }
+
 }

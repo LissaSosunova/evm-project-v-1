@@ -11,6 +11,7 @@ class EventData {
       this.name = event.name;
       this.status = event.status;
       this.date = event.date;
+      this.date_type = event.date_type;
       this.notification = event.notification;
     }
   }
@@ -32,8 +33,10 @@ class EventData {
       ]
     };
     const event = new Event;
+    console.log('date', req.body.date);
     event.name = req.body.name;
     event.status = req.body.status;
+    event.date_type = req.body.date_type;
     event.date = req.body.date;
     event.place = req.body.place;
     event.members = req.body.members;
@@ -43,6 +46,7 @@ class EventData {
       if (err) { res.json(err)}
       else {
         const createdEvent = new EventData(event);
+        console.log('createdEvent', createdEvent);
         datareader(User, params, 'findOne')
           .then((response) =>{
             User.updateOne({username: response.username}, {$push: {events:createdEvent}}, (e, d) => {
@@ -51,7 +55,7 @@ class EventData {
             })
           })
           .then((response) =>{
-            if(event.members.invited.length !== 0){
+            if(event.members && event.members.invited && event.members.invited.length !== 0){
               event.notification.id = event._id;
               event.members.invited.forEach(function (item) {
                 User.updateOne({username: item.username}, {$push: {events:createdEvent}}, (e, d) => {
@@ -68,7 +72,7 @@ class EventData {
             }
           })
           .then((response) => {
-          res.sendStatus(200);
+            res.json({status: 200});
           })
       }
     })
