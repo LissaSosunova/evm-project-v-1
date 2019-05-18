@@ -41,13 +41,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.init();
-
   }
 
   ngOnDestroy () {
     if (this.inputMes) {
       this.sendDraftMessage();
-    } else if (this.isDraftMessageSent) {
+    } else if (this.isDraftMessageSent && this.inputMes === '') {
       this.deleteDraftMessage();
     }
     this.unsubscribe$.next();
@@ -55,8 +54,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   }
 
   public init(): void {
+    this.socketIoService.on(SocketIO.events.new_message).pipe(takeUntil(this.unsubscribe$))
+    .subscribe(message => {
+      console.log(message);
+    });
     this.chatId = this.route.snapshot.params.chatId;
-    // this.getChat(this.chatId);
+    this.getChat(this.chatId); // вынеси в резолвер
     this.user = this.transferService.dataGet('userData');
     this.draftMessage = this.route.snapshot.data.draftMessage;
     let draftMessageItem: types.DraftMessage;
@@ -105,29 +108,36 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
 
   public sendMessage(): void {
     const date = this.dateTransformService.nowUTC();
-    const draftMessage: types.DraftMessage = {
+    const message: types.Message = {
       chatID: this.chatId,
       text: this.inputMes,
       date: date,
+      edited: false,
       authorId: this.user.username
     };
     if (this.isDraftMessageSent) {
       this.deleteDraftMessage();
       this.isDraftMessageSent = false;
     }
-    console.log(draftMessage);
+    console.log(message);
+    // this.socketIoService.socketEmitCallback(SocketIO.events.message, message, this.sendMessageCallback);
     this.inputMes = '';
     this.control.setValue('');
+  }
+
+  private sendMessageCallback(): void {
+    console.log('event');
   }
 
   private deleteDraftMessage(): void {
     const draftMessageDeleteObj: types.DraftMessageDeleteObj = {
       chatID: this.chatId,
       authorId: this.user.username
-    }
-    console.log('delete draft message',draftMessageDeleteObj);
+    };
+    console.log('delete draft message', draftMessageDeleteObj);
     this.data.deleteDraftMessage(draftMessageDeleteObj).subscribe(res => {
      console.log(res);
+     this.isDraftMessageExist = false;
     });
   }
 

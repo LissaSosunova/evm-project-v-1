@@ -39,6 +39,7 @@ router.get('/private_chat/:id/', async function (req, res, next){
       const getUserChat = await datareader(Chat, getChatParams, 'findOneElementMatch');
       res.json(getUserChat.messages);
     } catch (err) {
+      console.error(err);
       res.sendStatus(500);
     }
   });

@@ -164,9 +164,8 @@ export module types {
     chatID: string;
     authorId: string;
     text: string;
-    isSelected: boolean;
     edited: boolean;
-    unread: string[];
+    unread?: string[];
     date: number; // timeStamp (to UTC)
   }
 

@@ -4,6 +4,7 @@ export module SocketIO {
         chats_model = 'chats_model',
         user_read_message = 'user_read_message',
         message = 'message',
+        new_message = 'new_message',
         user = 'user',
         user_in_chat = 'user_in_chat',
         user_left_chat = 'user_left_chat',

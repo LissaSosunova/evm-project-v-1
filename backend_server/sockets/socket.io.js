@@ -32,6 +32,7 @@ function loadUser(session, callback) {
 
 function runWebsocketsIO(server, expressApp) {
     const io = require('socket.io').listen(server);
+    console.info('Socket IO is running');
     expressApp.set('io', io);
     // io.set('origins', 'localhost:*');
 
@@ -138,7 +139,6 @@ function runWebsocketsIO(server, expressApp) {
                 chatID: string;
                 authorId: string;
                 text: string;
-                isSelected: boolean;
                 edited: boolean;
                 unread: string[];
                 users: string[]
@@ -146,7 +146,7 @@ function runWebsocketsIO(server, expressApp) {
             }
              */
 
-
+            console.log('clientsInChat', clientsInChat);
             if (clientsInChat[obj.chatIdCurr]) {
                 // Находим пользователей, которые не в чате
                 Object.keys(clientsInChat[obj.chatIdCurr]).forEach(userId => {
@@ -162,6 +162,7 @@ function runWebsocketsIO(server, expressApp) {
                 // Шлём сообщения всем, кто в чате
                 Object.keys(clientsInChat[obj.chatIdCurr]).forEach(userId => {
                     Object.keys(clientsInChat[obj.chatIdCurr][obj.userId]).forEach(token => {
+                        console.log('sent mess', obj);
                         clientsInChat[obj.chatIdCurr][userId][token].emit('new_message',obj); // попробовать вместо send emit
                     });
                 });
