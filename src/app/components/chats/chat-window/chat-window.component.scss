@@ -116,3 +116,43 @@ ul {
   border-color: map-get($bg-color, 'dark');
   padding: 5px;
 }
+
+
+
+
+footer {
+    position: absolute;
+    bottom: 0;
+    min-height: 60px;
+    width: 85%;
+    padding: 16px 0;
+    box-sizing: border-box;
+}
+
+form {
+  width: 100%;
+}
+
+.btn-submit-send{
+    background-color: #9bb00f;
+    font-size: 12px;
+    height: 36px;
+    padding-left: 10px;
+    padding-right: 10px;
+    align-items: center;
+    transition: 0.5s;
+    border: 0px;
+    border-radius: 50%;
+    cursor: pointer;
+    &:hover, &:active{
+      background-color: #1c2001;
+      color: white;
+    }
+  
+  }
+
+  .disabled, .disabled:hover {
+    cursor: default;
+    background-color: map-get($disabled, 'grey');
+    color: black;
+  }

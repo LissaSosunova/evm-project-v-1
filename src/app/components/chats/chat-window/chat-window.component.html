@@ -51,18 +51,25 @@
     </div>
 </div>
 
-<footer class="row">
+<footer>
+  <form class="row">
     <div class="col-sm-9">
-        <app-multi-line-input [(ngModel)]="inputMes"
+        <app-multi-line-input
+        [formControl]="control"
         [placeholder]="'Write a message'"
         [minHeight]="35"
-        [maxHeight]="250">
+        [maxHeight]="250"
+        [currMes]="inputMes">
         </app-multi-line-input>
     </div>
     <div class="col-sm-3">
-        <button class="btn-submit-send">
+        <button class="btn-submit-send"
+        (click)="sendMessage()"
+        [disabled]="control.invalid"
+        [ngClass]="{'disabled': control.invalid}">
             <i class="material-icons">send</i>
         </button>
     </div>
-   
-  </footer>
+  </form>  
+</footer>
+

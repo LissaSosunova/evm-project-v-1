@@ -8,7 +8,9 @@
             (focus)="onFocus()"
             (blur)="onBlur()">
   </div>
-  <div class="placeholder" *ngIf="showPlaceholder">
+  <div class="placeholder" 
+      *ngIf="showPlaceholder"
+      (click)="onFocus()">
     {{placeholder}}
   </div>
 </section>  

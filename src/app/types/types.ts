@@ -1,5 +1,4 @@
 import { constants } from '../constants/default-constants';
-import { Observable } from 'rxjs';
 
 export module types {
 
@@ -133,6 +132,28 @@ export module types {
     invited: string[]
   }
 
+  export interface DraftMessage {
+    chatID: string;
+    authorId: string;
+    text: string;
+    date: number;
+  }
+
+  export interface DraftMessageDeleteObj {
+    chatID: string;
+    authorId: string;
+  }
+
+  export interface Events {
+    name: string;
+    status: boolean;
+    date: object;
+    place: object;
+    members: object;
+    additional: string;
+    notification: object;
+  }
+
   export interface FindUser {
     query: string;
   }
@@ -143,9 +164,8 @@ export module types {
     chatID: string;
     authorId: string;
     text: string;
-    isSelected: boolean;
     edited: boolean;
-    unread: string[];
+    unread?: string[];
     date: number; // timeStamp (to UTC)
   }
 
@@ -187,5 +207,11 @@ export interface CreateNewChat {
 
   export type StepState = 'login' | 'registration' | 'about' | 'main';
 
+  export enum ChatType {
+    PRIVATE_CHAT = 1,
+    GROUP_OR_EVENT_CHAT = 2,
+    BLOCKED_CHAT = 3,
+    DELETED_CHAT = 4
+  }
 
 }

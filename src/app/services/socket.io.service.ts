@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { types } from '../types/types';
-import { Socket } from 'dgram';
 import { Subject, Observable } from 'rxjs';
 import { SocketIO} from 'src/app/types/socket.io.types';
 
@@ -69,7 +68,7 @@ export class SocketIoService {
     this.socketInstance.on('connect', this.onSocketReconnect.bind(this));
   }
 
-  public socketEmitCallback(event: string, data: any, cbFunction: Function): void {
+  public socketEmitCallback(event: SocketIO.events, data: any, cbFunction: Function): void {
     this.socketInstance.emit(event, data, cbFunction);
   }
 
