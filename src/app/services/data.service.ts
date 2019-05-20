@@ -81,6 +81,13 @@ export class DataService {
     return this.http.post(URL_BACK + '/set_draft_message', query, {headers});
   }
 
+  public sendMessage(query: types.Message): Observable<any> {
+    const token = this.sessionStorageService.getValue('_token');
+    const tokenKey = this.sessionStorageService.getValue('token_key');
+    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
+    return this.http.post(URL_BACK + '/send_message', query, {headers});
+  }
+
   public deleteDraftMessage(query: types.DraftMessageDeleteObj): Observable<any> {
     const token = this.sessionStorageService.getValue('_token');
     const tokenKey = this.sessionStorageService.getValue('token_key');

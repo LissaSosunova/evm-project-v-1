@@ -17,18 +17,20 @@ import { SocketIO} from 'src/app/types/socket.io.types';
 })
 
 export class ChatWindowComponent implements OnInit, OnDestroy {
+  public arrayOfMessages: Array<types.Message> = [];
   public blockedChats: Array<types.Chats> = [];
   public chats: types.Chats;
+  public control: FormControl;
   public deletedChats: Array<types.Chats> = [];
+  public draftMessage: any[];
   public groupChats: Array<types.Chats> = [];
   public inputMes: string;
+  public isDraftMessageExist: boolean;
+  public isDraftMessageSent: boolean = false;
+  public isMessages: boolean = false;
   public privateChats:Array<types.Chats> = [];
   public test: String = 'This is test data';
   public user: types.User = {} as types.User;
-  public control: FormControl;
-  public isDraftMessageSent: boolean = false;
-  public draftMessage: any[];
-  public isDraftMessageExist: boolean;
 
   private chatId: string;
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -68,7 +70,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         return item.authorId === this.user.username;
       });
     }
-    console.log('draftMessageItem', draftMessageItem);
+    // console.log('draftMessageItem', draftMessageItem);
     this.isDraftMessageExist = !!draftMessageItem;
 
     if (this.isDraftMessageExist) {
@@ -97,10 +99,18 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   }
 
   public getChat(id: string): void {
-    // const id = window.location.href.toString().split("/chat-window/")[1];
     this.data.getPrivatChat(id, '0').subscribe(
       response => {
-        console.log(response);
+        console.log('messages', response);
+        if(response.length <=0){
+          this.test = 'There are no messages in this chat.';
+          console.log(this.test);
+        } else {
+          this.isMessages = true;
+          this.arrayOfMessages = response;
+          console.log('messages', response);
+        }
+        
       }
     );
   }
@@ -115,10 +125,16 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
       edited: false,
       authorId: this.user.username
     };
-    if (this.isDraftMessageSent) {
-      this.deleteDraftMessage();
-      this.isDraftMessageSent = false;
-    }
+    // if (this.isDraftMessageSent) {
+    //   this.deleteDraftMessage();
+    //   this.isDraftMessageSent = false;
+    // }
+    this.data.sendMessage(message).subscribe(
+      chatBody => {
+        this.arrayOfMessages = chatBody.messages;
+        console.log(chatBody);
+      }
+    )
     console.log(message);
     // this.socketIoService.socketEmitCallback(SocketIO.events.message, message, this.sendMessageCallback);
     this.inputMes = '';
