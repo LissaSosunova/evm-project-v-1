@@ -3,14 +3,14 @@
             <ul>
             <li *ngFor="let item of privateChats">
                     <div class="row on-click-one-chat"
-                    (click)= "goToChat(item._id)">
+                    (click)= "goToChat(item.chatId)">
                             <div class="col-sm-1">
                                     <img src="{{item.avatar.url}}">
                             </div>
                             <div class="col-sm-9">
                                     <span class="chat-name">{{item.name}}</span>
                                     <br>
-                                    <span class="chat-message">{{item.id}}</span>
+                                    <span class="chat-message">{{item.chatId}}</span>
                             </div>
                             <div class="col-sm-2"  *ngIf="size === 'normal'">
                                     <br>

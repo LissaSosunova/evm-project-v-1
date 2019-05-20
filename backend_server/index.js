@@ -14,6 +14,7 @@ const $addUser = require('./endpoints/user/add_user');
 const $confirmUser = require('./endpoints/user/confirm_user');
 const $deleteContact = require('./endpoints/user/delete_contact');
 const $privateChat = require('./endpoints/chat/private_chat');
+const $sendMessage = require('./endpoints/chat/send_message');
 const $newPrivateChat = require('./endpoints/chat/new_private_chat');
 const $deleteChat = require('./endpoints/chat/delete_chat');
 const $renewChat = require('./endpoints/chat/renew_chat');
@@ -79,6 +80,9 @@ app.route('/private_chat/:id/')
 
 app.route('/new_private_chat/')
   .post($newPrivateChat);
+
+app.route('/send_message')
+  .post($sendMessage);
 
 app.route('/set_draft_message')  
   .post($setDraftMessage);

@@ -36,7 +36,7 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   public result: any;
   public searchControl: FormControl;
   public test: String = 'This is test data';
-  public user: types.User = {} as types.User
+  public user: types.User = {} as types.User;
 
   @ViewChild('userPopup') private userPopup: UserInfoPopupComponent;
   @ViewChild('popupDetails') private confirmAction: PopupDetailsComponent;

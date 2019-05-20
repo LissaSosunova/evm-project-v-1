@@ -47,7 +47,6 @@ export class ChatListComponent implements OnInit {
   }
   public goToChat(chatId): void {
     this.chatId = chatId;
-    // this.router.navigate(['/main/chats/chat-window', this.private_chat]);
     this.router.navigate(['/main/chat-window', this.chatId]);
   }
   public getChatList(): void {

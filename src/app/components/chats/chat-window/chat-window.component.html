@@ -5,7 +5,17 @@
             col-md-8
             col-lg-8">
     <div class="message-box">
-        here is place for our messages
+        
+        <section [ngSwitch]="isMessages">
+            <span *ngSwitchCase="false">{{test}}</span>
+            <span *ngSwitchCase="isMessages == true">
+                <ul *ngFor="let item of arrayOfMessages">
+                    <li>
+{{item.authorId}}
+                    </li>
+                </ul>
+            </span>
+        </section>
          </div>
     </div>
     <div class="menu-block col-xs-4
