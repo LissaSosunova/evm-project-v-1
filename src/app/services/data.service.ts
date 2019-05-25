@@ -17,46 +17,28 @@ export class DataService {
             private sessionStorageService: SessionStorageService) { }
 
   public addUser(query: types.AddUser): Observable<any> {
-    const token = this.sessionStorageService.getValue('_token');
-    const tokenKey = this.sessionStorageService.getValue('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
-    return this.http.post(URL_BACK + '/add_user/', query, {headers});
+    return this.http.post(URL_BACK + '/add_user/', query, {headers: this.getHeaders()});
   }
 
   public confUser(query: types.AddUser): Observable<any> {
-    const token = this.sessionStorageService.getValue('_token');
-    const tokenKey = this.sessionStorageService.getValue('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
-    return this.http.post(URL_BACK + '/confirm_user/', query, {headers});
+    return this.http.post(URL_BACK + '/confirm_user/', query, {headers: this.getHeaders()});
   }
 
   public createNewPrivateChat(params: types.CreateNewChat): Observable<any> {
-    const token = this.sessionStorageService.getValue('_token');
-    const tokenKey = this.sessionStorageService.getValue('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
-    return this.http.post(URL_BACK + '/new_private_chat/', params, {headers});
+    return this.http.post(URL_BACK + '/new_private_chat/', params, {headers: this.getHeaders()});
   }
 
   public findUser(query: types.FindUser): Observable<any> {
-    const token = this.sessionStorageService.getValue('_token');
-    const tokenKey = this.sessionStorageService.getValue('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
-    return this.http.post(URL_BACK + '/find_user/', query, {headers});
+    return this.http.post(URL_BACK + '/find_user/', query, {headers: this.getHeaders()});
   }
 
   public getPrivatChat(params: string, n: string): Observable<any> {
-    const token = this.sessionStorageService.getValue('_token');
-    const tokenKey = this.sessionStorageService.getValue('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
     const query = {queryNum: n};
-    return this.http.get(`${URL_BACK}/private_chat/${params}`, {headers : headers,  params: query});
+    return this.http.get(`${URL_BACK}/private_chat/${params}`, {headers : this.getHeaders(),  params: query});
   }
 
   public getUser(): Observable<any> {
-    const token = this.sessionStorageService.getValue('_token');
-    const tokenKey = this.sessionStorageService.getValue('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
-    return this.http.get(URL_BACK + '/user/', {headers});
+    return this.http.get(URL_BACK + '/user/', {headers: this.getHeaders()});
   }
 
   public setAuth(params: types.Login): Observable<any> {
@@ -68,39 +50,31 @@ export class DataService {
   }
 
   public saveEvent(event: types.EventDb): Observable<any> {
-    const token = this.sessionStorageService.getValue('_token');
-    const tokenKey = this.sessionStorageService.getValue('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
-    return this.http.post(URL_BACK + '/new_event/', event, {headers});
+    return this.http.post(URL_BACK + '/new_event/', event, {headers: this.getHeaders()});
   }
 
   public sendDraftMessage(query: types.DraftMessage): Observable<any> {
-    const token = this.sessionStorageService.getValue('_token');
-    const tokenKey = this.sessionStorageService.getValue('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
-    return this.http.post(URL_BACK + '/set_draft_message', query, {headers});
+    return this.http.post(URL_BACK + '/set_draft_message', query, {headers: this.getHeaders()});
   }
 
   public sendMessage(query: types.Message): Observable<any> {
-    const token = this.sessionStorageService.getValue('_token');
-    const tokenKey = this.sessionStorageService.getValue('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
-    return this.http.post(URL_BACK + '/send_message', query, {headers});
+    return this.http.post(URL_BACK + '/send_message', query, {headers: this.getHeaders()});
   }
 
   public deleteDraftMessage(query: types.DraftMessageDeleteObj): Observable<any> {
-    const token = this.sessionStorageService.getValue('_token');
-    const tokenKey = this.sessionStorageService.getValue('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
-    return this.http.post(URL_BACK + '/delete_draft_message', query, {headers});
+    return this.http.post(URL_BACK + '/delete_draft_message', query, {headers: this.getHeaders()});
   }
 
   public getDraftMessage(userId: string, chatId: string): Observable<any> {
+    const query = {authorId: userId};
+    return this.http.get(`${URL_BACK}/get_draft_message/${chatId}`, {headers: this.getHeaders(), params: query});
+  }
+
+  private getHeaders(): HttpHeaders {
     const token = this.sessionStorageService.getValue('_token');
     const tokenKey = this.sessionStorageService.getValue('token_key');
     const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
-    const query = {authorId: userId};
-    return this.http.get(`${URL_BACK}/get_draft_message/${chatId}`, {headers: headers, params: query});
+    return headers;
   }
 
 }
