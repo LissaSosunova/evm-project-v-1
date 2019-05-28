@@ -2,86 +2,10 @@ const Chat = require('../models/chats');
 const datareader = require('../modules/datareader');
 const User = require('../models/user');
 
-function loadSession(sid, callback) {
-    sessionStore.load(sid, function (err, session) {
-        if (arguments.length == 0) {
-            //no arguments => no session
-            return callback(null, null);
-        } else {
-            return callback(null, session);
-        }
-    });
-}
-
-function loadUser(session, callback) {
-    if (!session.user) {
-        return callback(null, null);
-    }
-
-    User.findById(session.user, function (err, user) {
-        if (err) return callback(err);
-
-        if (!user) {
-            return callback(null, null);
-        }
-
-        callback(null, user);
-    })
-}
-
 
 function runWebsocketsIO(server, expressApp) {
     const io = require('socket.io').listen(server);
     console.info('Socket IO is running');
-    expressApp.set('io', io);
-    // io.set('origins', 'localhost:*');
-
-    // данный код не даёт подключится к сокетам неавторизированным пользователям
-    // io.use(function (socket, next) {
-    //     const handshakeData = socket.request;
-        //console.info('socket', socket);
-
-        // async.waterfall([
-        //     function (callback) {
-        //         //получить sid
-        //         const parser = cookieParser(secret);
-        //         parser(handshakeData, {}, function (err) {
-        //             if (err) return callback(err);
-
-        //             var sid = handshakeData.signedCookies[sessionKey];
-
-        //             loadSession(sid, callback);
-        //         });
-        //     },
-        //     function (session, callback) {
-        //         if (!session) {
-        //             return callback(new HttpError(401, "No session"));
-        //         }
-
-        //         socket.handshake.session = session;
-        //         loadUser(session, callback);
-        //     },
-        //     function (user, callback) {
-        //         if (!user) {
-        //             return callback(new HttpError(403, "Anonymous session may not connect"));
-        //         }
-        //         callback(null, user);
-        //     }
-        // ], function (err, user) {
-
-        //     if (err) {
-        //         if (err instanceof HttpError) {
-        //             return next(new Error('not authorized'));
-        //         }
-        //         next(err);
-        //     }
-
-        //     socket.handshake.user = user;
-        //     next();
-
-        // });
-
-   // });
 
     const onlineClients = {};
     const clientsInChat = {};
@@ -145,11 +69,10 @@ function runWebsocketsIO(server, expressApp) {
                 date: number; // timeStamp (to UTC)
             }
              */
-
-            console.log('clientsInChat', clientsInChat);
-            if (clientsInChat[obj.chatIdCurr]) {
+            obj.unread = obj.unread || [];
+            if (clientsInChat[obj.chatID]) {
                 // Находим пользователей, которые не в чате
-                Object.keys(clientsInChat[obj.chatIdCurr]).forEach(userId => {
+                Object.keys(clientsInChat[obj.chatID]).forEach(userId => {
                     const userInChat = obj.users.find(item => {
                         return item === userId;
                     });
@@ -157,15 +80,7 @@ function runWebsocketsIO(server, expressApp) {
                         obj.unread.push(userId);
                     }
                 });
-            }
-            if (clientsInChat[obj.chatIdCurr]) {
-                // Шлём сообщения всем, кто в чате
-                Object.keys(clientsInChat[obj.chatIdCurr]).forEach(userId => {
-                    Object.keys(clientsInChat[obj.chatIdCurr][obj.userId]).forEach(token => {
-                        console.log('sent mess', obj);
-                        clientsInChat[obj.chatIdCurr][userId][token].emit('new_message',obj); // попробовать вместо send emit
-                    });
-                });
+              
             }
 
             const updateParams = {
@@ -174,15 +89,21 @@ function runWebsocketsIO(server, expressApp) {
             };
             datareader(Chat, updateParams, 'updateOne') // Сохраняем в базу данных сообщение, причём записываем его в начало массива
             .then(res => {
+                 // Шлём сообщения всем, кто в чате
+                Object.keys(clientsInChat[obj.chatID]).forEach(userId => {
+                    Object.keys(clientsInChat[obj.chatID][userId]).forEach(token => {
+                        clientsInChat[obj.chatID][userId][token].emit('new_message',obj); // попробовать вместо send emit
+                    });
+                });
             // Шлём всем кто в онлайн обновленную модель списка чатов
               obj.users.forEach(user => {
                 Object.keys(onlineClients).forEach(async onlineUser => {
                     if(user === onlineUser) {
                         try {
                             const queryParams = {
-                                query: user,
+                                query: {username: user},
                                 elementMatch: {chats: 1}
-                              };
+                              };  
                             const chatList = await datareader(User, queryParams, 'findElementMatch');
                             const promises = [];
                             chatList.forEach(chat => {
@@ -192,7 +113,7 @@ function runWebsocketsIO(server, expressApp) {
                                     elementMatch: {
                                         messages:{
                                             $elemMatch:{
-                                                unread: userDb.username
+                                                unread: chatList.chats.username
                                                 }
                                             }
                                         }
@@ -219,11 +140,13 @@ function runWebsocketsIO(server, expressApp) {
                                     }
                                 })
                             });
-                            Object.keys(onlineUser).forEach(token => {
-                                token.emit('chats_model', chatList);
+                            Object.keys(onlineClients).forEach(userId => {
+                                Object.keys(onlineClients[userId]).forEach(token => {
+                                    onlineClients[userId][token].emit('chats_model', chatList);
+                                });
                             });
                         } catch(err) {
-                            console.error(new Error(err));
+                            console.error('message event error', new Error(err));
                         }
 
                         }
@@ -237,7 +160,6 @@ function runWebsocketsIO(server, expressApp) {
             /*
             obj = {
                 chatIdCurr: string;
-                chatIdPrev: string;
                 userId: string;
                 token: string
             }
@@ -249,33 +171,27 @@ function runWebsocketsIO(server, expressApp) {
                 clientsInChat[obj.chatIdCurr][obj.userId] = {}
             }
             clientsInChat[obj.chatIdCurr][obj.userId][obj.token] = socket;
-            delete clientsInChat[obj.chatIdPrev][obj.userId][obj.token];
-            if (Object.keys(clientsInChat[obj.chatIdPrev][obj.userId]).length === 0) {
-                delete clientsInChat[obj.chatIdPrev][obj.userId];
-            }
-            if (Object.keys(clientsInChat[obj.chatIdPrev]).length === 0) {
-                delete clientsInChat[obj.chatIdPrev]
-            }
         });
 
         socket.on("user_left_chat", obj => {
             /*
             obj = {
-                chatIdPrev: string;
+                chatId: string;
                 userId: string;
                 token: string
             }
              */
-            delete clientsInChat[obj.chatIdPrev][obj.userId][obj.token];
-            if (Object.keys(clientsInChat[obj.chatIdPrev][obj.userId]).length === 0) {
-                delete clientsInChat[obj.chatIdPrev][obj.userId];
+            delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
+            if (Object.keys(clientsInChat[obj.chatIdCurr][obj.userId]).length === 0) {
+                delete clientsInChat[obj.chatIdCurr][obj.userId];
             }
-            if (Object.keys(clientsInChat[obj.chatIdPrev]).length === 0) {
-                delete clientsInChat[obj.chatIdPrev]
+            if (Object.keys(clientsInChat[obj.chatIdCurr]).length === 0) {
+                delete clientsInChat[obj.chatIdCurr]
             }
         });
 
         io.on("disconnect", () => {
+            console.log(`User ${obj.userId} is offline`);
             delete onlineClients[obj.userId][obj.token]
         });
     });

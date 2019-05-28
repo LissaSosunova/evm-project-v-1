@@ -16,6 +16,7 @@ import { NewEventGuard } from './components/new-event/new-event.guard';
 import { NgModule } from '@angular/core';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { Routes, RouterModule } from '@angular/router';
+import { GetChatResolverService } from './resolvers/get-chat-resolver.service';
 
 const routes: Routes = [
   {
@@ -75,16 +76,13 @@ const routes: Routes = [
         path: 'chat-window/:chatId',
         component: ChatWindowComponent,
         resolve: {
-          draftMessage: GetDraftMessagesResolverService
+          draftMessage: GetDraftMessagesResolverService,
+          chatMessages: GetChatResolverService
          },
         children: [
           {
             path: 'chat-list',
             component: ChatListComponent
-          },
-          {
-            path: 'chat-list',
-            component: ChatListComponent,
           }
         ]
       },

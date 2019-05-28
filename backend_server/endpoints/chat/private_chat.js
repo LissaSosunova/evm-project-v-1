@@ -37,7 +37,12 @@ router.get('/private_chat/:id/', async function (req, res, next){
         elementMatch: {messages: {$slice: [n, mesAmount]}}
       };
       const getUserChat = await datareader(Chat, getChatParams, 'findOneElementMatch');
-      res.json(getUserChat.messages);
+      if (n > 0) {
+        res.json(getUserChat.messages);
+      } else {
+        res.json(getUserChat);
+      }
+      
     } catch (err) {
       console.error(err);
       res.sendStatus(500);

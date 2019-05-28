@@ -9,6 +9,7 @@ import { DateTransformService } from 'src/app/services/date-transform.service';
 import { Subject } from 'rxjs';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { SocketIO} from 'src/app/types/socket.io.types';
+import { SessionStorageService } from 'src/app/services/session.storage.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -19,7 +20,6 @@ import { SocketIO} from 'src/app/types/socket.io.types';
 export class ChatWindowComponent implements OnInit, OnDestroy {
   public arrayOfMessages: Array<types.Message> = [];
   public blockedChats: Array<types.Chats> = [];
-  public chats: types.Chats;
   public control: FormControl;
   public deletedChats: Array<types.Chats> = [];
   public draftMessage: any[];
@@ -28,18 +28,21 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   public isDraftMessageExist: boolean;
   public isDraftMessageSent: boolean = false;
   public isMessages: boolean = false;
-  public privateChats:Array<types.Chats> = [];
+  public privateChats: Array<types.Chats> = [];
   public test: String = 'This is test data';
   public user: types.User = {} as types.User;
 
+  private chats: types.ChatData;
   private chatId: string;
+  private userObj: {chatIdCurr: string; userId: string; token: string};
   private unsubscribe$: Subject<void> = new Subject<void>();
   constructor(private transferService: TransferService,
               private route: ActivatedRoute,
               private router: Router,
               private data: DataService,
               private dateTransformService: DateTransformService,
-              private socketIoService: SocketIoService) { }
+              private socketIoService: SocketIoService,
+              private sessionStorageService: SessionStorageService) { }
 
   ngOnInit() {
     this.init();
@@ -53,16 +56,68 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.socketIoService.socketEmit(SocketIO.events.user_left_chat, this.userObj);
   }
 
-  public init(): void {
-    this.socketIoService.on(SocketIO.events.new_message).pipe(takeUntil(this.unsubscribe$))
-    .subscribe(message => {
-      console.log(message);
-    });
-    this.chatId = this.route.snapshot.params.chatId;
-    this.getChat(this.chatId); // вынеси в резолвер
+  public sendMessage(): void {
+    const date = this.dateTransformService.nowUTC();
+    const message: types.Message = {
+      chatID: this.chatId,
+      text: this.inputMes,
+      users: this.chats.users,
+      unread: [],
+      date: date,
+      edited: false,
+      authorId: this.user.username
+    };
+    if (this.isDraftMessageSent) {
+       this.deleteDraftMessage();
+       this.isDraftMessageSent = false;
+     }
+    console.log(message);
+    this.socketIoService.socketEmit(SocketIO.events.message, message);
+    this.inputMes = '';
+    this.control.setValue('');
+  }
+
+  private getChat(): void {
+    this.chats = this.route.snapshot.data.chatMessages;
+    this.arrayOfMessages = this.chats.messages;
+    if (this.arrayOfMessages.length <= 0) {
+      this.test = 'There are no messages in this chat.';
+      console.log(this.test);
+    } else {
+      this.isMessages = true;
+      console.log('messages', this.arrayOfMessages);
+    }
+  }
+
+  private init(): void {
     this.user = this.transferService.dataGet('userData');
+    this.chatId = this.route.snapshot.params.chatId;
+    this.subscribeNewMessagesInit();
+    this.userObj = {
+      chatIdCurr: this.chatId,
+      userId: this.user.username,
+      token: this.sessionStorageService.getValue('_token')
+  };
+    this.socketIoService.socketEmit(SocketIO.events.user_in_chat, this.userObj);
+    this.getChat();
+    this.initDraftMessagesSubscription();
+  }
+
+
+  private deleteDraftMessage(): void {
+    const draftMessageDeleteObj: types.DraftMessageDeleteObj = {
+      chatID: this.chatId,
+      authorId: this.user.username
+    };
+    this.data.deleteDraftMessage(draftMessageDeleteObj).subscribe(res => {
+     this.isDraftMessageExist = false;
+    });
+  }
+
+  private initDraftMessagesSubscription(): void {
     this.draftMessage = this.route.snapshot.data.draftMessage;
     let draftMessageItem: types.DraftMessage;
     if (this.draftMessage && this.draftMessage.length > 0) {
@@ -70,7 +125,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         return item.authorId === this.user.username;
       });
     }
-    // console.log('draftMessageItem', draftMessageItem);
     this.isDraftMessageExist = !!draftMessageItem;
 
     if (this.isDraftMessageExist) {
@@ -98,63 +152,13 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     });
   }
 
-  public getChat(id: string): void {
-    this.data.getPrivatChat(id, '0').subscribe(
+  private getMessages(chatId: string, n: number): void {
+    // метод для получения последующих порций сообщений, будет вызываться при скроле окна до верха
+    this.data.getPrivatChat(chatId, String(n)).subscribe(
       response => {
         console.log('messages', response);
-        if(response.length <=0){
-          this.test = 'There are no messages in this chat.';
-          console.log(this.test);
-        } else {
-          this.isMessages = true;
-          this.arrayOfMessages = response;
-          console.log('messages', response);
-        }
-        
       }
     );
-  }
-
-
-  public sendMessage(): void {
-    const date = this.dateTransformService.nowUTC();
-    const message: types.Message = {
-      chatID: this.chatId,
-      text: this.inputMes,
-      date: date,
-      edited: false,
-      authorId: this.user.username
-    };
-    // if (this.isDraftMessageSent) {
-    //   this.deleteDraftMessage();
-    //   this.isDraftMessageSent = false;
-    // }
-    this.data.sendMessage(message).subscribe(
-      chatBody => {
-        this.arrayOfMessages = chatBody.messages;
-        console.log(chatBody);
-      }
-    )
-    console.log(message);
-    // this.socketIoService.socketEmitCallback(SocketIO.events.message, message, this.sendMessageCallback);
-    this.inputMes = '';
-    this.control.setValue('');
-  }
-
-  private sendMessageCallback(): void {
-    console.log('event');
-  }
-
-  private deleteDraftMessage(): void {
-    const draftMessageDeleteObj: types.DraftMessageDeleteObj = {
-      chatID: this.chatId,
-      authorId: this.user.username
-    };
-    console.log('delete draft message', draftMessageDeleteObj);
-    this.data.deleteDraftMessage(draftMessageDeleteObj).subscribe(res => {
-     console.log(res);
-     this.isDraftMessageExist = false;
-    });
   }
 
   private sendDraftMessage(): void {
@@ -165,11 +169,17 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
       date: date,
       authorId: this.user.username
     };
-    console.log('draft message sent', draftMessage);
     this.data.sendDraftMessage(draftMessage).subscribe(res => {
-     console.log(res);
      this.isDraftMessageSent = true;
     });
   }
 
+  private subscribeNewMessagesInit(): void {
+    this.socketIoService.on(SocketIO.events.new_message).
+    pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe(message => {
+      console.log(message);
+      // тут будет логика обновления модели для сообщений как своих, так и входящих
+    });
+ }
 }

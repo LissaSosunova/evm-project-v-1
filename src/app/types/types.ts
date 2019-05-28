@@ -16,6 +16,14 @@ export module types {
     contacts: Contact[];
   }
 
+  export interface ChatData {
+    _id: string;
+    email: string[];
+    users: string[];
+    messages: Message[];
+    type: ChatType;
+  }
+
   export interface Chats {
     _id: string;
     avatar: string;
@@ -161,9 +169,11 @@ export module types {
     query: string;
   }
   export interface Message {
+    _id?: string;
     chatID: string;
     authorId: string;
     text: string;
+    users: string[];
     edited: boolean;
     unread?: string[];
     date: number; // timeStamp (to UTC)
@@ -197,8 +207,8 @@ export interface SocketMessage {
 }
 
 export interface CreateNewChat {
-  users: string[],
-  email: string[]
+  users: string[];
+  email: string[];
 }
 
   export const getURI = () => {
