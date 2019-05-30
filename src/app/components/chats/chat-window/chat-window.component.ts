@@ -49,6 +49,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy () {
+    console.log('destroy');
+    this.socketIoService.socketEmit(SocketIO.events.user_left_chat, this.userObj);
     if (this.inputMes) {
       this.sendDraftMessage();
     } else if (this.isDraftMessageSent && this.inputMes === '') {
@@ -56,7 +58,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    this.socketIoService.socketEmit(SocketIO.events.user_left_chat, this.userObj);
   }
 
   public sendMessage(): void {

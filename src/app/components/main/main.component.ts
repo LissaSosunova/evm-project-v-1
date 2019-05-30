@@ -36,10 +36,12 @@ export class MainComponent implements OnInit, OnDestroy {
       token: token
     };
     this.socketIoService.socketEmit(SocketIO.events.user, dataObj);
+    console.log(this.user);
   }
 
   ngOnDestroy() {
-
+    this.socketIoService.closeConnection();
+    sessionStorage.clear();
   }
 
 

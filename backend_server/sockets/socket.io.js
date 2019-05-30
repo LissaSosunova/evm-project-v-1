@@ -69,15 +69,17 @@ function runWebsocketsIO(server, expressApp) {
                 date: number; // timeStamp (to UTC)
             }
              */
+            console.log('clientsInChat[obj.chatID]',clientsInChat[obj.chatID]);
             obj.unread = obj.unread || [];
             if (clientsInChat[obj.chatID]) {
                 // Находим пользователей, которые не в чате
-                Object.keys(clientsInChat[obj.chatID]).forEach(userId => {
-                    const userInChat = obj.users.find(item => {
-                        return item === userId;
+                obj.users.forEach(userId => {
+                    const userOffChat = Object.keys(clientsInChat[obj.chatID]).every(item => {
+                        return item !== userId
                     });
-                    if (!userInChat) {
+                    if (userOffChat) {
                         obj.unread.push(userId);
+                        console.log('userId', userId);
                     }
                 });
               
@@ -181,6 +183,8 @@ function runWebsocketsIO(server, expressApp) {
                 token: string
             }
              */
+            console.log("user_left_chat");
+            console.log('obj', obj);
             delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
             if (Object.keys(clientsInChat[obj.chatIdCurr][obj.userId]).length === 0) {
                 delete clientsInChat[obj.chatIdCurr][obj.userId];
@@ -188,6 +192,7 @@ function runWebsocketsIO(server, expressApp) {
             if (Object.keys(clientsInChat[obj.chatIdCurr]).length === 0) {
                 delete clientsInChat[obj.chatIdCurr]
             }
+            console.log('clientsInChat', clientsInChat);
         });
 
         io.on("disconnect", () => {

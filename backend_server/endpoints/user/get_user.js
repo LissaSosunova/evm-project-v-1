@@ -78,8 +78,10 @@ router.get('/user', async function (req, res, next) {
         }
       });
       const unreadMes = await Promise.all(promises);
+      console.log('unreadMes', unreadMes);
       const unreadNumInChats = [];
       unreadMes.forEach(item => {
+        console.log(item[0].messages);
         const obj = {};
         obj.chatId = String(item[0]._id);
         obj.unreadMes = item[0].messages.length;

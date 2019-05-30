@@ -6,7 +6,7 @@ const messageItem = db.Schema({
     authorId: {type: String},
     text: {type: String},
     edited: {type: Boolean},
-    read: [String],
+    unread: [String],
     date: {type: Number} // timestamp
 });
 
