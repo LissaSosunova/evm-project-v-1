@@ -4,12 +4,14 @@ import { types } from 'src/app/types/types';
 import { TransferService } from 'src/app/services/transfer.service';
 import { DataService } from 'src/app/services/data.service';
 import { FormControl, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, takeUntil, throttle, throttleTime} from 'rxjs/operators';
 import { DateTransformService } from 'src/app/services/date-transform.service';
-import { Subject } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { SocketIO} from 'src/app/types/socket.io.types';
 import { SessionStorageService } from 'src/app/services/session.storage.service';
+import { Store, select } from '@ngrx/store';
+import * as userAction from '../../../store/actions';
 
 @Component({
   selector: 'app-chat-window',
@@ -36,20 +38,22 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   private chatId: string;
   private userObj: {chatIdCurr: string; userId: string; token: string};
   private unsubscribe$: Subject<void> = new Subject<void>();
+  private user$: Observable<types.User>;
+
   constructor(private transferService: TransferService,
               private route: ActivatedRoute,
               private router: Router,
               private data: DataService,
               private dateTransformService: DateTransformService,
               private socketIoService: SocketIoService,
-              private sessionStorageService: SessionStorageService) { }
+              private sessionStorageService: SessionStorageService,
+              private store: Store<types.User>) { }
 
   ngOnInit() {
     this.init();
   }
 
   ngOnDestroy () {
-    console.log('destroy');
     this.socketIoService.socketEmit(SocketIO.events.user_left_chat, this.userObj);
     if (this.inputMes) {
       this.sendDraftMessage();
@@ -75,7 +79,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
        this.deleteDraftMessage();
        this.isDraftMessageSent = false;
      }
-    console.log(message);
     this.socketIoService.socketEmit(SocketIO.events.message, message);
     this.inputMes = '';
     this.control.setValue('');
@@ -94,6 +97,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   }
 
   private init(): void {
+    this.user$ = this.store.pipe(select('user'));
+    this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
+      this.user = user;
+    });
     this.user = this.transferService.dataGet('userData');
     this.chatId = this.route.snapshot.params.chatId;
     this.subscribeNewMessagesInit();
@@ -105,6 +112,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.socketIoService.socketEmit(SocketIO.events.user_in_chat, this.userObj);
     this.getChat();
     this.initDraftMessagesSubscription();
+
   }
 
 
@@ -179,8 +187,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.socketIoService.on(SocketIO.events.new_message).
     pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
     .subscribe(message => {
-      console.log(message);
       // тут будет логика обновления модели для сообщений как своих, так и входящих
+      this.arrayOfMessages.unshift(message);
+      this.store.dispatch(new userAction.UpdateChatList(message));
     });
  }
 }

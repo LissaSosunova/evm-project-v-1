@@ -11,7 +11,8 @@
             <span *ngSwitchCase="isMessages == true">
                 <ul *ngFor="let item of arrayOfMessages">
                     <li>
-{{item.authorId}}
+                        <div>{{item.authorId}}, date {{item.date | date: 'medium'}}</div>
+                        <div>{{item.text}}</div>
                     </li>
                 </ul>
             </span>

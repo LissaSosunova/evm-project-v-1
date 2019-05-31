@@ -45,7 +45,7 @@ export class DateTransformService {
     const ms = now.getMilliseconds();
 
     const utcDate: number = this.dateToUtc(now);
-    return new Date(utcDate).setUTCHours(hour, min, sec, ms);
+    return new Date(utcDate).setHours(hour, min, sec, ms);
   }
 
   /**

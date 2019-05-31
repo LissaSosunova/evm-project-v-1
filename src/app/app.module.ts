@@ -49,7 +49,8 @@ import { SelectComponent } from './shared/form-controls/select/select.component'
 import { PageMaskComponent } from './components/page-mask/page-mask.component';
 import { RouterModule } from '@angular/router';
 import { UserInfoPopupComponent } from './components/user-info-popup/user-info-popup.component';
-import { TransferService } from './services/transfer.service';
+import { StoreModule } from '@ngrx/store';
+import {userReducer} from './store/reducer';
 
 
 @NgModule({
@@ -115,7 +116,8 @@ import { TransferService } from './services/transfer.service';
     MatIconModule,
     MatNativeDateModule,
     MatRadioModule,
-    MatSelectModule
+    MatSelectModule,
+    StoreModule.forRoot({user: userReducer})
   ],
   entryComponents: [
     ToastSuccessComponent,

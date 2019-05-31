@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
-import { TransferService } from 'src/app/services/transfer.service';
 import { DataService } from 'src/app/services/data.service';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-chats',
@@ -17,11 +18,13 @@ export class ChatsComponent implements OnInit, OnDestroy {
   public inputMes: string;
   public privateChats:Array<types.Chats> = [];
   public user: types.User = {} as types.User;
+  public user$: Observable<types.User>;
 
-  constructor(private transferService: TransferService,
+  constructor(
               private route: ActivatedRoute,
               private router: Router,
-              private data: DataService
+              private data: DataService,
+              private store: Store<types.User>
               ) { }
 
 
@@ -34,8 +37,7 @@ export class ChatsComponent implements OnInit, OnDestroy {
   }
 
   public init(): void {
-    const user = this.transferService.dataGet('userData');
-    this.user = Object.assign({}, user);
+    this.user$ = this.store.select('user');
   }
 
   public getChat(id: string): void {

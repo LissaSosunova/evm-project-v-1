@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {OptionsInput} from 'fullcalendar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
-import { TransferService } from 'src/app/services/transfer.service';
+import {Store} from '@ngrx/store';
+import * as userAction from '../../store/actions';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-event-calendar',
@@ -13,13 +15,14 @@ export class EventCalendarComponent implements OnInit {
 
   public calendarOptions: OptionsInput;
   public user: types.User;
+  public user$: Observable<types.User>;
 
   constructor(private route: ActivatedRoute,
-              private transferService: TransferService) {}
+              private store: Store<types.User>) {}
 
   ngOnInit() {
     this.user = this.route.snapshot.data.userData;
-    this.transferService.dataSet({name: 'userData', data: this.user});
+    this.store.dispatch(new userAction.InitUserModel(this.user));
     const events = this.user.events.map(event => {
       if (event.date_type === types.dateTypeEvent.DIAPASON_OF_DATES) {
         return {

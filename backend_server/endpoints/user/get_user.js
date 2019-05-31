@@ -12,6 +12,7 @@ const FoundContact = require('../../models/findcontact');
 
 const datareader = require('../../modules/datareader');
 const Chat = require('../../models/chats');
+const ObjectId =  require('mongodb').ObjectID;
 
 // импортируем файл конфигурации (баловство, конечно, надо генерировать это на лету и хранить где-нибудь)
 const config = require('../../config');
@@ -61,45 +62,51 @@ router.get('/user', async function (req, res, next) {
       const userDb = await datareader(User, params, 'findOne');
       const user = new UserData(userDb);
       const chatList = userDb.chats;
-      const promises = [];
+      const promisesUnreadNum = [];
+      const promisesLastMes = [];
       chatList.forEach(chat => {
         if(chat.chatId) {
-          let queryParams = {
-            query: {_id: chat.chatId},
-            elementMatch: {
-              messages:{
-                $elemMatch:{
-                  unread: userDb.username
-                }
-              }
-            }
+          const queryParams = {
+            query: {"_id" : ObjectId(chat.chatId)},
+            queryField1: 'messages',
+            queryField2: 'unread',
+            contidition: [user.username]
           };
-        promises.push(datareader(Chat, queryParams, 'findElementMatch'));
+          const queryParamsForLastMes = {
+            query: {"_id" : ObjectId(chat.chatId)},
+            elementMatch: {messages: {$slice: [0, 1]}}
+          }
+        promisesUnreadNum.push(datareader(Chat, queryParams, 'arrayFilter'));
+        promisesLastMes.push(datareader(Chat, queryParamsForLastMes, 'findOneElementMatch'))
         }
       });
-      const unreadMes = await Promise.all(promises);
-      console.log('unreadMes', unreadMes);
+
+      const unreadMes = await Promise.all(promisesUnreadNum);
+      const lastMes = await Promise.all(promisesLastMes);
+      console.log('lastMes', lastMes);
       const unreadNumInChats = [];
       unreadMes.forEach(item => {
-        console.log(item[0].messages);
         const obj = {};
         obj.chatId = String(item[0]._id);
-        obj.unreadMes = item[0].messages.length;
-        if (item[0].messages.length > 0) {
-          obj.lastMessage = item[0].messages[0];
-        }
+        obj.unreadMes = item[0].query.length;
         unreadNumInChats.push(obj);
       });
       user.chats.forEach(item => {
         unreadNumInChats.forEach(el => {
           if (item.chatId && item.chatId === el.chatId) {
             item.unreadMes = el.unreadMes;
-            item.lastMessage = el.lastMessage;
+           
+          }
+        })
+        lastMes.forEach(el => {
+          if (item.chatId && item.chatId == el._id) {
+             item.lastMessage = el.messages[0];
           }
         })
       });
       res.json(user);
     } catch(err) {
+      console.error('/user', err);
       res.sendStatus(500);
     }
 

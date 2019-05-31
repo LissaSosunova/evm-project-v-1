@@ -32,6 +32,7 @@ export module types {
     name: string;
     type: number;
     unreadMes: number;
+    lastMessage: Message;
   }
 
 
