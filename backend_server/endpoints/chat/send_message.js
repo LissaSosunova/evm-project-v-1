@@ -21,7 +21,7 @@ router.post('/send_message', async function (req, res, next){
         message.edited = req.body.edited;
         message.date = req.body.date;
 
-      const getChatParams = {_id: message.chatID};
+      const getChatParams = {_id: req.body.chatID};
 
       const updateParams = {
         getChatParams,
