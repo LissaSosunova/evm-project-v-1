@@ -54,8 +54,6 @@ export class SidebarComponent implements OnInit {
       token: token
     };
     this.socketIoService.socketEmit(SocketIO.events.user_left, dataObj);
-    this.socketIoService.closeConnection();
-    sessionStorage.clear();
   }
 
 }

@@ -4,11 +4,12 @@ import { DataService } from 'src/app/services/data.service';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { PopupDetailsComponent } from './popup-details/popup-details.component';
-import { Subject } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import { ToastService } from 'src/app/shared/toasts/services/toast.service';
-import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
 import { UserInfoPopupComponent } from '../user-info-popup/user-info-popup.component';
+import {Store} from '@ngrx/store';
+import * as userAction from '../../store/actions';
 
 @Component({
   selector: 'app-contacts',
@@ -37,17 +38,19 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   public searchControl: FormControl;
   public test: String = 'This is test data';
   public user: types.User = {} as types.User;
+  public user$: Observable<types.User>;
 
   @ViewChild('userPopup') private userPopup: UserInfoPopupComponent;
   @ViewChild('popupDetails') private confirmAction: PopupDetailsComponent;
 
   private unsubscribe$: Subject<void> = new Subject();
 
-  constructor(private transferService: TransferService,
+  constructor(
               private route: ActivatedRoute,
               private router: Router,
               private data: DataService,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private store: Store<types.User>) {
 
             }
 
@@ -80,7 +83,7 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
         this.user = Object.assign({}, data);
-        this.transferService.dataSet({name: 'userData', data: this.user});
+        this.store.dispatch(new userAction.InitUserModel(this.user));
         this.initSortContactLists();
       }
     );
@@ -93,7 +96,7 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.data.confUser(this.query).subscribe(
       data => {
         this.user = Object.assign({}, data);
-        this.transferService.dataSet({name: 'userData', data: this.user});
+        this.store.dispatch(new userAction.InitUserModel(this.user));
         this.initSortContactLists();
         this.toastService.openToastSuccess('Confirmed!');
       }
@@ -113,7 +116,7 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.data.createNewPrivateChat(this.createNewChatParams).subscribe(
         resp => {
           this.user = Object.assign({}, resp.user);
-          this.transferService.dataSet({name: 'userData', data: this.user});
+          this.store.dispatch(new userAction.InitUserModel(this.user));
           this.private_chat = resp.chat._id;
           this.router.navigate(['/main/chat-window', this.private_chat]);
         }
@@ -121,20 +124,19 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   private init(): void {
-    const user = this.transferService.dataGet('userData');
-    this.user = Object.assign({}, user);
-    this.transferService.setDataObs(this.test);
+    this.user$ = this.store.select('user');
+    this.user$.subscribe(user => this.user = user);
     this.currTab = this.route.snapshot.queryParams.currTab;
     this.initSortContactLists();
     if(!this.currTab) {
       this.currTab = 'contacts';
     }
   }
-  
+
   private initSortContactLists(): void {
-    this.contactsConfirmed=[];
-    this.contactsAwaiting=[];
-    this.contactsRequested=[];
+    this.contactsConfirmed = [];
+    this.contactsAwaiting = [];
+    this.contactsRequested = [];
     this.isContactsConfirmed = false;
     this.isContactsAwaiting = false;
     this.iscontactsRequested = false;

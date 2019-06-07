@@ -54,6 +54,16 @@ function dbQuery (collection, params, action) {
         else resolve(d);
       })
     }
+    else if (action === 'arrayFilter') {
+      const query = params.queryField1;
+      const condition = params.contidition;
+      collection.aggregate([{$match: params.query}, {$project: {query: {$filter: {input: `$${params.queryField1}`, as: 'item', cond: {$eq:[`$$item.${params.queryField2}`, params.contidition]}}}}}], (e, d) => {
+        if (e) reject (e);
+        else resolve(d);
+      })
+                              // db.chats.aggregate([{$match: {"_id" : ObjectId("5cf0ec864e24792f5a76109d")}}, {$project: {messages: {$filter: {input: '$messages', as: 'item', cond: {$eq:['$$item.unread', ['AndreyTrz']]}}}}}])
+
+    }
    
   })
 }

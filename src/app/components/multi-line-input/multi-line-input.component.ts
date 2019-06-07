@@ -22,6 +22,7 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
   @Input() public currMes: string;
   @ViewChild('input') public input: ElementRef;
   private inputElement: HTMLDivElement;
+  private isInputFocused: boolean = false;
   @Input() private minHeight: string; // optional
   @Input() private maxHeight: string; // optional
 
@@ -36,10 +37,10 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.inputElement && changes.currMes.currentValue === '' && !changes.currMes.isFirstChange()) {
+    if (this.inputElement && !this.isInputFocused && changes.currMes.currentValue === '' && !changes.currMes.isFirstChange()) {
       this.inputElement.innerHTML = changes.currMes.currentValue;
-      this.showPlaceholder = true;
       this.currText = '';
+      this.showPlaceholder = true;
     } else if (this.inputElement && changes.currMes.currentValue !== '' && !changes.currMes.isFirstChange()) {
       this.showPlaceholder = false;
     }
@@ -59,10 +60,15 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
     if (!this.currText) {
       this.showPlaceholder = true;
     }
+    this.isInputFocused = false;
   }
 
   public onFocus(): void {
+    this.isInputFocused = true;
     this.showPlaceholder = false;
+    setTimeout(() => {
+      this.inputElement.focus();
+    });
   }
 
   registerOnChange(fn: any): void {
