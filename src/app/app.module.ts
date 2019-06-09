@@ -50,7 +50,9 @@ import { PageMaskComponent } from './components/page-mask/page-mask.component';
 import { RouterModule } from '@angular/router';
 import { UserInfoPopupComponent } from './components/user-info-popup/user-info-popup.component';
 import { StoreModule } from '@ngrx/store';
-import {userReducer} from './store/reducer';
+import { userReducer} from './store/reducer';
+import { ReversePipe } from './pipes/reverse.pipe';
+import { GetNameFromUserIDPipe } from './pipes/get-name-from-user-id.pipe';
 
 
 @NgModule({
@@ -98,7 +100,9 @@ import {userReducer} from './store/reducer';
     ChatWindowComponent,
     ChatListComponent,
     ChatMainComponent,
-    ChatGroupsComponent
+    ChatGroupsComponent,
+    ReversePipe,
+    GetNameFromUserIDPipe
   ],
   imports: [
     BrowserModule,

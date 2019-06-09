@@ -70,7 +70,11 @@
                 <i class="material-icons">visibility</i>
               </button>
               <button class="m-btn confirm"
-                    (click)="goToChat({chatId: item.private_chat, userId: item.id, email: item.email})">
+                    (click)="goToChat({
+                      chatId: item.private_chat,
+                      userId: item.id,
+                      name: item.name,
+                      email: item.email})">
                       <i class="material-icons">chat_bubble_outline</i>
                     </button>
               <button class="m-btn cancel"

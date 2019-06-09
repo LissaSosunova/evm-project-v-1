@@ -8,14 +8,18 @@
         
         <section [ngSwitch]="isMessages">
             <span *ngSwitchCase="false">{{test}}</span>
-            <span *ngSwitchCase="isMessages == true">
-                <ul *ngFor="let item of arrayOfMessages">
+            <div class="message-wrapper" *ngSwitchCase="isMessages == true">
+                <ul *ngFor="let item of arrayOfMessages | reverse">
                     <li>
-                        <div>{{item.authorId}}, date {{item.date | date: 'medium'}}</div>
-                        <div>{{item.text}}</div>
+                        <div class="message-body"
+                        [ngClass]="{'message-not-author': item.authorId !== user.username, 'message-author': item.authorId  === user.username}">
+                            <span class="author-name" > {{ arrayOfUsers | getNameFromUserID: item.authorId }}, </span>
+                            <span class="date"> {{item.date | date: 'dd.MM.yy'}}, ({{item.date | date: 'HH:mm:ss'}}): &nbsp;&nbsp;&nbsp;</span>
+                            <span class="text">{{item.text}}</span>
+                        </div>
                     </li>
                 </ul>
-            </span>
+            </div>
         </section>
          </div>
     </div>

@@ -2,6 +2,8 @@ $bg-color: (
   'dark': rgba(94, 116, 25, 1),
   'darker': rgba(60, 74, 16, 1),
   'gray': rgba(214, 222, 217, 1),
+  'gray-light': rgba(233, 233, 233, 1),
+  'gray-lighter': rgba(242, 242, 242, 1),
   'green': rgba(155, 176, 15, 1),
   'light-olive': rgba(245, 255, 232, 1),
   'lighter': rgba(183, 217, 77, 1),
@@ -22,6 +24,8 @@ $font-color: (
 
 $footer-height: 65px;
 $header-height: 70px;
+$logo-height: 40px;
+
 $error-mes: (
   'white': white,
   'red': red);
@@ -34,4 +38,4 @@ $disabled: (
 
 $border-color: (
   'darker': rgba(20, 32, 11, 1)
-)
+);

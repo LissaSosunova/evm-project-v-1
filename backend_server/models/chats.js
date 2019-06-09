@@ -4,6 +4,7 @@ const db = require('./db');
 const messageItem = db.Schema({
     chatID: {type: String},
     authorId: {type: String},
+    authorName: {type: String},
     text: {type: String},
     edited: {type: Boolean},
     unread: [String],
@@ -17,10 +18,15 @@ const draftMessageItem = db.Schema({
     date: {type: Number}
 });
 
+const userItem = db.Schema({
+    username:{type: String},
+    name:{type: String},
+    email:{type: String}
+});
+
 //Chat types: 1 - private chat, 2 - group chat | event chat, 3 - blocked chat, 4 - deleted chat
 const chat = db.Schema({
-    users:[String],
-    email:[String],
+    users:[userItem],
     draftMessages: [draftMessageItem],
     messages: [messageItem],
     type: {type: Number}

@@ -21,6 +21,7 @@ import * as userAction from '../../../store/actions';
 
 export class ChatWindowComponent implements OnInit, OnDestroy {
   public arrayOfMessages: Array<types.Message> = [];
+  public arrayOfUsers: any[];
   public blockedChats: Array<types.Chats> = [];
   public control: FormControl;
   public deletedChats: Array<types.Chats> = [];
@@ -65,6 +66,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   }
 
   public sendMessage(): void {
+    this.isMessages = true;
     const date = this.dateTransformService.nowUTC();
     const message: types.Message = {
       chatID: this.chatId,
@@ -73,7 +75,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
       unread: [],
       date: date,
       edited: false,
-      authorId: this.user.username
+      authorId: this.user.username,
+      authorName: this.user.name
     };
     if (this.isDraftMessageSent) {
        this.deleteDraftMessage();
@@ -87,12 +90,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   private getChat(): void {
     this.chats = this.route.snapshot.data.chatMessages;
     this.arrayOfMessages = this.chats.messages;
+    this.arrayOfUsers = this.chats.users;
     if (this.arrayOfMessages.length <= 0) {
       this.test = 'There are no messages in this chat.';
-      console.log(this.test);
     } else {
       this.isMessages = true;
-      console.log('messages', this.arrayOfMessages);
     }
   }
 
@@ -176,7 +178,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
       chatID: this.chatId,
       text: this.inputMes,
       date: date,
-      authorId: this.user.username
+      authorId: this.user.username,
+      authorName: this.user.name
     };
     this.data.sendDraftMessage(draftMessage).subscribe(res => {
      this.isDraftMessageSent = true;
