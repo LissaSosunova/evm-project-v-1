@@ -138,7 +138,6 @@ export module types {
     authorId: string;
     text: string;
     date: number;
-    authorName: string;
   }
 
   export interface DraftMessageDeleteObj {
@@ -166,7 +165,6 @@ export module types {
     _id?: string;
     chatID: string;
     authorId: string;
-    authorName: string;
     text: string;
     users: string[];
     edited: boolean;

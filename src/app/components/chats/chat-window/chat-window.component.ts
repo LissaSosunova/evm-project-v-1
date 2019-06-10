@@ -4,9 +4,9 @@ import { types } from 'src/app/types/types';
 import { TransferService } from 'src/app/services/transfer.service';
 import { DataService } from 'src/app/services/data.service';
 import { FormControl, Validators } from '@angular/forms';
-import {debounceTime, distinctUntilChanged, takeUntil, throttle, throttleTime} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil, throttle, throttleTime } from 'rxjs/operators';
 import { DateTransformService } from 'src/app/services/date-transform.service';
-import {Observable, Subject} from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { SocketIO} from 'src/app/types/socket.io.types';
 import { SessionStorageService } from 'src/app/services/session.storage.service';
@@ -75,8 +75,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
       unread: [],
       date: date,
       edited: false,
-      authorId: this.user.username,
-      authorName: this.user.name
+      authorId: this.user.username
     };
     if (this.isDraftMessageSent) {
        this.deleteDraftMessage();
@@ -178,8 +177,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
       chatID: this.chatId,
       text: this.inputMes,
       date: date,
-      authorId: this.user.username,
-      authorName: this.user.name
+      authorId: this.user.username
     };
     this.data.sendDraftMessage(draftMessage).subscribe(res => {
      this.isDraftMessageSent = true;
@@ -190,7 +188,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.socketIoService.on(SocketIO.events.new_message).
     pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
     .subscribe(message => {
-      // тут будет логика обновления модели для сообщений как своих, так и входящих
       this.arrayOfMessages.unshift(message);
       this.store.dispatch(new userAction.UpdateChatList(message));
     });

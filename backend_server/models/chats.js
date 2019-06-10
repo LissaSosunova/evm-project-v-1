@@ -4,7 +4,6 @@ const db = require('./db');
 const messageItem = db.Schema({
     chatID: {type: String},
     authorId: {type: String},
-    authorName: {type: String},
     text: {type: String},
     edited: {type: Boolean},
     unread: [String],

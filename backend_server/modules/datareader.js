@@ -61,8 +61,6 @@ function dbQuery (collection, params, action) {
         if (e) reject (e);
         else resolve(d);
       })
-                              // db.chats.aggregate([{$match: {"_id" : ObjectId("5cf0ec864e24792f5a76109d")}}, {$project: {messages: {$filter: {input: '$messages', as: 'item', cond: {$eq:['$$item.unread', ['AndreyTrz']]}}}}}])
-
     }
    
   })
