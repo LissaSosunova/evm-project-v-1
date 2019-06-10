@@ -4,9 +4,9 @@ import { types } from 'src/app/types/types';
 import { TransferService } from 'src/app/services/transfer.service';
 import { DataService } from 'src/app/services/data.service';
 import { FormControl, Validators } from '@angular/forms';
-import {debounceTime, distinctUntilChanged, takeUntil, throttle, throttleTime} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil, throttle, throttleTime } from 'rxjs/operators';
 import { DateTransformService } from 'src/app/services/date-transform.service';
-import {Observable, Subject} from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { SocketIO} from 'src/app/types/socket.io.types';
 import { SessionStorageService } from 'src/app/services/session.storage.service';
@@ -21,6 +21,7 @@ import * as userAction from '../../../store/actions';
 
 export class ChatWindowComponent implements OnInit, OnDestroy {
   public arrayOfMessages: Array<types.Message> = [];
+  public arrayOfUsers: any[];
   public blockedChats: Array<types.Chats> = [];
   public control: FormControl;
   public deletedChats: Array<types.Chats> = [];
@@ -65,6 +66,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   }
 
   public sendMessage(): void {
+    this.isMessages = true;
     const date = this.dateTransformService.nowUTC();
     const message: types.Message = {
       chatID: this.chatId,
@@ -87,12 +89,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   private getChat(): void {
     this.chats = this.route.snapshot.data.chatMessages;
     this.arrayOfMessages = this.chats.messages;
+    this.arrayOfUsers = this.chats.users;
     if (this.arrayOfMessages.length <= 0) {
       this.test = 'There are no messages in this chat.';
-      console.log(this.test);
     } else {
       this.isMessages = true;
-      console.log('messages', this.arrayOfMessages);
     }
   }
 
@@ -187,7 +188,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.socketIoService.on(SocketIO.events.new_message).
     pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
     .subscribe(message => {
-      // тут будет логика обновления модели для сообщений как своих, так и входящих
       this.arrayOfMessages.unshift(message);
       this.store.dispatch(new userAction.UpdateChatList(message));
     });

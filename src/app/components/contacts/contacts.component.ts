@@ -106,8 +106,18 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   public goToChat(data): void {
     this.private_chat = data.chatId;
     this.createNewChatParams = {
-      users: [this.user.username, data.userId],
-      email: [this.user.email, data.email]
+      users: [
+        {
+          username: this.user.username,
+          name: this.user.name,
+          email: this.user.email
+        }, 
+        {
+          username: data.userId,
+          name: data.name,
+          email: data.email
+        }
+      ]
     };
     if(this.private_chat &&
       this.private_chat != 0) {

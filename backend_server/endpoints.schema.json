@@ -5,8 +5,12 @@
             "type": "post",
             "headers": "authorization",
             "requestObject": {
-                "users": "String[]",
-                "email": "String[]"
+                "users": [
+                    {
+                    "username" :"String",
+                    "name":"String",
+                    "email":"String"}
+                ]
             },
             "responseObject": {
                 "id": "String",

@@ -30,19 +30,11 @@ export module types {
     chatId: string;
     id: string;
     name: string;
+    users: CreateNewChatUser[];
     type: number;
     unreadMes: number;
     lastMessage: Message;
   }
-
-
-  // export interface PrivateChat {
-  //   _id: string,
-  //   users: string[],
-  //   email: string[]
-  //   messages: Message[], 
-  //   type: string
-  // } 
 
   export interface Login {
     username: string;
@@ -208,8 +200,20 @@ export interface SocketMessage {
 }
 
 export interface CreateNewChat {
-  users: string[];
-  email: string[];
+  users: CreateNewChatUser[];
+}
+
+export interface CreateNewChatUser {
+  username: string;
+  name: string;
+  email: string;
+}
+
+export interface arrayOfUsersForMessage {
+  username: string;
+  name: string;
+  email: string;
+  _id: string;
 }
 
   export const getURI = () => {

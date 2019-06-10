@@ -115,15 +115,52 @@ ul {
   border: 1px solid #5e7419;
   border-color: map-get($bg-color, 'dark');
   padding: 5px;
+  max-height: calc(85vh - (#{$footer-height}));
+  overflow: auto;
 }
 
+// Windows with messages
 
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+}
 
+.message-body {
+  border-radius: 20px;
+  width: 70%;
+  padding: 10px 20px 10px 20px;
+}
+.message-not-author {
+  background-color: map-get($bg-color, 'gray-lighter');
+  margin: 0 20% 0px 10px;
+}
+
+.message-author {
+  background-color: map-get($bg-color, 'gray-light');
+  margin: 0px 0px 0px 20%;
+}
+
+.author-name {
+  font-size: 13px;
+  color:  map-get($font-color, 'primary');
+  font-weight: 500;
+}
+.date {
+  font-size: 11px;
+  font-style: italic; 
+  color:  map-get($bg-color, 'dark');
+}
+.text {
+  font-size: 14px;
+  font-style: italic; 
+  color:  map-get($bg-color, 'darker');
+}
 
 footer {
     position: absolute;
     bottom: 0;
-    min-height: 60px;
+    min-height: $footer-height;
     width: 85%;
     padding: 16px 0;
     box-sizing: border-box;
@@ -135,7 +172,7 @@ form {
 
 .btn-submit-send{
     background-color: #9bb00f;
-    font-size: 12px;
+    font-size: 11px;
     height: 36px;
     padding-left: 10px;
     padding-right: 10px;
