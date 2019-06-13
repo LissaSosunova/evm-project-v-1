@@ -216,6 +216,14 @@ export interface arrayOfUsersForMessage {
   _id: string;
 }
 
+export interface UserIsTyping {
+  userId: string;
+  name: string;
+  users: any[];
+  chatId: string;
+  typing: boolean;
+}
+
   export const getURI = () => {
     return `${constants.localBackEnd.protocol}://${constants.localBackEnd.host}:${constants.localBackEnd.port}`;
   };

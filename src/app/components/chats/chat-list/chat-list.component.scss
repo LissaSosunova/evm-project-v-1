@@ -51,3 +51,12 @@ ul {
   font-size: 9px;
   font-weight: 400;
 }
+.unread-mes {
+  font-size: 10px;
+  font-weight: 400;
+  padding: 2px !important;
+  border-radius: 10px;
+  text-align: center;
+  background-color: map-get($bg-color, 'gray-light');
+  color:  map-get($bg-color, 'green');
+}

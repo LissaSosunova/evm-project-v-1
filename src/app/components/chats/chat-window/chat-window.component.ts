@@ -1,16 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { types } from 'src/app/types/types';
-import { TransferService } from 'src/app/services/transfer.service';
-import { DataService } from 'src/app/services/data.service';
-import { FormControl, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, takeUntil, throttle, throttleTime } from 'rxjs/operators';
-import { DateTransformService } from 'src/app/services/date-transform.service';
-import { Observable, Subject } from 'rxjs';
-import { SocketIoService } from 'src/app/services/socket.io.service';
-import { SocketIO} from 'src/app/types/socket.io.types';
-import { SessionStorageService } from 'src/app/services/session.storage.service';
-import { Store, select } from '@ngrx/store';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {types} from 'src/app/types/types';
+import {TransferService} from 'src/app/services/transfer.service';
+import {DataService} from 'src/app/services/data.service';
+import {FormControl, Validators} from '@angular/forms';
+import {debounceTime, distinctUntilChanged, filter, takeUntil, throttleTime} from 'rxjs/operators';
+import {DateTransformService} from 'src/app/services/date-transform.service';
+import {Observable, Subject} from 'rxjs';
+import {SocketIoService} from 'src/app/services/socket.io.service';
+import {SocketIO} from 'src/app/types/socket.io.types';
+import {SessionStorageService} from 'src/app/services/session.storage.service';
+import {select, Store} from '@ngrx/store';
 import * as userAction from '../../../store/actions';
 
 @Component({
@@ -32,12 +32,15 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   public isDraftMessageSent: boolean = false;
   public isMessages: boolean = false;
   public privateChats: Array<types.Chats> = [];
-  public test: String = 'This is test data';
+  public showUserIsTyping: boolean;
+  public test: string;
   public user: types.User = {} as types.User;
+  public userNameIsTyping: string;
 
   private chats: types.ChatData;
   private chatId: string;
   private userObj: {chatIdCurr: string; userId: string; token: string};
+  private isUserTyping: boolean = false;
   private unsubscribe$: Subject<void> = new Subject<void>();
   private user$: Observable<types.User>;
 
@@ -61,6 +64,17 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     } else if (this.isDraftMessageSent && this.inputMes === '') {
       this.deleteDraftMessage();
     }
+
+    if (this.isUserTyping) {
+        const userIsTypingObj: types.UserIsTyping = {
+        userId: this.user.username,
+        name: this.user.name,
+        users: this.chats.users,
+        chatId: this.chatId,
+        typing: false
+      };
+    this.socketIoService.socketEmit(SocketIO.events.user_is_typing, userIsTypingObj);
+  }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
@@ -88,6 +102,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
 
   private getChat(): void {
     this.chats = this.route.snapshot.data.chatMessages;
+    console.log(this.chats);
     this.arrayOfMessages = this.chats.messages;
     this.arrayOfUsers = this.chats.users;
     if (this.arrayOfMessages.length <= 0) {
@@ -101,6 +116,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.user$ = this.store.pipe(select('user'));
     this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
+      console.log(this.user);
     });
     this.user = this.transferService.dataGet('userData');
     this.chatId = this.route.snapshot.params.chatId;
@@ -113,7 +129,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.socketIoService.socketEmit(SocketIO.events.user_in_chat, this.userObj);
     this.getChat();
     this.initDraftMessagesSubscription();
-
+    this.subscribeUserIsTyping();
+    const thisChat = this.user.chats.find(chat => chat.chatId === this.chatId);
+    if (thisChat.unreadMes > 0) {
+      this.socketIoService.socketEmit(SocketIO.events.user_read_message, {userId: this.user.username, chatId: this.chatId});
+      this.store.dispatch(new userAction.UserReadAllMessages({unread: 0, chatId: this.chatId}));
+    }
   }
 
 
@@ -152,6 +173,15 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.control.valueChanges
     .pipe(debounceTime(2000), distinctUntilChanged(), takeUntil(this.unsubscribe$))
     .subscribe(message => {
+      const userIsTypingObj: types.UserIsTyping = {
+        userId: this.user.username,
+        name: this.user.name,
+        users: this.chats.users,
+        chatId: this.chatId,
+        typing: false
+      };
+      this.socketIoService.socketEmit(SocketIO.events.user_is_typing, userIsTypingObj);
+      this.isUserTyping = false;
       if (message) {
         this.sendDraftMessage();
         this.isDraftMessageSent = true;
@@ -160,6 +190,21 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.isDraftMessageSent = false;
       }
     });
+
+    this.control.valueChanges.pipe(takeUntil(this.unsubscribe$), filter(message => !this.isUserTyping), throttleTime(2000))
+      .subscribe(message => {
+        const userIsTypingObj: types.UserIsTyping = {
+          userId: this.user.username,
+          name: this.user.name,
+          users: this.chats.users,
+          chatId: this.chatId,
+          typing: true
+        };
+        if (message) {
+          this.socketIoService.socketEmit(SocketIO.events.user_is_typing, userIsTypingObj);
+          this.isUserTyping = true;
+        }
+      });
   }
 
   private getMessages(chatId: string, n: number): void {
@@ -185,11 +230,20 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   }
 
   private subscribeNewMessagesInit(): void {
-    this.socketIoService.on(SocketIO.events.new_message).
-    pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    this.socketIoService.on(SocketIO.events.new_message)
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
     .subscribe(message => {
       this.arrayOfMessages.unshift(message);
       this.store.dispatch(new userAction.UpdateChatList(message));
     });
+ }
+
+ private subscribeUserIsTyping(): void {
+    this.socketIoService.on(SocketIO.events.user_is_typing)
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+      .subscribe((obj: types.UserIsTyping) => {
+        this.userNameIsTyping = obj.name;
+        this.showUserIsTyping = obj.typing;
+      });
  }
 }

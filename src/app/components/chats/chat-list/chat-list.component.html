@@ -7,13 +7,16 @@
                             <div class="col-sm-1">
                                     <img src="{{item.avatar.url}}">
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-sm-8">
                                     <span class="chat-name">{{item.name}}</span>
                             </div>
                             <div class="col-sm-2"  *ngIf="size === 'normal'">
                                     <br>
                                     <span class="chat-time">01.01.2019</span>
-                            </div>   
+                            </div>
+                            <div class="col-sm-1" *ngIf="item.unreadMes > 0">
+                              <div class="unread-mes">{{item.unreadMes}}</div>
+                            </div>
                         </div>
             </li>
             </ul>
