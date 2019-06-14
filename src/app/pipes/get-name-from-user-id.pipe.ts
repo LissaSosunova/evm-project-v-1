@@ -8,9 +8,9 @@ import { types } from 'src/app/types/types';
 })
 export class GetNameFromUserIDPipe implements PipeTransform {
 
-  transform(arrayOfUsers: Array<types.arrayOfUsersForMessage>, userID: string): any {
-    const name = arrayOfUsers.find((item) =>{
-      return item.username == userID
+  transform(arrayOfUsers: Array<types.arrayOfUsersForMessage>, userID: string): string {
+    const name = arrayOfUsers.find((item) => {
+      return item.username === userID;
     });
     return name.name;
   }

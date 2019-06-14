@@ -19,12 +19,15 @@ export function userReducer(state: types.User = userInitState, action: any) {
   switch (action.type) {
     case userAction.ActionTypes.UPDATE_CHAT_LIST: {
       const newMessage: types.Message = action.payload;
+      console.log('updateState', updateState);
       updateState.chats.forEach(item => {
         if (item.chatId === newMessage.chatID) {
           item.lastMessage = newMessage;
+          console.log('newMessage', newMessage);
           newMessage.unread.forEach(unreadUser => {
-            if (unreadUser !== updateState.username) {
+            if (unreadUser === updateState.username) {
               item.unreadMes++;
+              console.log(item.unreadMes);
             }
           });
         }
@@ -36,6 +39,15 @@ export function userReducer(state: types.User = userInitState, action: any) {
       const user: types.User = action.payload;
       state = user;
       return user;
+    }
+    case userAction.ActionTypes.NO_UNREAD_MESSAGES: {
+      const payload: {unread: number; chatId: string} = action.payload;
+      updateState.chats.forEach(chatItem => {
+        if (chatItem.chatId === payload.chatId) {
+          chatItem.unreadMes = payload.unread;
+        }
+      });
+      return updateState;
     }
     default:
       return state;

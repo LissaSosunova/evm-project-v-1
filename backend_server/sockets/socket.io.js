@@ -3,13 +3,15 @@ const datareader = require('../modules/datareader');
 const User = require('../models/user');
 const ObjectId =  require('mongodb').ObjectID;
 
+const onlineClients = {};
+const clientsInChat = {};
+
 
 function runWebsocketsIO(server, expressApp) {
     const io = require('socket.io').listen(server);
     console.info('Socket IO is running');
 
-    const onlineClients = {};
-    const clientsInChat = {};
+
 
     /*
     onlineClients = {
@@ -70,17 +72,15 @@ function runWebsocketsIO(server, expressApp) {
                 date: number; // timeStamp (to UTC)
             }
              */
-            console.log('clientsInChat[obj.chatID]',clientsInChat[obj.chatID]);
             obj.unread = obj.unread || [];
             if (clientsInChat[obj.chatID]) {
                 // Находим пользователей, которые не в чате
                 obj.users.forEach(userId => {
                     const userOffChat = Object.keys(clientsInChat[obj.chatID]).every(item => {
-                        return item !== userId
+                        return item !== userId.username
                     });
                     if (userOffChat) {
-                        obj.unread.push(userId);
-                        console.log('userId', userId);
+                        obj.unread.push(userId.username);
                     }
                 });
               
@@ -100,7 +100,7 @@ function runWebsocketsIO(server, expressApp) {
                 });
                 obj.users.forEach(user => {
                   Object.keys(onlineClients).forEach(userId => {
-                    if(user === userId) {
+                    if(user.username === userId) {
                       Object.keys(onlineClients[userId]).forEach(token => {
                         onlineClients[userId][token].emit('chats_model',obj)
                       })
@@ -135,8 +135,6 @@ function runWebsocketsIO(server, expressApp) {
                 token: string
             }
              */
-            console.log("user_left_chat");
-            console.log('obj', obj);
             delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
             if (Object.keys(clientsInChat[obj.chatIdCurr][obj.userId]).length === 0) {
                 delete clientsInChat[obj.chatIdCurr][obj.userId];
@@ -144,14 +142,69 @@ function runWebsocketsIO(server, expressApp) {
             if (Object.keys(clientsInChat[obj.chatIdCurr]).length === 0) {
                 delete clientsInChat[obj.chatIdCurr]
             }
-            console.log('clientsInChat', clientsInChat);
         });
 
-        io.on("disconnect", () => {
-            console.log(`User ${obj.userId} is offline`);
-            delete onlineClients[obj.userId][obj.token];
-            delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
+        socket.on("user_is_typing", obj => {
+          /**
+           obj = {
+          userId: string;
+          name: string;
+          users: string[];
+          chatId: string;
+          typing: boolean
+          }
+           */
+
+          obj.users.forEach(user => {
+            if(user.username !== obj.userId && onlineClients[user.username]) {
+                Object.keys(onlineClients[user.username]).forEach(token => {
+                    onlineClients[user.username][token].emit('user_is_typing_notification', obj)
+                })
+            }
+          });
+
+          if(clientsInChat[obj.chatId]) {
+            Object.keys(clientsInChat[obj.chatId]).forEach(userId => {
+              Object.keys(clientsInChat[obj.chatId][userId]).forEach(token => {
+                if (obj.userId !== userId) {
+                  clientsInChat[obj.chatId][userId][token].emit('user_is_typing', obj);
+                }
+              })
+            })
+          }
         });
+
+        socket.on('user_read_message', async obj => {
+          /**
+           obj = {
+          userId: string;
+          chatId: string;
+          }
+           */
+
+          const queryParams = {
+            query: {"_id" : ObjectId(obj.chatId)},
+            queryField1: 'messages',
+            queryField2: 'unread',
+            contidition: [obj.userId]
+          };
+          const result = await datareader(Chat, queryParams, 'arrayFilter');
+          const promises = [];
+          const chatId = result[0]._id;
+          const unreadMes = result[0].query;
+          unreadMes.forEach(mes => {
+            mes.unread = mes.unread.filter(item => item !== obj.userId);
+            promises.push(datareader(Chat, {query: {"_id": ObjectId(chatId), messages:  {$elemMatch:{_id: ObjectId(mes._id)}}}, objNew: {$set: {'messages.$.unread': mes.unread}}}, 'updateOne'));
+          });
+          const updateMes = await Promise.all(promises);
+        })
+
+    });
+
+    io.on("disconnect", () => {
+      console.info(`User ${obj.userId} is offline`);
+      delete onlineClients[obj.userId][obj.token];
+      delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
     });
 
 

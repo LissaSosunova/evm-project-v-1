@@ -83,7 +83,6 @@ router.get('/user', async function (req, res, next) {
 
       const unreadMes = await Promise.all(promisesUnreadNum);
       const lastMes = await Promise.all(promisesLastMes);
-      console.log('lastMes', lastMes);
       const unreadNumInChats = [];
       unreadMes.forEach(item => {
         const obj = {};

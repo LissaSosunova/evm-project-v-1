@@ -4,7 +4,8 @@ import {types} from '../types/types';
 
 export enum ActionTypes {
   UPDATE_CHAT_LIST = 'chat_list',
-  INIT_USER_MODEL = 'user_model'
+  INIT_USER_MODEL = 'user_model',
+  NO_UNREAD_MESSAGES = 'no_unread_messages'
 }
 
 export class UpdateChatList implements Action {
@@ -17,4 +18,10 @@ export class InitUserModel implements Action {
   public readonly type = ActionTypes.INIT_USER_MODEL;
 
   constructor(public payload: types.User) {}
+}
+
+export class UserReadAllMessages implements Action {
+  public readonly  type = ActionTypes.NO_UNREAD_MESSAGES;
+
+  constructor(public payload: {unread: number; chatId: string}) {}
 }

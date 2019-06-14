@@ -9,6 +9,7 @@ export module SocketIO {
         user_in_chat = 'user_in_chat',
         user_left_chat = 'user_left_chat',
         user_is_typing = 'user_is_typing',
+        user_is_typing_notification = 'user_is_typing_notification',
         user_left = 'user_left',
         all_online_users = 'all_online_users'
     }

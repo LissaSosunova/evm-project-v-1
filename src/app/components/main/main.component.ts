@@ -9,7 +9,7 @@ import { SessionStorageService } from 'src/app/services/session.storage.service'
 import { SocketIO} from 'src/app/types/socket.io.types';
 import { Store, select } from '@ngrx/store';
 import * as userAction from  '../../store/actions';
-import {takeUntil} from 'rxjs/operators';
+import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-main',
@@ -42,8 +42,9 @@ export class MainComponent implements OnInit, OnDestroy {
       token: token
     };
     this.socketIoService.socketEmit(SocketIO.events.user, dataObj);
-    this.socketIoService.on(SocketIO.events.chats_model).pipe(takeUntil(this.unsubscribe$))
+    this.socketIoService.on(SocketIO.events.chats_model).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe(message => {
+        console.log('message when user is out of chat', message);
         this.store.dispatch(new userAction.UpdateChatList(message));
       });
   }
