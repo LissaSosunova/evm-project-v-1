@@ -70,10 +70,21 @@ export class DataService {
     return this.http.get(`${URL_BACK}/get_draft_message/${chatId}`, {headers: this.getHeaders(), params: query});
   }
 
+  public uploadAvatar(obj: FormData, userId: string): Observable<any> {
+    return this.http.post(URL_BACK + '/upload_avatar', obj, {headers: this.getHeaderForUploadFile(userId)});
+  }
+
   private getHeaders(): HttpHeaders {
     const token = this.sessionStorageService.getValue('_token');
     const tokenKey = this.sessionStorageService.getValue('token_key');
     const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
+    return headers;
+  }
+
+  private getHeaderForUploadFile(userId: string): HttpHeaders {
+    const token = this.sessionStorageService.getValue('_token');
+    const tokenKey = this.sessionStorageService.getValue('token_key');
+    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey, 'userId': userId});
     return headers;
   }
 

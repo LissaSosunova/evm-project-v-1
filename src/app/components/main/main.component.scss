@@ -18,8 +18,13 @@
   height: 30px;
   align-self: center;
   border-radius: 50%;
+  cursor: pointer;
 }
 
 .header-user-container {
   margin-right: 5%
+}
+
+[type="file"] {
+  display: none;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import { ActivatedRoute, Router, RouterOutlet, NavigationStart } from '@angular/router';
 import { TransferService } from 'src/app/services/transfer.service';
@@ -20,6 +20,8 @@ import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 export class MainComponent implements OnInit, OnDestroy {
 
   public user: types.User = {} as types.User;
+  public user$: Observable<types.User>;
+  @ViewChild('uploadFile') public uploadFile: ElementRef;
   private unsubscribe$: Subject<void> = new Subject();
 
   constructor(private route: ActivatedRoute,
@@ -32,7 +34,7 @@ export class MainComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
-    this.user = this.route.snapshot.data.userData; // используем резолвер для получения данных пользователя
+    this.user = this.route.snapshot.data.userData;
     this.store.dispatch(new userAction.InitUserModel(this.user));
     this.transferService.dataSet({name: 'userData', data: this.user});
     const token = this.sessionStorageService.getValue('_token');
@@ -47,6 +49,11 @@ export class MainComponent implements OnInit, OnDestroy {
         console.log('message when user is out of chat', message);
         this.store.dispatch(new userAction.UpdateChatList(message));
       });
+    this.user.avatar.url = this.user.avatar.url || types.Defaults.DEFAULT_AVATAR_URL;
+    this.user$ = this.store.pipe(select('user'));
+    this.user$.subscribe(user => {
+      this.user = user;
+    })
   }
 
   ngOnDestroy() {
@@ -55,6 +62,18 @@ export class MainComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
+
+  public uploadAvatar(event): void {
+    const files = this.uploadFile.nativeElement.files;
+    const formData: FormData = new FormData();
+    formData.append('image', files[0]);
+    formData.append('userId', this.user.username);
+    this.data.uploadAvatar(formData, this.user.username).subscribe(res => {
+      this.store.dispatch(new userAction.UpdateAvatarURL(res));
+    })
+  }
+
 
 
 }

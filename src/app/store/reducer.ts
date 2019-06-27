@@ -10,7 +10,7 @@ const userInitState: types.User = {
   contacts: [],
   events:  [],
   chats: [],
-  avatar: {},
+  avatar: {url: '', owner: ''},
   notifications: []
 };
 
@@ -19,15 +19,12 @@ export function userReducer(state: types.User = userInitState, action: any) {
   switch (action.type) {
     case userAction.ActionTypes.UPDATE_CHAT_LIST: {
       const newMessage: types.Message = action.payload;
-      console.log('updateState', updateState);
       updateState.chats.forEach(item => {
         if (item.chatId === newMessage.chatID) {
           item.lastMessage = newMessage;
-          console.log('newMessage', newMessage);
           newMessage.unread.forEach(unreadUser => {
             if (unreadUser === updateState.username) {
               item.unreadMes++;
-              console.log(item.unreadMes);
             }
           });
         }
@@ -47,6 +44,12 @@ export function userReducer(state: types.User = userInitState, action: any) {
           chatItem.unreadMes = payload.unread;
         }
       });
+      return updateState;
+    }
+
+    case userAction.ActionTypes.UPDATE_AVATAR: {
+      const payload: types.Avatar = action.payload;
+      updateState.avatar = payload;
       return updateState;
     }
     default:

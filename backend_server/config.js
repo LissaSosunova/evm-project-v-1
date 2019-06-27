@@ -1,3 +1,4 @@
 module.exports = {
-    'secretkey': 'defaultSecretKey'
+    'secretkey': 'defaultSecretKey',
+    'filesDomainLocal': 'http://localhost:5006'
 }

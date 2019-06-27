@@ -13,7 +13,13 @@ function dbQuery (collection, params, action) {
       })
     }
     else if (action === 'update') {
-      collection.updateOne(params.query, params.objNew, params.multi,  (e, d) => {
+      collection.update(params.query, params.objNew, params.multi,  (e, d) => {
+        if (e) reject(e);
+        else resolve(d);
+      })
+    }
+    else if (action === 'updateMany') {
+      collection.updateMany(params.query, params.objNew,  (e, d) => {
         if (e) reject(e);
         else resolve(d);
       })
@@ -59,6 +65,12 @@ function dbQuery (collection, params, action) {
       const condition = params.contidition;
       collection.aggregate([{$match: params.query}, {$project: {query: {$filter: {input: `$${params.queryField1}`, as: 'item', cond: {$eq:[`$$item.${params.queryField2}`, params.contidition]}}}}}], (e, d) => {
         if (e) reject (e);
+        else resolve(d);
+      })
+    }
+    else if (action === 'insertOne') {
+      collection.insertOne(params, (e, d) => {
+        if (e) reject(e);
         else resolve(d);
       })
     }

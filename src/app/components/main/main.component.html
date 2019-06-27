@@ -1,6 +1,9 @@
 <div class="header">
   <span class="header-user-container">{{user.name}}
-    <img src="{{user.avatar?.url}}" class="avatar">
+    <label for="avatar-input">
+      <img src="{{user.avatar.url}}" class="avatar">
+      <input id="avatar-input" type="file" name="image" (change)="uploadAvatar($event)" enctype="multipart/form-data" #uploadFile>
+    </label>  
   </span>
   <img src="src/img/logo_login_page.png" alt="EVENT messenger" class="logo">
 </div>

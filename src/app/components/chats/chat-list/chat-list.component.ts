@@ -77,7 +77,6 @@ export class ChatListComponent implements OnInit, OnDestroy {
     this.user$ = this.store.select('user');
     this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
-      console.log(this.user);
       this.getChatList();
     });
   }

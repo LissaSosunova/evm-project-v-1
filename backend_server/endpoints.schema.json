@@ -406,6 +406,35 @@
                     }
                 ] 
             }
+        },
+        {
+            "endpoint":"delete_avatar",
+            "type": "post",
+            "headers": "authorization",
+            "requestObject": {
+                "userId": "String"
+            },
+            "responseObject": {
+                "owner": "String",
+                "url": "String"
+            }
+        },
+        {
+            "endpoint":"upload_avatar",
+            "type": "post",
+            "headers": ["authorization", "userId"],
+            "requestObject": {
+                "FormData": "FormData"
+            },
+            "responseObject": {
+                "owner": "String",
+                "url": "String"
+            }
+        },
+        {
+           "endpoint":"uploads/:userId/avatars/:fileName", 
+           "type": "get",
+           "response": "data"
         }
     ]
 

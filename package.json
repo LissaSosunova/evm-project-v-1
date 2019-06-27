@@ -25,6 +25,7 @@
     "@angular/router": "^6.1.0",
     "@material/layout-grid": "^0.40.1",
     "core-js": "^2.6.9",
+    "eslint-plugin-chai-friendly": "^0.4.1",
     "rxjs": "^6.5.2",
     "zone.js": "^0.8.29"
   },
