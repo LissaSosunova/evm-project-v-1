@@ -62,10 +62,15 @@ export module types {
     contacts: Contact[];
     events: EventDb [];
     chats: Chats[];
-    avatar: object;
+    avatar: Avatar;
     notifications: Notifications [];
   }
 
+
+  export interface Avatar {
+    url: string;
+    owner: string;
+  }
   export interface Notifications {
     type: string;
     message: string;
@@ -235,6 +240,10 @@ export interface UserIsTyping {
     GROUP_OR_EVENT_CHAT = 2,
     BLOCKED_CHAT = 3,
     DELETED_CHAT = 4
+  }
+
+  export enum Defaults {
+    DEFAULT_AVATAR_URL = 'src/img/default-profile-image.png'
   }
 
 }

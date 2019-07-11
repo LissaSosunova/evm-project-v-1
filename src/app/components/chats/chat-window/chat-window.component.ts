@@ -116,7 +116,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.user$ = this.store.pipe(select('user'));
     this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
-      console.log(this.user);
     });
     this.user = this.transferService.dataGet('userData');
     this.chatId = this.route.snapshot.params.chatId;
@@ -191,7 +190,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.control.valueChanges.pipe(takeUntil(this.unsubscribe$), filter(message => !this.isUserTyping), throttleTime(2000))
+    this.control.valueChanges.pipe(takeUntil(this.unsubscribe$), filter(message => !this.isUserTyping))
       .subscribe(message => {
         const userIsTypingObj: types.UserIsTyping = {
           userId: this.user.username,

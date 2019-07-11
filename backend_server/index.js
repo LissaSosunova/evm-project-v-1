@@ -22,6 +22,9 @@ const $setDraftMessage = require('./endpoints/chat/set_draft_message');
 const $deleteDraftMessage = require('./endpoints/chat/delete_draft_message');
 const $getDraftMessage = require('./endpoints/chat/get_draft_message');
 const socketIO = require('./sockets/socket.io');
+const $uploadAvatar = require('./endpoints/user/upload_avatar');
+const $get_avatar = require('./endpoints/user/get_avatar');
+const $deleteAvatar = require('./endpoints/user/delete_avatar');
 
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,7 +32,7 @@ app.use(bodyParser.json());
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, token_key');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, token_key, userId');
   next();
 });
 
@@ -92,6 +95,15 @@ app.route('/delete_draft_message')
 
 app.route('/get_draft_message/:id/')  
   .get($getDraftMessage);
+
+app.route('/upload_avatar')
+  .post($uploadAvatar);  
+
+app.route('/uploads/:userId/avatars/:fileName')
+  .get($get_avatar);
+
+app.route('/delete_avatar')
+  .post($deleteAvatar);    
 
 const server = app.listen(port); 
  console.info('Backend server listening on port ' + port);
