@@ -1,85 +1,105 @@
-<nav *ngIf="currParentUrl === 'login'">
-  <ul>
-    <li>
-      <a routerLink="registration" title="Create new account">
-        <i class="material-icons">fiber_new</i>
-      </a>
-    </li>
-    <li>
-      <a routerLink="about" title="About project">
-        <i class="material-icons">info</i>
-      </a>
-    </li>
-  </ul>
-</nav>
-<nav *ngIf="currParentUrl == 'registration'">
-  <ul>
-    <li>
-      <a routerLink="login" title="Sign in">
-        <i class="material-icons">account_box</i>
-      </a>
-    </li>
-    <li>
-      <a routerLink="about" title="About project">
-        <i class="material-icons">info</i>
-      </a>
-    </li>
-  </ul>
-</nav>
-<nav *ngIf="currParentUrl == 'about'">
-  <ul>
-    <li>
-      <a routerLink="login" title="Sign in">
-        <i class="material-icons">account_box</i>
-      </a>
-    </li>
-    <li>
-      <a routerLink="registration" title="Create new accaunt">
-        <i class="material-icons">fiber_new</i>
-      </a>
-    </li>
-  </ul>
-</nav>
-<nav *ngIf="currParentUrl == 'main'">
-  <ul>
-    <li *ngIf="currChildUrl != 'home'">
-      <a routerLink="main/home" title="home page">
-        <i class="material-icons">home</i>
-      </a>
-    </li>
-    <li *ngIf="currChildUrl != 'contacts'">
-      <a routerLink="main/contacts"
-      [queryParams]="{
-        currTab: 'contacts'
-        }" 
-      title="contacts">
-        <i class="material-icons">contacts</i>
-      </a>
-    </li>
-    <li *ngIf="currChildUrl != 'chats'">
-      <a routerLink="main/chats" title="chats">
-        <i class="material-icons">chat</i>
-      </a>
-    </li>
-    <li *ngIf="currChildUrl != 'events'">
-      <a routerLink="main/events" title="events">
-        <i class="material-icons">event</i>
-      </a>
-    </li>
-    <li *ngIf="currChildUrl != 'new_event'">
-      <a routerLink="main/new_event" title="new_event">
-        <i class="material-icons">note_add</i>
-      </a>
-    </li>
-    <li *ngIf="currChildUrl != 'calendar'">
-      <a routerLink="main/calendar" title="calendar">
-        <i class="material-icons">calendar_today</i>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/login" title="exit" (click)="exit()">
-        <i class="material-icons">exit_to_app</i>
-      </a>
-    </li>
-  </ul>
-</nav>
+<aside appClickOutside (mClickOutside)="onClickOutside($event)">
+  <a (click)="toggleSidebar()">
+    <i class="material-icons">
+      menu
+    </i>
+  </a>  
+    <nav *ngIf="currParentUrl === 'login'">
+      <ul>
+        <li>
+          <a routerLink="registration" title="Create new account">
+            <i class="material-icons">fiber_new</i>
+            <i class="label" *ngIf="sidebarIsExpanded">New account</i>
+          </a>
+        </li>
+        <li>
+          <a routerLink="about" title="About project">
+            <i class="material-icons">info</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Info</i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <nav *ngIf="currParentUrl == 'registration'">
+      <ul>
+        <li>
+          <a routerLink="login" title="Sign in">
+            <i class="material-icons">account_box</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Sign-in</i>
+          </a>
+        </li>
+        <li>
+          <a routerLink="about" title="About project">
+            <i class="material-icons">info</i>
+            <i class="label" *ngIf="sidebarIsExpanded">About</i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <nav *ngIf="currParentUrl == 'about'">
+      <ul>
+        <li>
+          <a routerLink="login" title="Sign in">
+            <i class="material-icons">account_box</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Sign in</i>
+          </a>
+        </li>
+        <li>
+          <a routerLink="registration" title="Create new account">
+            <i class="material-icons">fiber_new</i>
+            <i class="label" *ngIf="sidebarIsExpanded">New account</i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <nav *ngIf="currParentUrl == 'main'">
+      <ul>
+        <li *ngIf="currChildUrl != 'home'">
+          <a routerLink="main/home" title="home page">
+            <i class="material-icons">home</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Home</i>
+          </a>
+        </li>
+        <li *ngIf="currChildUrl != 'contacts'">
+          <a routerLink="main/contacts"
+          [queryParams]="{
+            currTab: 'contacts'
+            }" 
+          title="contacts">
+            <i class="material-icons">contacts</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Contacts</i>
+          </a>
+        </li>
+        <li *ngIf="currChildUrl != 'chats'">
+          <a routerLink="main/chats" title="chats">
+            <i class="material-icons">chat</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Chat</i>
+          </a>
+        </li>
+        <li *ngIf="currChildUrl != 'events'">
+          <a routerLink="main/events" title="events">
+            <i class="material-icons">event</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Events</i>
+          </a>
+        </li>
+        <li *ngIf="currChildUrl != 'new_event'">
+          <a routerLink="main/new_event" title="new_event">
+            <i class="material-icons">note_add</i>
+            <i class="label" *ngIf="sidebarIsExpanded">New event</i>
+          </a>
+        </li>
+        <li *ngIf="currChildUrl != 'calendar'">
+          <a routerLink="main/calendar" title="calendar">
+            <i class="material-icons">calendar_today</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Calendar</i>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/login" title="exit" (click)="exit()">
+            <i class="material-icons">exit_to_app</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Exit</i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+</aside>

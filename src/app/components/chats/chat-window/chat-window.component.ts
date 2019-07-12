@@ -4,7 +4,7 @@ import {types} from 'src/app/types/types';
 import {TransferService} from 'src/app/services/transfer.service';
 import {DataService} from 'src/app/services/data.service';
 import {FormControl, Validators} from '@angular/forms';
-import {debounceTime, distinctUntilChanged, filter, takeUntil, throttleTime} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, filter, takeUntil} from 'rxjs/operators';
 import {DateTransformService} from 'src/app/services/date-transform.service';
 import {Observable, Subject} from 'rxjs';
 import {SocketIoService} from 'src/app/services/socket.io.service';

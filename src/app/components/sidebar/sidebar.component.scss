@@ -1,9 +1,20 @@
-nav {
+aside {
   background: #1c2001;
-  height: 100%;
-  position: fixed;
-  width: 70px;
+  min-height: 100vh;
   z-index: 1;
+
+  a {
+    color: #fff;
+    padding: 20px;
+    display: block;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    &:hover {
+      color: #9bb00f;
+    }
+  }
 
   ul {
     list-style-type: none;
@@ -12,19 +23,18 @@ nav {
 
     li {
 
-      a {
-        color: #fff;
-        padding: 20px;
-        display: block;
-        &:hover {
-          color: #9bb00f;
-        }
-      }
-
       .activated {
         background-color: #00a8ff;
       }
     }
   }
 
+}
+
+.material-icons {
+  width: 30px;
+}
+
+.label {
+  min-width: 100px;
 }
