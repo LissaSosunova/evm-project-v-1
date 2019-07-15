@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { NewEventLeavePopupComponent } from '../new-event-leave-popup/new-event-leave-popup.component';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { NewEventLeavePopupComponent } from './new-event-leave-popup/new-event-leave-popup.component';
 import { types } from 'src/app/types/types';
 import { Observable, Subject } from 'rxjs';
 import { ToastService } from 'src/app/shared/toasts/services/toast.service';
@@ -11,7 +11,6 @@ import { DateTransformService } from '../../services/date-transform.service';
 import { DataService } from '../../services/data.service';
 
 @Component({
-  // changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-new-event',
   templateUrl: './new-event.component.html',
   styleUrls: ['./new-event.component.scss']

@@ -74,6 +74,7 @@
           <a routerLink="main/chats" title="chats">
             <i class="material-icons">chat</i>
             <i class="label" *ngIf="sidebarIsExpanded">Chat</i>
+            <i class="message-counter" *ngIf="totalUnreadMessagesAmount > 0">{{totalUnreadMessagesAmount}}</i>
           </a>
         </li>
         <li *ngIf="currChildUrl != 'events'">

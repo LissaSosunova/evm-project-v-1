@@ -132,7 +132,8 @@
       <div class="input-search-container">
         <form class ="search">
           <app-input-search [placeholder]="'Search contact'"
-                            [control]="searchControl">
+                            [control]="searchControl"
+                            (reset)="onReset($event)">
           </app-input-search>
         </form>
       </div>
@@ -147,6 +148,7 @@
             </div>
           </li>
         </ul>
+        <div class="nothing-found" *ngIf="nothingFound">Nothing found</div>
       </div>
     </div>
   </div>

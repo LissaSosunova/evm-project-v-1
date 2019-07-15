@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { UserInfoPopupComponent } from '../user-info-popup/user-info-popup.component';
+import { UserInfoPopupComponent } from './user-info-popup/user-info-popup.component';
 
 @Component({
   selector: 'app-home',

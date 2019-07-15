@@ -31,14 +31,14 @@ export abstract class InputAbstract implements ControlValueAccessor, OnDestroy {
 
   @Input() public debounceTime?: number = 500;
 
-  @Output() public valueChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() public valueChange: EventEmitter<string | number> = new EventEmitter<string | number>();
 
   protected subscriptions: Subscription[] = [];
   protected validatorsConfig: any[] = [];
 
   // For NG_VALUE_ACCESSOR
-  private onChange: (value: string) => void;
-  private onTouched: () => void;
+  protected onChange: (value: string | number) => void;
+  protected onTouched: () => void;
 
   constructor() {}
 

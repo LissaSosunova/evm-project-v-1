@@ -1,0 +1,14 @@
+.ellipsis-wrap {
+    overflow: hidden;
+    position: relative;
+}
+
+.tooltip {
+    width: 25%;
+    background-color: dimgrey;
+    position: fixed;
+    font-size: 10px;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}

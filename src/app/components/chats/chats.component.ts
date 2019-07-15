@@ -16,7 +16,7 @@ export class ChatsComponent implements OnInit, OnDestroy {
   public deletedChats: Array<types.Chats> = [];
   public groupChats: Array<types.Chats> = [];
   public inputMes: string;
-  public privateChats:Array<types.Chats> = [];
+  public privateChats: Array<types.Chats> = [];
   public user: types.User = {} as types.User;
   public user$: Observable<types.User>;
 
@@ -33,7 +33,7 @@ export class ChatsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy () {
- 
+
   }
 
   public init(): void {
@@ -41,12 +41,11 @@ export class ChatsComponent implements OnInit, OnDestroy {
   }
 
   public getChat(id: string): void {
-    // const id = window.location.href.toString().split("/chat-window/")[1];
-    this.data.getPrivatChat(id, '0').subscribe(
+    this.data.getPrivatChat(id, '0', String(types.Defaults.QUERY_MESSAGES_AMOUNT), '0').subscribe(
       response => {
         console.log(response);
       }
-    )   
+    );
   }
 
 }

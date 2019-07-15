@@ -1,0 +1,10 @@
+<div #multilineEllipsisWrap class="ellipsis-wrap" 
+    [matTooltip]="text"
+    [matTooltipPosition]="'above'"
+    *ngIf="showTooltip"
+    >
+  <p #preview>{{previewText}}</p>
+</div>
+<div class="ellipsis-wrap" *ngIf="!showTooltip">
+  <p #preview>{{previewText}}</p>
+</div>

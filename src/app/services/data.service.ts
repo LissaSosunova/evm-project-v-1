@@ -32,8 +32,12 @@ export class DataService {
     return this.http.post(URL_BACK + '/find_user/', query, {headers: this.getHeaders()});
   }
 
-  public getPrivatChat(params: string, n: string): Observable<any> {
-    const query = {queryNum: n};
+  public getPrivatChat(params: string, queryNum: string, queryMessagesAmount: string, messagesShift: string): Observable<any> {
+    const query = {
+      queryNum,
+      queryMessagesAmount,
+      messagesShift
+    };
     return this.http.get(`${URL_BACK}/private_chat/${params}`, {headers : this.getHeaders(),  params: query});
   }
 
