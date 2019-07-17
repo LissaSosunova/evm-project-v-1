@@ -14,11 +14,12 @@ import { ToastWarningComponent } from '../components/toast-warning/toast-warning
 })
 
 export class ToastService {
-  
+
+  // default config
   private horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   private verticalPosition: MatSnackBarVerticalPosition = 'top';
   private duration: number = 3000;
-  
+
   constructor(private snackBar: MatSnackBar,
               private transferService: TransferService) { }
 
@@ -41,7 +42,7 @@ export class ToastService {
   }
 
   private initToastConfig(config?: MatSnackBarConfig): MatSnackBarConfig {
-    config = config || {} as MatSnackBarConfig; 
+    config = config || {} as MatSnackBarConfig;
     config.verticalPosition = config.verticalPosition || this.verticalPosition;
     config.horizontalPosition = config.horizontalPosition || this.horizontalPosition;
     config.duration = config.duration || this.duration;

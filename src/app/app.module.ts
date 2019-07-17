@@ -23,18 +23,17 @@ import { HomeComponent } from './components/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { InputEmailComponent } from './shared/form-controls/input-email/input-email.component';
 import { InputPasswordComponent } from './shared/form-controls/input-password/input-password.component';
-import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
 import { MatTooltipModule, MatButtonModule, MatCheckboxModule, MatInputModule } from '@angular/material';
-import { MultiLineInputComponent } from './components/multi-line-input/multi-line-input.component';
+import { MultiLineInputComponent } from './shared/components/multi-line-input/multi-line-input.component';
 import { NewEventComponent } from './components/new-event/new-event.component';
-import { NewEventLeavePopupComponent } from './components/new-event-leave-popup/new-event-leave-popup.component';
+import { NewEventLeavePopupComponent } from './components/new-event/new-event-leave-popup/new-event-leave-popup.component';
 import { InputSearchComponent} from './shared/form-controls/input-search/input-search.component';
 import { InputTextComponent } from './shared/form-controls/input-text/input-text.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { MainComponent } from './components/main/main.component';
 import { MatSnackBarModule } from '@angular/material';
 import { NgModule } from '@angular/core';
-import { PopupComponent } from './components/popup/popup.component';
+import { PopupComponent } from './shared/components/popup/popup.component';
 import { PopupDetailsComponent } from './components/contacts/popup-details/popup-details.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -46,13 +45,18 @@ import { DatePipe } from '@angular/common';
 import { CheckboxDropdownComponent } from './shared/components/checkbox-dropdown/checkbox-dropdown.component';
 import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
 import { SelectComponent } from './shared/form-controls/select/select.component';
-import { PageMaskComponent } from './components/page-mask/page-mask.component';
+import { PageMaskComponent } from './shared/page-mask/page-mask.component';
 import { RouterModule } from '@angular/router';
-import { UserInfoPopupComponent } from './components/user-info-popup/user-info-popup.component';
+import { UserInfoPopupComponent } from './components/home/user-info-popup/user-info-popup.component';
 import { StoreModule } from '@ngrx/store';
 import { userReducer} from './store/reducer';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { GetNameFromUserIDPipe } from './pipes/get-name-from-user-id.pipe';
+import { MultiLineEllipsisComponent } from './shared/components/multi-line-ellipsis/multi-line-ellipsis.component';
+import { SectionSpinnerComponent } from './shared/components/section-spinner/section-spinner.component';
+import { InputNumberDirective } from './shared/directives/input-number.directive';
+import { MatProgressSpinnerModule } from '@angular/material';
+import { InputNumberComponent } from './shared/form-controls/input-number/input-number.component';
 
 
 @NgModule({
@@ -102,7 +106,11 @@ import { GetNameFromUserIDPipe } from './pipes/get-name-from-user-id.pipe';
     ChatMainComponent,
     ChatGroupsComponent,
     ReversePipe,
-    GetNameFromUserIDPipe
+    GetNameFromUserIDPipe,
+    MultiLineEllipsisComponent,
+    SectionSpinnerComponent,
+    InputNumberDirective,
+    InputNumberComponent
   ],
   imports: [
     BrowserModule,
@@ -121,6 +129,7 @@ import { GetNameFromUserIDPipe } from './pipes/get-name-from-user-id.pipe';
     MatNativeDateModule,
     MatRadioModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
     StoreModule.forRoot({user: userReducer})
   ],
   entryComponents: [

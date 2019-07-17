@@ -1,13 +1,9 @@
 @import "../../../../scss/_variables.scss";
 @import "../../../../scss/_functions.scss";
 
-footer {
-  position: absolute;
-  bottom: 0;
-  min-height: 60px;
-  width: 85%;
-  padding: 16px 16px;
-  box-sizing: border-box;
+.chat-window-container {
+  height: calc(100vh - #{$header-height} - 30px);
+  position: relative;
 }
 
 .btn-submit-send{
@@ -104,10 +100,17 @@ ul {
     list-style-type: none;
   }
 }
+.arrow-down {
+  position: absolute;
+  right: 10px;
+  background-color: map-get($bg-color, 'dark');
+  border-radius: 50%;
+  padding: 0 2px;
+  cursor: pointer;
+}
 
-.chat-window-conteiner {
-  height: 100%;
-  width: 100%;
+.messages-container {
+  max-height: calc(100vh - #{$footer-height} - #{$header-height} - 50px);
 }
 
 .message-box{
@@ -115,7 +118,8 @@ ul {
   border: 1px solid #5e7419;
   border-color: map-get($bg-color, 'dark');
   padding: 5px;
-  max-height: calc(77vh - (#{$footer-height}));
+  position: relative;
+  height: 100%;
   overflow: auto;
 }
 
@@ -158,14 +162,13 @@ ul {
 }
 
 .user-is-typing {
-  position: absolute;
-  bottom: $footer-height;
   background-color: map-get($bg-color, 'light-olive');
   border: 1px solid #5e7419;
   border-radius: 20px;
   padding: 5px;
   font-size: 11px;
   font-style: italic;
+  max-width: 100px;
 }
 
 footer {
@@ -175,6 +178,7 @@ footer {
     width: 85%;
     padding: 16px 0;
     box-sizing: border-box;
+    height: auto;
 }
 
 form {
@@ -204,3 +208,24 @@ form {
     background-color: map-get($disabled, 'grey');
     color: black;
   }
+
+  app-section-spinner {
+    display: block;
+    width: 66.7%;
+
+      /deep/ mat-spinner {
+      top: 0 !important;
+      z-index: 5;
+      left: 50%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+  .messages-container {
+    height: 45%;
+  }
+
+  div.row {
+    height: 90%;
+  }
+}

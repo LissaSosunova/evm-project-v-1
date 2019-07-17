@@ -53,7 +53,12 @@ export class MainComponent implements OnInit, OnDestroy {
     this.user$ = this.store.pipe(select('user'));
     this.user$.subscribe(user => {
       this.user = user;
-    })
+      let allUnredMessagesAmount: number = 0;
+      this.user.chats.forEach(chatItem => {
+        allUnredMessagesAmount = allUnredMessagesAmount + chatItem.unreadMes;
+      });
+      this.transferService.setDataObs({allUnredMessagesAmount});
+    });
   }
 
   ngOnDestroy() {

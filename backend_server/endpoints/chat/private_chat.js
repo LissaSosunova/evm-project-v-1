@@ -29,9 +29,10 @@ router.get('/private_chat/:id/', async function (req, res, next){
     try {
       const chatId = req.params.id;
       const param = url.parse(req.url).query;
-      const mesAmount = 20;
+      const mesAmount = +queryString.parse(param).queryMessagesAmount || 20;
       const queryNum = +queryString.parse(param).queryNum;
-      const n = queryNum * mesAmount;
+      const mesageShift = +queryString.parse(param).messagesShift;
+      const n = queryNum * mesAmount + mesageShift;
       const getChatParams = {
         query: {_id: chatId},
         elementMatch: {messages: {$slice: [n, mesAmount]}}

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {types} from 'src/app/types/types';
 import {TransferService} from 'src/app/services/transfer.service';
@@ -19,7 +19,7 @@ import * as userAction from '../../../store/actions';
   styleUrls: ['./chat-window.component.scss']
 })
 
-export class ChatWindowComponent implements OnInit, OnDestroy {
+export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public arrayOfMessages: Array<types.Message> = [];
   public arrayOfUsers: any[];
   public blockedChats: Array<types.Chats> = [];
@@ -30,15 +30,28 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   public inputMes: string;
   public isDraftMessageExist: boolean;
   public isDraftMessageSent: boolean = false;
+  public isLoadingMessages: boolean;
   public isMessages: boolean = false;
+  public moreMessages: boolean = false;
+  public portionMessagesNumber: number;
   public privateChats: Array<types.Chats> = [];
+  public showArrowDown: boolean = false;
   public showUserIsTyping: boolean;
   public test: string;
   public user: types.User = {} as types.User;
   public userNameIsTyping: string;
 
+  @ViewChild('messageBox') private messageBox: ElementRef;
+  private messageBoxElement: HTMLDivElement;
+  @ViewChild('footer') private footer: ElementRef;
+  private footerElement: HTMLDivElement;
+  @ViewChild('arrowDown') public arrowDown: ElementRef;
+  private arrowDownElement: HTMLDivElement;
+
   private chats: types.ChatData;
   private chatId: string;
+
+  private messagesShift: number = 0;
   private userObj: {chatIdCurr: string; userId: string; token: string};
   private isUserTyping: boolean = false;
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -55,6 +68,13 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.init();
+  }
+
+  ngAfterViewInit() {
+    this.messageBoxElement = this.messageBox.nativeElement as HTMLDivElement;
+    this.footerElement = this.footer.nativeElement as HTMLDivElement;
+    this.arrowDownElement = this.arrowDown.nativeElement as HTMLDivElement;
+    this.scrollDownMessageWindow();
   }
 
   ngOnDestroy () {
@@ -79,6 +99,21 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  @HostListener('scroll', ['$event']) public scrollChatWindow (event) {
+    const scrolled: number = this.messageBoxElement.scrollTop;
+    const clientHeightChatWindow: number = this.messageBoxElement.clientHeight;
+    const chatWindowsSrollHeight: number = this.messageBoxElement.scrollHeight;
+    this.arrowDownElement.style.top = `${(clientHeightChatWindow + scrolled - 50)}px`;
+    if (scrolled < chatWindowsSrollHeight - 2 * clientHeightChatWindow) {
+      this.showArrowDown = true;
+    } else {
+      this.showArrowDown = false;
+    }
+    if (this.portionMessagesNumber && scrolled === 0 && this.moreMessages) {
+      this.getMessages(this.chatId, this.portionMessagesNumber, types.Defaults.QUERY_MESSAGES_AMOUNT, this.messagesShift);
+    }
+  }
+
   public sendMessage(): void {
     this.isMessages = true;
     const date = this.dateTransformService.nowUTC();
@@ -98,6 +133,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.socketIoService.socketEmit(SocketIO.events.message, message);
     this.inputMes = '';
     this.control.setValue('');
+    this.scrollDownMessageWindow();
+  }
+
+  private changeChatWindowHeigth(): void {
+    const footerHeigth: number = this.footerElement.clientHeight;
+    this.messageBoxElement.style.maxHeight = `calc(100vh - ${footerHeigth}px - 120px)`;
   }
 
   private getChat(): void {
@@ -105,10 +146,14 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     console.log(this.chats);
     this.arrayOfMessages = this.chats.messages;
     this.arrayOfUsers = this.chats.users;
-    if (this.arrayOfMessages.length <= 0) {
+    if (this.arrayOfMessages && this.arrayOfMessages.length <= 0) {
       this.test = 'There are no messages in this chat.';
     } else {
       this.isMessages = true;
+      if (this.arrayOfMessages && this.arrayOfMessages.length >= 20) {
+        this.portionMessagesNumber = 1;
+        this.moreMessages = true;
+      }
     }
   }
 
@@ -149,6 +194,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
 
   private initDraftMessagesSubscription(): void {
     this.draftMessage = this.route.snapshot.data.draftMessage;
+    setTimeout(() => {
+      this.changeChatWindowHeigth();
+    });
     let draftMessageItem: types.DraftMessage;
     if (this.draftMessage && this.draftMessage.length > 0) {
       draftMessageItem = this.draftMessage[0].draftMessages.find(item => {
@@ -167,6 +215,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     this.control.valueChanges.pipe(takeUntil(this.unsubscribe$))
     .subscribe(message => {
       this.inputMes = message;
+      this.changeChatWindowHeigth();
     });
 
     this.control.valueChanges
@@ -206,13 +255,41 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getMessages(chatId: string, n: number): void {
-    // метод для получения последующих порций сообщений, будет вызываться при скроле окна до верха
-    this.data.getPrivatChat(chatId, String(n)).subscribe(
+  private getMessages(chatId: string, n: number, queryMessagesAmount: number, messagesShift: number): void {
+    this.isLoadingMessages = true;
+    this.data.getPrivatChat(chatId, String(n), String(queryMessagesAmount), String(messagesShift)).subscribe(
       response => {
         console.log('messages', response);
+        this.isLoadingMessages = false;
+        if (response && response.length < 20) {
+          this.moreMessages = false;
+        } else {
+          this.portionMessagesNumber++;
+          this.moreMessages = true;
+        }
+        response.forEach(item => {
+          const messageExists = this.arrayOfMessages.some(message => message._id === item._id);
+          if (!messageExists) {
+            this.arrayOfMessages.push(item);
+          }
+        });
+        this.messageBoxElement.scrollTo(0, 1);
       }
     );
+  }
+
+  private shiftMessagesQuery(): void {
+    this.messagesShift++;
+    if (this.messagesShift === types.Defaults.QUERY_MESSAGES_AMOUNT) {
+      this.messagesShift = 0;
+      this.portionMessagesNumber++;
+    }
+  }
+
+  private scrollDownMessageWindow(): void {
+    const chatWindowsSrollHeight: number = this.messageBoxElement.scrollHeight;
+    const chatWindowsClientHeight: number = this.messageBoxElement.clientHeight;
+    this.messageBoxElement.scrollTo(0, chatWindowsSrollHeight - chatWindowsClientHeight);
   }
 
   private sendDraftMessage(): void {
@@ -231,9 +308,13 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   private subscribeNewMessagesInit(): void {
     this.socketIoService.on(SocketIO.events.new_message)
       .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
-    .subscribe(message => {
-      this.arrayOfMessages.unshift(message);
-      this.store.dispatch(new userAction.UpdateChatList(message));
+      .subscribe(message => {
+        this.arrayOfMessages.unshift(message);
+        this.store.dispatch(new userAction.UpdateChatList(message));
+        setTimeout(() => {
+          this.scrollDownMessageWindow();
+        });
+        this.shiftMessagesQuery();
     });
  }
 

@@ -44,6 +44,10 @@ input, button {
   color: map-get($bg-color, 'green') !important;
 }
 
+.mat-progress-spinner circle {
+  stroke: map-get($bg-color, 'green') !important;
+}
+
 
 @font-face {
   font-family: 'Material Icons';

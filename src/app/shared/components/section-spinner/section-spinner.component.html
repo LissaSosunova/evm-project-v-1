@@ -1,0 +1,13 @@
+<div [ngSwitch]="loading">
+  <div *ngSwitchCase="false">
+    <ng-content></ng-content>
+  </div>
+  <div *ngSwitchCase="true" class="app-section-spinner__wrapper">
+    <mat-spinner class="app-section-spinner"
+        [ngStyle]="{ width: width }"
+        [ngClass]="{'fixed': position === 'fixed', 'absolute': position === 'absolute'}"
+        [diameter]="50"
+        >
+    </mat-spinner>
+  </div>
+</div>

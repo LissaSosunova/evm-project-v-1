@@ -243,7 +243,8 @@ export interface UserIsTyping {
   }
 
   export enum Defaults {
-    DEFAULT_AVATAR_URL = 'src/img/default-profile-image.png'
+    DEFAULT_AVATAR_URL = 'src/img/default-profile-image.png',
+    QUERY_MESSAGES_AMOUNT = 20
   }
 
 }

@@ -1,3 +1,6 @@
+@import '../../../scss/variables';
+@import '../../../scss/functions';
+
 aside {
   background: #1c2001;
   min-height: 100vh;
@@ -37,4 +40,10 @@ aside {
 
 .label {
   min-width: 100px;
+}
+
+.message-counter {
+  padding: 0 4px;
+  border-radius: 50%;
+  background-color: map-get($bg-color, 'orange');
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'src/app/services/session.storage.service';
 import { RouterService } from 'src/app/services/router.service';
@@ -7,18 +7,23 @@ import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
 import { SocketIO} from 'src/app/types/socket.io.types';
 import { PageMaskService } from 'src/app/services/page-mask.service';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
 
   public currParentUrl: string;
   public currChildUrl: string;
   public sidebarIsExpanded: boolean;
+  public totalUnreadMessagesAmount: number;
   @Input() private documentWidth: number;
+
+  private unsubscribe$: Subject<void> = new Subject();
 
   constructor(public router: Router,
             private activateRouter: ActivatedRoute,
@@ -31,6 +36,18 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.getCurrentRoute();
     this.setSidebarPosition();
+    this.transferService.dataObj$
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe(obj => {
+      if (obj.allUnredMessagesAmount || obj.allUnredMessagesAmount === 0) {
+        this.totalUnreadMessagesAmount = obj.allUnredMessagesAmount;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   public exit(): void {
