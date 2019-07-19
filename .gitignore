@@ -36,6 +36,7 @@ yarn-error.log
 testem.log
 /typings
 backend_server/uploads
+backend_server/credsEmail.js
 
 # System Files
 .DS_Store

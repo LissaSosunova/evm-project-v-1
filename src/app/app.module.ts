@@ -57,6 +57,7 @@ import { SectionSpinnerComponent } from './shared/components/section-spinner/sec
 import { InputNumberDirective } from './shared/directives/input-number.directive';
 import { MatProgressSpinnerModule } from '@angular/material';
 import { InputNumberComponent } from './shared/form-controls/input-number/input-number.component';
+import { EmailConfirmedComponent } from './components/email-confirmed/email-confirmed.component';
 
 
 @NgModule({
@@ -110,7 +111,8 @@ import { InputNumberComponent } from './shared/form-controls/input-number/input-
     MultiLineEllipsisComponent,
     SectionSpinnerComponent,
     InputNumberDirective,
-    InputNumberComponent
+    InputNumberComponent,
+    EmailConfirmedComponent
   ],
   imports: [
     BrowserModule,

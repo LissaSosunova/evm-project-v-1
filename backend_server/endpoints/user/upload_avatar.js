@@ -66,7 +66,7 @@ router.post('/upload_avatar', upload.single('image'), async function (req, res, 
 
 	const avatarObjToSave = {
 		owner: req.headers.userid,
-		url: `${config.filesDomainLocal}/uploads/${req.headers.userid}/avatars/${fileName}`
+		url: `${config.filesDomain}/uploads/${req.headers.userid}/avatars/${fileName}`
 	};
 	const queryParam = {
 		query: params,
