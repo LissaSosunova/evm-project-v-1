@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
 import { DataService } from 'src/app/services/data.service';
 import { NgForm } from '@angular/forms';
+import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 
 @Component({
   selector: 'app-registration',
@@ -23,7 +24,8 @@ export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private data: DataService) {
+              private data: DataService,
+              private toastService: ToastService) {
 
    }
 
@@ -57,9 +59,10 @@ export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
       data => {
         const response = JSON.parse(data);
         if (response.name === 'MongoError' || response.statuscode === 409) {
-          this.errorMes = 'User with such username is already exists. Try another username';
+          this.errorMes = 'User with such username or e-mail is already exists. Try another username or e-mail';
         } else {
-          this.router.navigate(['../login']);
+          this.toastService.openToastSuccess('Check your email to complete registration', {duration: 6000});
+          this.errorMes = '';
         }
       }
     );

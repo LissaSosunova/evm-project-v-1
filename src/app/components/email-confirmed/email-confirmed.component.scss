@@ -1,0 +1,13 @@
+@import '../../../scss/variables';
+
+.email-confirmed-text {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.done {
+  padding: 2px;
+  border-radius: 50%;
+  background-color: map-get($bg-color, 'green');  
+}

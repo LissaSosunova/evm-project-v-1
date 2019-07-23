@@ -17,6 +17,7 @@ import { NgModule } from '@angular/core';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { Routes, RouterModule } from '@angular/router';
 import { GetChatResolverService } from './resolvers/get-chat-resolver.service';
+import { EmailConfirmedComponent } from './components/email-confirmed/email-confirmed.component';
 
 const routes: Routes = [
   {
@@ -35,6 +36,10 @@ const routes: Routes = [
   {
     path: 'about',
     component: AboutComponent
+  },
+  {
+    path: 'email-confirmed',
+    component: EmailConfirmedComponent
   },
   {
     path: 'main',

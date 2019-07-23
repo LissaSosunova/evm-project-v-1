@@ -435,6 +435,13 @@
            "endpoint":"uploads/:userId/avatars/:fileName", 
            "type": "get",
            "response": "data"
+        },
+        {
+            "endpoint": "confirm_email/:token/:tokenKey",
+            "type": "get",
+            "reponse": {
+                "status": 200
+            }
         }
     ]
 

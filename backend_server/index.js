@@ -21,10 +21,11 @@ const $renewChat = require('./endpoints/chat/renew_chat');
 const $setDraftMessage = require('./endpoints/chat/set_draft_message');
 const $deleteDraftMessage = require('./endpoints/chat/delete_draft_message');
 const $getDraftMessage = require('./endpoints/chat/get_draft_message');
-const socketIO = require('./sockets/socket.io');
+const $confirmEmail = require('./endpoints/registration/confirm_email');
 const $uploadAvatar = require('./endpoints/user/upload_avatar');
 const $get_avatar = require('./endpoints/user/get_avatar');
 const $deleteAvatar = require('./endpoints/user/delete_avatar');
+const socketIO = require('./sockets/socket.io');
 
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -104,6 +105,9 @@ app.route('/uploads/:userId/avatars/:fileName')
 
 app.route('/delete_avatar')
   .post($deleteAvatar);    
+
+app.route('/confirm_email/:token')
+  .get($confirmEmail);
 
 const server = app.listen(port); 
  console.info('Backend server listening on port ' + port);

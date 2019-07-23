@@ -20,6 +20,28 @@
         </li>
       </ul>
     </nav>
+    <nav *ngIf="currParentUrl == 'email-confirmed'">
+      <ul>
+        <li>
+          <a routerLink="login" title="Sign in">
+            <i class="material-icons">account_box</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Sign-in</i>
+          </a>
+        </li>
+        <li>
+          <a routerLink="registration" title="Create new account">
+            <i class="material-icons">fiber_new</i>
+            <i class="label" *ngIf="sidebarIsExpanded">New account</i>
+          </a>
+        </li>
+        <li>
+          <a routerLink="about" title="About project">
+            <i class="material-icons">info</i>
+            <i class="label" *ngIf="sidebarIsExpanded">Info</i>
+          </a>
+        </li>
+      </ul>
+    </nav>
     <nav *ngIf="currParentUrl == 'registration'">
       <ul>
         <li>
