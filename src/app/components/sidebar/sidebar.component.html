@@ -20,7 +20,9 @@
         </li>
       </ul>
     </nav>
-    <nav *ngIf="currParentUrl == 'email-confirmed'">
+    <nav *ngIf="currParentUrl == 'email-confirmed'
+    || currParentUrl == 'forgot-password'
+    || currParentUrl == 'reset-password'">
       <ul>
         <li>
           <a routerLink="login" title="Sign in">

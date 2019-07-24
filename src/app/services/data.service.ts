@@ -78,6 +78,15 @@ export class DataService {
     return this.http.post(URL_BACK + '/upload_avatar', obj, {headers: this.getHeaderForUploadFile(userId)});
   }
 
+  public forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${URL_BACK}/forgot_password`, {email});
+  }
+
+  public changePassword(password: string, token: string, tokenTime: string): Observable<any> {
+    const headers = new HttpHeaders({'authorization': token});
+    return this.http.post(`${URL_BACK}/change_password`, {password, tokenTime}, {headers});
+  }
+
   private getHeaders(): HttpHeaders {
     const token = this.sessionStorageService.getValue('_token');
     const tokenKey = this.sessionStorageService.getValue('token_key');
