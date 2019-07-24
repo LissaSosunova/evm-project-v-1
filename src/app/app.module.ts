@@ -14,7 +14,7 @@ import { MatDatepickerModule, MatRadioModule } from '@angular/material';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { ContenteditableModelDirective } from './directives/contenteditable-model.directive';
 import { ChatMainComponent } from './components/chats/chat-main/chat-main.component';
-import { ErrMsgComponent } from './components/err-msg/err-msg.component';
+import { ErrMsgComponent } from './shared/components/err-msg/err-msg.component';
 import { EventCalendarComponent } from './components/event-calendar/event-calendar.component';
 import { EventsComponent } from './components/events/events.component';
 import { FilterPipe } from './pipes/filter.pipe';
@@ -58,6 +58,8 @@ import { InputNumberDirective } from './shared/directives/input-number.directive
 import { MatProgressSpinnerModule } from '@angular/material';
 import { InputNumberComponent } from './shared/form-controls/input-number/input-number.component';
 import { EmailConfirmedComponent } from './components/email-confirmed/email-confirmed.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 
 @NgModule({
@@ -112,7 +114,9 @@ import { EmailConfirmedComponent } from './components/email-confirmed/email-conf
     SectionSpinnerComponent,
     InputNumberDirective,
     InputNumberComponent,
-    EmailConfirmedComponent
+    EmailConfirmedComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,

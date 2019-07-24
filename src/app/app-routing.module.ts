@@ -18,6 +18,8 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { Routes, RouterModule } from '@angular/router';
 import { GetChatResolverService } from './resolvers/get-chat-resolver.service';
 import { EmailConfirmedComponent } from './components/email-confirmed/email-confirmed.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -40,6 +42,14 @@ const routes: Routes = [
   {
     path: 'email-confirmed',
     component: EmailConfirmedComponent
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
+  },
+  {
+    path: 'reset-password/:token/:tokenTime',
+    component: ResetPasswordComponent
   },
   {
     path: 'main',

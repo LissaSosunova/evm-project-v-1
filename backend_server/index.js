@@ -25,6 +25,9 @@ const $confirmEmail = require('./endpoints/registration/confirm_email');
 const $uploadAvatar = require('./endpoints/user/upload_avatar');
 const $get_avatar = require('./endpoints/user/get_avatar');
 const $deleteAvatar = require('./endpoints/user/delete_avatar');
+const $forgotPassword = require('./endpoints/registration/forgot_password');
+const $resetPassword = require('./endpoints/registration/reset_password');
+const $changePassword = require('./endpoints/registration/change_password');
 const socketIO = require('./sockets/socket.io');
 
 app.use(bodyParser.text());
@@ -109,8 +112,17 @@ app.route('/delete_avatar')
 app.route('/confirm_email/:token')
   .get($confirmEmail);
 
+app.route('/forgot_password')
+  .post($forgotPassword);
+  
+app.route('/reset_password/:token/:tokenTime')
+  .get($resetPassword);
+
+app.route('/change_password')
+  .post($changePassword);  
+
 const server = app.listen(port); 
- console.info('Backend server listening on port ' + port);
+console.info('Backend server is listening on port ' + port);
 
 socketIO(server, app);
 

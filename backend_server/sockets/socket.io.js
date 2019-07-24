@@ -56,8 +56,12 @@ function runWebsocketsIO(server, expressApp) {
                token: string;
             }
              */
-            delete onlineClients[obj.userId][obj.token];
-            socket.broadcast.emit("user_left", {userId: obj.userId});
+             try {
+                delete onlineClients[obj.userId][obj.token];
+                socket.broadcast.emit("user_left", {userId: obj.userId});
+             } catch (err) {
+               console.error('user_left', err);
+             }
         });
 
         socket.on("message", obj => {
@@ -135,13 +139,18 @@ function runWebsocketsIO(server, expressApp) {
                 token: string
             }
              */
-            delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
-            if (Object.keys(clientsInChat[obj.chatIdCurr][obj.userId]).length === 0) {
-                delete clientsInChat[obj.chatIdCurr][obj.userId];
+            try {
+              delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
+              if (Object.keys(clientsInChat[obj.chatIdCurr][obj.userId]).length === 0) {
+                  delete clientsInChat[obj.chatIdCurr][obj.userId];
+              }
+              if (Object.keys(clientsInChat[obj.chatIdCurr]).length === 0) {
+                  delete clientsInChat[obj.chatIdCurr]
+              }
+            } catch (err) {
+              console.error("user_left_chat", err);
             }
-            if (Object.keys(clientsInChat[obj.chatIdCurr]).length === 0) {
-                delete clientsInChat[obj.chatIdCurr]
-            }
+            
         });
 
         socket.on("user_is_typing", obj => {

@@ -14,7 +14,6 @@ const ConfUser = require('../../models/pending_registration_user');
 // импортируем файл конфигурации (баловство, конечно, надо генерировать это на лету и хранить где-нибудь)
 const config = require('../../config');
 const transporter = require('../../modules/transporterNodemailer');
-const crypto = require('crypto');
 
   /**
    * При поступлении запроса типа POST эта функция шифрует пароль с помощью bcrypt и сохраняет результат в БД.
@@ -74,7 +73,7 @@ const crypto = require('crypto');
           subject: "Email confirmation ✔",
           text: "Please, confirm your email",
           html: `Please click this link to confirm your email: <a href="${url}">${url}</a>
-                <br> This link is valid within 1 hour`
+                <br> This link is valid during 10 minutes`
         });
         const confUser = new ConfUser;
         confUser.username = req.body.username;
