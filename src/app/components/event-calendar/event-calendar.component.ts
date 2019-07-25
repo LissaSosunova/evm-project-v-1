@@ -62,7 +62,10 @@ export class EventCalendarComponent implements OnInit {
         center: 'title',
         right: 'today prev,next'
       },
-      events: events
+      events: events,
+      eventClick: event => {
+        console.log(event);
+      }
       //[
       //  {
       //    title: 'All Day Event',

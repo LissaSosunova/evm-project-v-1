@@ -45,6 +45,8 @@ function runWebsocketsIO(server, expressApp) {
             if (!onlineClients[obj.userId]) {
                 onlineClients[obj.userId] = {};
               }
+              socket.userId = obj.userId;
+              socket.token = obj.token;
               onlineClients[obj.userId][obj.token] = socket;
               socket.emit("all_online_users", Object.keys(onlineClients));
               socket.broadcast.emit("user", {userId: obj.userId});
@@ -58,6 +60,9 @@ function runWebsocketsIO(server, expressApp) {
              */
              try {
                 delete onlineClients[obj.userId][obj.token];
+                if (Object.keys(onlineClients[obj.userId].length === 0)) {
+                  delete onlineClients[obj.userId];
+                }
                 socket.broadcast.emit("user_left", {userId: obj.userId});
              } catch (err) {
                console.error('user_left', err);
@@ -128,6 +133,9 @@ function runWebsocketsIO(server, expressApp) {
             if (!clientsInChat[obj.chatIdCurr][obj.userId]) {
                 clientsInChat[obj.chatIdCurr][obj.userId] = {}
             }
+            socket.userId = obj.userId;
+            socket.token = obj.token;
+            socket.chatIdCurr = obj.chatIdCurr;
             clientsInChat[obj.chatIdCurr][obj.userId][obj.token] = socket;
         });
 
@@ -208,14 +216,25 @@ function runWebsocketsIO(server, expressApp) {
           const updateMes = await Promise.all(promises);
         })
 
-    });
+        socket.on("disconnect", obj => {
+          console.info(`User ${socket.userId} is offline`);
+          if (onlineClients[socket.userId] && onlineClients[socket.userId][socket.token]) {
+            delete onlineClients[socket.userId][socket.token];
+          }
+          if (onlineClients[socket.userId] && Object.keys(onlineClients[socket.userId]).length === 0) {
+            delete onlineClients[socket.userId];
+          }
+          if (socket.chatIdCurr) {
+            delete clientsInChat[socket.chatIdCurr][socket.userId][socket.token];
+          }
+          if (clientsInChat[socket.chatIdCurr] && 
+            clientsInChat[socket.chatIdCurr][socket.userId] &&
+            Object.keys(clientsInChat[socket.chatIdCurr][socket.userId]).length === 0) {
+              delete clientsInChat[socket.chatIdCurr][socket.userId];
+            } 
+        });
 
-    io.on("disconnect", () => {
-      console.info(`User ${obj.userId} is offline`);
-      delete onlineClients[obj.userId][obj.token];
-      delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
     });
-
 
 }
 
