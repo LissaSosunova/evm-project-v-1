@@ -60,6 +60,7 @@ import { InputNumberComponent } from './shared/form-controls/input-number/input-
 import { EmailConfirmedComponent } from './components/email-confirmed/email-confirmed.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { NewMessageToastComponent } from './shared/toasts/components/new-message-toast/new-message-toast.component';
 
 
 @NgModule({
@@ -116,7 +117,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     InputNumberComponent,
     EmailConfirmedComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    NewMessageToastComponent
   ],
   imports: [
     BrowserModule,
@@ -141,7 +143,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
   entryComponents: [
     ToastSuccessComponent,
     ToastFailComponent,
-    ToastWarningComponent
+    ToastWarningComponent,
+    NewMessageToastComponent
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

@@ -10,6 +10,7 @@ import { SocketIO} from 'src/app/types/socket.io.types';
 import { Store, select } from '@ngrx/store';
 import * as userAction from  '../../store/actions';
 import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
+import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 
 @Component({
   selector: 'app-main',
@@ -25,11 +26,12 @@ export class MainComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject();
 
   constructor(private route: ActivatedRoute,
-    public router: Router,
-    private data: DataService,
-    private transferService: TransferService,
-    private socketIoService: SocketIoService,
-    private sessionStorageService: SessionStorageService,
+              private router: Router,
+              private data: DataService,
+              private transferService: TransferService,
+              private socketIoService: SocketIoService,
+              private sessionStorageService: SessionStorageService,
+              private toastService: ToastService,
               private store: Store<types.User>) {
     }
 
@@ -46,8 +48,23 @@ export class MainComponent implements OnInit, OnDestroy {
     this.socketIoService.socketEmit(SocketIO.events.user, dataObj);
     this.socketIoService.on(SocketIO.events.chats_model).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe(message => {
-        console.log('message when user is out of chat', message);
         this.store.dispatch(new userAction.UpdateChatList(message));
+      });
+    this.socketIoService.on(SocketIO.events.message_out_of_chat).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+      .subscribe(message => {
+        const contactOfIncomingMessage: types.Contact = this.user.contacts.find(contact => contact.id === message.authorId);
+        if (!contactOfIncomingMessage) {
+          // тот случай, когда нет в контактах автора входящего сообщения
+          // шлём запрос на сервер, чтобы получить его имя и аватарку
+        }
+        const toastMessageObj: types.ContactForToastMessage = {
+          text: `New message from ${contactOfIncomingMessage.name}`,
+          avatar: contactOfIncomingMessage.avatar.url,
+          message: message.text,
+          userId: message.authorId,
+          chatId: message.chatID
+        };
+        this.toastService.openMessageToast(toastMessageObj, {duration: 5000});
       });
     this.user.avatar.url = this.user.avatar.url || types.Defaults.DEFAULT_AVATAR_URL;
     this.user$ = this.store.pipe(select('user'));
@@ -76,7 +93,7 @@ export class MainComponent implements OnInit, OnDestroy {
     formData.append('userId', this.user.username);
     this.data.uploadAvatar(formData, this.user.username).subscribe(res => {
       this.store.dispatch(new userAction.UpdateAvatarURL(res));
-    })
+    });
   }
 
 

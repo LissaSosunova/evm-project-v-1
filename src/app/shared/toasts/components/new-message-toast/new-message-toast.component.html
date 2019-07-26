@@ -1,0 +1,10 @@
+<section class="toast-message" (click)="goToChat(messageObj.chatId)">
+  <div class="header">
+    <div>{{messageObj.text}}</div>
+    <div>
+      <img src="{{messageObj.avatar}}" class="avatar">
+    </div>
+    
+  </div>
+  <div class="message">{{messageObj.message}}</div>
+</section>

@@ -3,7 +3,7 @@ import { constants } from '../constants/default-constants';
 export module types {
 
   export interface Contact {
-    avatar: string;
+    avatar: Avatar;
     email: string;
     id: string;
     name: string;
@@ -34,6 +34,14 @@ export module types {
     type: number;
     unreadMes: number;
     lastMessage: Message;
+  }
+
+  export interface ContactForToastMessage {
+    avatar: string;
+    chatId: string;
+    message: string;
+    text: string;
+    userId: string;
   }
 
   export interface Login {

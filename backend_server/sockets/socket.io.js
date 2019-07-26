@@ -107,11 +107,23 @@ function runWebsocketsIO(server, expressApp) {
                         clientsInChat[obj.chatID][userId][token].emit('new_message',obj);
                     });
                 });
+                // шлем всем кто онлайн сообщение для обновления модели
                 obj.users.forEach(user => {
                   Object.keys(onlineClients).forEach(userId => {
                     if(user.username === userId) {
                       Object.keys(onlineClients[userId]).forEach(token => {
                         onlineClients[userId][token].emit('chats_model',obj)
+                      })
+                    }
+                  });
+                  // шлем всем кто онлайн, но не в чате сообщение
+                  const userIdsOutOfChat = Object.keys(onlineClients).filter(userId => {
+                    return Object.keys(clientsInChat[obj.chatID]).every(userIdInChat => userIdInChat !== userId)
+                  });
+                  userIdsOutOfChat.forEach(userId => {
+                    if(user.username === userId) {
+                      Object.keys(onlineClients[userId]).forEach(token => {
+                        onlineClients[userId][token].emit('message_out_of_chat', obj);
                       })
                     }
                   })
@@ -172,13 +184,13 @@ function runWebsocketsIO(server, expressApp) {
           }
            */
 
-          obj.users.forEach(user => {
-            if(user.username !== obj.userId && onlineClients[user.username]) {
-                Object.keys(onlineClients[user.username]).forEach(token => {
-                    onlineClients[user.username][token].emit('user_is_typing_notification', obj)
-                })
-            }
-          });
+          // obj.users.forEach(user => {
+          //   if(user.username !== obj.userId && onlineClients[user.username]) {
+          //       Object.keys(onlineClients[user.username]).forEach(token => {
+          //           onlineClients[user.username][token].emit('user_is_typing_notification', obj)
+          //       })
+          //   }
+          // });
 
           if(clientsInChat[obj.chatId]) {
             Object.keys(clientsInChat[obj.chatId]).forEach(userId => {
@@ -218,20 +230,25 @@ function runWebsocketsIO(server, expressApp) {
 
         socket.on("disconnect", obj => {
           console.info(`User ${socket.userId} is offline`);
-          if (onlineClients[socket.userId] && onlineClients[socket.userId][socket.token]) {
-            delete onlineClients[socket.userId][socket.token];
-          }
-          if (onlineClients[socket.userId] && Object.keys(onlineClients[socket.userId]).length === 0) {
-            delete onlineClients[socket.userId];
-          }
-          if (socket.chatIdCurr) {
-            delete clientsInChat[socket.chatIdCurr][socket.userId][socket.token];
-          }
-          if (clientsInChat[socket.chatIdCurr] && 
-            clientsInChat[socket.chatIdCurr][socket.userId] &&
-            Object.keys(clientsInChat[socket.chatIdCurr][socket.userId]).length === 0) {
-              delete clientsInChat[socket.chatIdCurr][socket.userId];
+          try {
+            if (onlineClients[socket.userId] && onlineClients[socket.userId][socket.token]) {
+              delete onlineClients[socket.userId][socket.token];
+            }
+            if (onlineClients[socket.userId] && Object.keys(onlineClients[socket.userId]).length === 0) {
+              delete onlineClients[socket.userId];
+            }
+            if (socket.chatIdCurr) {
+              delete clientsInChat[socket.chatIdCurr][socket.userId][socket.token];
+            }
+            if (clientsInChat[socket.chatIdCurr] && 
+              clientsInChat[socket.chatIdCurr][socket.userId] &&
+              Object.keys(clientsInChat[socket.chatIdCurr][socket.userId]).length === 0) {
+                delete clientsInChat[socket.chatIdCurr][socket.userId];
             } 
+          } catch(err) {
+            console.error('disconnect', err);
+          }
+        
         });
 
     });
