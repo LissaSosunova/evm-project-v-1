@@ -439,9 +439,39 @@
         {
             "endpoint": "confirm_email/:token/:tokenKey",
             "type": "get",
-            "reponse": {
-                "status": 200
+            "redirect": "${config.frontendDomain}/email-confirmed"
+        },
+        {
+            "endpoint": "change_password",
+            "type": "post",
+            "requestObject": {
+                "tokenTime": "String",
+                "password": "String"
+            },
+            "responseObject": {
+                "message": "String",
+                "status": "Number"
             }
+        }, 
+        {
+            "endpoint": "forgot_password",
+            "type": "post",
+            "requestObject": {
+                "email": "String"
+            },
+            "responseObject": {
+                "message": "String",
+                "status": "Number"
+            }
+        },
+        {
+            "endpoint": "reset_password/:token/:tokenTime",
+            "type": "get",
+            "responseObjectError": {
+                "message": "String",
+                "status": "Number"
+            },
+            "redirect": "${config.frontendDomain}/reset-password/:token/:tokenTime"
         }
     ]
 

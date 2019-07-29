@@ -143,7 +143,6 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private getChat(): void {
     this.chats = this.route.snapshot.data.chatMessages;
-    console.log(this.chats);
     this.arrayOfMessages = this.chats.messages;
     this.arrayOfUsers = this.chats.users;
     if (this.arrayOfMessages && this.arrayOfMessages.length <= 0) {
@@ -259,7 +258,6 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isLoadingMessages = true;
     this.data.getPrivatChat(chatId, String(n), String(queryMessagesAmount), String(messagesShift)).subscribe(
       response => {
-        console.log('messages', response);
         this.isLoadingMessages = false;
         if (response && response.length < 20) {
           this.moreMessages = false;

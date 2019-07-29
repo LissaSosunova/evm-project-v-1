@@ -8,6 +8,8 @@ import { TransferService } from 'src/app/services/transfer.service';
 import { ToastSuccessComponent } from '../components/toast-succes/toast-success.component';
 import { ToastFailComponent } from '../components/toast-fail/toast-fail.component';
 import { ToastWarningComponent } from '../components/toast-warning/toast-warning.component';
+import { NewMessageToastComponent } from '../components/new-message-toast/new-message-toast.component';
+import { types } from 'src/app/types/types';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +41,12 @@ export class ToastService {
     config = this.initToastConfig(config);
     this.transferService.dataSet({name: 'toastMessage', data: message});
     this.snackBar.openFromComponent(ToastWarningComponent, config);
+  }
+
+  public openMessageToast(obj: types.ContactForToastMessage, config?: MatSnackBarConfig): void {
+    config = this.initToastConfig(config);
+    this.transferService.dataSet({name: 'toastMessage', data: obj});
+    this.snackBar.openFromComponent(NewMessageToastComponent, config);
   }
 
   private initToastConfig(config?: MatSnackBarConfig): MatSnackBarConfig {
