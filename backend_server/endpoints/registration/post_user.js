@@ -36,7 +36,7 @@ const transporter = require('../../modules/transporterNodemailer');
     };
     const defaultAvatar = {
       owner: 'default',
-      url: "src/img/default-profile-image.png"
+      url: "assets/img/default-profile-image.png"
     };
     const user = new User;
     user.username = req.body.username;

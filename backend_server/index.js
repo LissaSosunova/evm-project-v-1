@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const port = 5006;
+const config = require('./config');
+const port = process.env.PORT || config.backendPort;
 const $login = require('./endpoints/login/login');
 const $account = require('./endpoints/user/account');
 const $event = require('./endpoints/events/event');

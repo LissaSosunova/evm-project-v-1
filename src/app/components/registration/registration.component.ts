@@ -20,6 +20,7 @@ export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
   public passConf: string;
   public password: string;
   public username: string;
+  public nameOfUser: string;
   @ViewChild('registrationForm') public registrationForm: NgForm;
 
   constructor(private route: ActivatedRoute,

@@ -24,15 +24,11 @@ router.post('/delete_avatar', async function (req, res, next) {
     };
 
     const userId = req.body.userId;
-    fs.readdir(path.join(__dirname,`../../uploads/${userId}/avatars/`), (err, items) => {
-    	items.forEach((file) => {
-    		fs.unlinkSync(path.join(__dirname,`../../uploads/${userId}/avatars/${file}`))
-    	})
-    });
+    
 
     const avatarObjToSave = {
 		owner: 'dafault',
-		url: `src/img/default-profile-image.png`
+		url: `assets/img/default-profile-image.png`
 	};
 	const queryParam = {
 		query: params,
@@ -55,7 +51,12 @@ router.post('/delete_avatar', async function (req, res, next) {
     try {
     	await datareader(User, queryParam, 'updateOne');
     	await datareader(User, updateAvatarInContacts, 'updateMany');
-		await datareader(User, updateAvatarInChats, 'updateMany');
+		  await datareader(User, updateAvatarInChats, 'updateMany');
+      fs.readdir(path.join(__dirname,`../../uploads/${userId}/avatars/`), (err, items) => {
+        items.forEach((file) => {
+          fs.unlinkSync(path.join(__dirname,`../../uploads/${userId}/avatars/${file}`))
+        })
+      });
     	res.json(avatarObjToSave);
     } catch (err) {
     	console.error('/delete_avatar', err);

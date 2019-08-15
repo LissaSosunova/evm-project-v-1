@@ -4,4 +4,9 @@ export module constants {
         host: 'localhost',
         port: 5006
     };
+
+    export const deployedBackEnd = {
+    	protocol: 'https',
+    	host: 'evm-backend.herokuapp.com'
+    };
 }
