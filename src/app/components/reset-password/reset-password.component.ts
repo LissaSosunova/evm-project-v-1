@@ -11,6 +11,9 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class ResetPasswordComponent implements OnInit {
 
+  public password: string;
+  public confPassword: string;
+
   private token: string;
   private tokenTime: string;
   @ViewChild('resetPasswordForm') private resetPasswordForm: NgForm;

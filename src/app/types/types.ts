@@ -237,10 +237,6 @@ export interface UserIsTyping {
   typing: boolean;
 }
 
-  export const getURI = () => {
-    return `${constants.localBackEnd.protocol}://${constants.localBackEnd.host}:${constants.localBackEnd.port}`;
-  };
-
   export type StepState = 'login' | 'registration' | 'about' | 'main';
 
   export enum ChatType {
@@ -251,7 +247,7 @@ export interface UserIsTyping {
   }
 
   export enum Defaults {
-    DEFAULT_AVATAR_URL = 'src/img/default-profile-image.png',
+    DEFAULT_AVATAR_URL = 'assets/img/default-profile-image.png',
     QUERY_MESSAGES_AMOUNT = 20
   }
 

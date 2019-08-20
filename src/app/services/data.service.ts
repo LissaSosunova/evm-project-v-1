@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { types } from '../types/types';
 import { SessionStorageService } from './session.storage.service';
+import {getURI} from '../constants/backendURI';
 
-const URL_BACK = types.getURI();
+const URL_BACK = getURI;
 
 @Injectable({
   providedIn: 'root'

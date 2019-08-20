@@ -24,6 +24,8 @@ export class ForgotPasswordComponent implements OnInit {
       } else {
         this.toastService.openToastSuccess('Check your email to complete password resetting', {duration: 6000});
       }
+    }, err => {
+      this.toastService.openToastFail('Server error');
     });
   }
 

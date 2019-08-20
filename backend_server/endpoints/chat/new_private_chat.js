@@ -4,6 +4,14 @@ const User = require('../../models/user');
 const Chat = require('../../models/chats');
 const datareader = require('../../modules/datareader');
 
+class ChatData {
+  constructor(chat) {
+    this.id = chat._id;
+    this.users = chat.users;
+    this.email = chat.email;
+    this.messages = chat.messages;
+  }
+}
 
 router.post('/new_private_chat/', async function (req, res, next) {
     let auth;
@@ -80,7 +88,7 @@ router.post('/new_private_chat/', async function (req, res, next) {
             res.json(err);
           }
           else {
-            let createdChat = new Chat(chat);
+            let createdChat = new ChatData(chat);
             datareader(User, params, 'findOne')
               .then(response => {
                 let user1 = '', user2 = '';
