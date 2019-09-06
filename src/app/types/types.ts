@@ -185,6 +185,22 @@ export module types {
     date: number; // timeStamp (to UTC)
   }
 
+  export interface DeleteMessage {
+    userId: string;
+    authorId: string;
+    messageId: string;
+    chatId: string;
+    unread: string[];
+  }
+
+  export interface EditMessage {
+    userId: string;
+    authorId: string;
+    messageId: string;
+    chatId: string;
+    text: string;
+  }
+
   export interface FormPopupConfig {
     position?: 'top-center'|'center-center';
     cssClass?: string;

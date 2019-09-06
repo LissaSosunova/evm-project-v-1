@@ -15,9 +15,26 @@
                             <li>
                                 <div class="message-body"
                                 [ngClass]="{'message-not-author': item.authorId !== user.username, 'message-author': item.authorId  === user.username}">
-                                    <span class="author-name" > {{ arrayOfUsers | getNameFromUserID: item.authorId }}, </span>
-                                    <span class="date"> {{item.date | date: 'dd.MM.yy'}}, ({{item.date | date: 'HH:mm:ss'}}): &nbsp;&nbsp;&nbsp;</span>
-                                    <span class="text">{{item.text}}</span>
+                                    <div class="message-container">
+                                        <span class="author-name" > {{ arrayOfUsers | getNameFromUserID: item.authorId }}, </span>
+                                        <span class="date"> {{item.date | date: 'dd.MM.yy'}}, ({{item.date | date: 'HH:mm:ss'}}): &nbsp;&nbsp;&nbsp;</span>
+                                        <span class="edited-message"
+                                            *ngIf="item.edited">Edited</span>
+                                        <span class="text">{{item.text}}</span>
+                                    </div>
+                                    <div>
+                                        <span class="material-icons edit-btn"
+                                            *ngIf="item.authorId === user.username"
+                                            (click)="editMessage(item)">
+                                            edit
+                                        </span>
+                                        <span class="material-icons delete-btn"
+                                            *ngIf="item.authorId === user.username"
+                                            (click)="deleteMessage(item)">
+                                            delete
+                                        </span>
+                                    </div>
+                                    
                                 </div>
                             </li>
                         </ul>
@@ -75,8 +92,12 @@
     
 
     </div>
+    
 
     <footer #footer>
+        <div class="editing-message" *ngIf="editMessageMode">
+            Editing message
+        </div>
         <div class="user-is-typing" *ngIf="showUserIsTyping"> {{userNameIsTyping}} is typing</div>  
         <form class="row">
         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
@@ -89,12 +110,25 @@
             </app-multi-line-input>
         </div>
         <div class="col-sm-3">
+            <button class="btn-submit-check" 
+                    *ngIf="editMessageMode"
+                    (click)="completeEditing()"
+                    [disabled]="control.invalid"
+                    [ngClass]="{'disabled': control.invalid}">
+                <i class="material-icons">check</i>
+            </button>
+            <button class="btn-submit-clear" 
+                    *ngIf="editMessageMode"
+                    (click)="cancelEditing()">
+                <i class="material-icons">clear</i>
+            </button>
             <button class="btn-submit-send"
             (click)="sendMessage()"
-            [disabled]="control.invalid"
-            [ngClass]="{'disabled': control.invalid}">
+            [disabled]="control.invalid || editMessageMode"
+            [ngClass]="{'disabled': control.invalid || editMessageMode}">
                 <i class="material-icons">send</i>
             </button>
+            
         </div>
         </form>  
     </footer>

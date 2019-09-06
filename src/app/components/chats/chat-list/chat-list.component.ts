@@ -57,7 +57,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
 
   public goToChat(chatId): void {
     this.chatId = chatId;
-    this.router.navigate(['/main/chat-window', this.chatId]);
+    this.router.navigate([`/main/chat-window/`, chatId], {relativeTo: this.route.parent});
   }
   public getChatList(): void {
     // Chat types: 1 - private chat, 2 - group chat | event chat, 3 - blocked chat, 4 - deleted chat

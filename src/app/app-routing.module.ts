@@ -80,12 +80,12 @@ const routes: Routes = [
       {
         path: 'chats',
         component: ChatsComponent,
-        children: [
-          {
-            path: 'chat-list',
-            component: ChatListComponent
-          }
-        ]
+        // children: [
+        //   {
+        //     path: 'chat-list',
+        //     component: ChatListComponent
+        //   }
+        // ]
       },
       {
         path: 'chat-window/:chatId',
@@ -93,13 +93,13 @@ const routes: Routes = [
         resolve: {
           draftMessage: GetDraftMessagesResolverService,
           chatMessages: GetChatResolverService
-         },
-        children: [
-          {
-            path: 'chat-list',
-            component: ChatListComponent
-          }
-        ]
+         }
+        // children: [
+        //   {
+        //     path: 'chat-list',
+        //     component: ChatListComponent
+        //   }
+        // ]
       },
       {
         path: 'events',

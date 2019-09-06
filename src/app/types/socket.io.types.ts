@@ -11,6 +11,9 @@ export module SocketIO {
         user_is_typing = 'user_is_typing',
         message_out_of_chat = 'message_out_of_chat',
         user_left = 'user_left',
-        all_online_users = 'all_online_users'
+        all_online_users = 'all_online_users',
+        delete_message = 'delete_message',
+        edit_message = 'edit_message',
+        delete_message_out_of_chat = 'delete_message_out_of_chat'
     }
 }

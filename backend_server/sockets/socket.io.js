@@ -100,8 +100,14 @@ function runWebsocketsIO(server, expressApp) {
                 objNew: {$push: {messages: {$each: [obj], $position: 0}}}
             };
             datareader(Chat, updateParams, 'updateOne') // Сохраняем в базу данных сообщение, причём записываем его в начало массива
-            .then(res => {
+            .then(async res => {
                  // Шлём сообщения всем, кто в чате
+                 const getSavedMess = {
+                    query: {_id: obj.chatID},
+                    elementMatch: {messages: {$slice: [0, 1]}}
+                 };
+                const savedMessageResponse = await datareader(Chat, getSavedMess, 'findOneElementMatch');
+                obj._id = savedMessageResponse.messages[0]._id;
                 Object.keys(clientsInChat[obj.chatID]).forEach(userId => {
                     Object.keys(clientsInChat[obj.chatID][userId]).forEach(token => {
                         clientsInChat[obj.chatID][userId][token].emit('new_message',obj);
@@ -184,14 +190,6 @@ function runWebsocketsIO(server, expressApp) {
           }
            */
 
-          // obj.users.forEach(user => {
-          //   if(user.username !== obj.userId && onlineClients[user.username]) {
-          //       Object.keys(onlineClients[user.username]).forEach(token => {
-          //           onlineClients[user.username][token].emit('user_is_typing_notification', obj)
-          //       })
-          //   }
-          // });
-
           if(clientsInChat[obj.chatId]) {
             Object.keys(clientsInChat[obj.chatId]).forEach(userId => {
               Object.keys(clientsInChat[obj.chatId][userId]).forEach(token => {
@@ -201,6 +199,73 @@ function runWebsocketsIO(server, expressApp) {
               })
             })
           }
+        });
+
+        socket.on('delete_message', async obj => {
+          /**
+           * obj = {
+           * userId: string,
+           * authorId: string
+           * messageId: string,
+           * chatId: string,
+           * unread: string[]
+           * }
+           */
+          try {
+            if(obj.userId !== obj.authorId) {
+              return;
+            };
+            const deleteMessage = {
+              query: {"_id": ObjectId(obj.chatId)},
+              objNew: {$pull: {messages: {_id: ObjectId(obj.messageId)}}}
+            }
+            await datareader(Chat, deleteMessage, 'updateOne');
+              Object.keys(clientsInChat[obj.chatId]).forEach(userId => {
+                Object.keys(clientsInChat[obj.chatId][userId]).forEach(token => {
+                    clientsInChat[obj.chatId][userId][token].emit('delete_message',obj);
+                });
+            });
+              obj.unread.forEach(userId => {
+                if(onlineClients[userId]) {
+                  Object.keys(onlineClients[userId]).forEach(token => {
+                    onlineClients[userId][token].emit('delete_message_out_of_chat',obj)
+                  })
+                }
+              });
+            } catch(err) {
+              console.error('delete_message', err);
+          }
+            
+        });
+
+        socket.on('edit_message', async obj => {
+          /**
+           * obj = {
+           *  text: string,
+           *  userId: string,
+              chatId: string,
+              messageId: string,
+              authorId: string
+           * }
+           */
+          try {
+            if(obj.userId !== obj.authorId) {
+              return;
+            };
+            const editMessage = {
+              query: {"_id": ObjectId(obj.chatId), "messages._id": ObjectId(obj.messageId)},
+              objNew: {$set:  {'messages.$.edited': true, 'messages.$.text': obj.text}}
+            };
+            await datareader(Chat, editMessage, 'updateOne');
+            Object.keys(clientsInChat[obj.chatId]).forEach(userId => {
+              Object.keys(clientsInChat[obj.chatId][userId]).forEach(token => {
+                  clientsInChat[obj.chatId][userId][token].emit('edit_message',obj);
+              });
+          })
+          } catch(err) {
+            console.error('edit_message', err);
+          }
+
         });
 
         socket.on('user_read_message', async obj => {

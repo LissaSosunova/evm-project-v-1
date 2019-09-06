@@ -23,11 +23,11 @@ router.post('/delete_avatar', async function (req, res, next) {
       ]
     };
 
-    const userId = req.body.userId;
+  const userId = req.body.userId;
     
 
-    const avatarObjToSave = {
-		owner: 'dafault',
+  const avatarObjToSave = {
+		owner: 'default',
 		url: `assets/img/default-profile-image.png`
 	};
 	const queryParam = {

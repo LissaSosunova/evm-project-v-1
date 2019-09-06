@@ -1,15 +1,15 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router, RouterOutlet, NavigationStart } from '@angular/router';
 import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
 import { DataService } from 'src/app/services/data.service';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { SessionStorageService } from 'src/app/services/session.storage.service';
-import { SocketIO} from 'src/app/types/socket.io.types';
+import { SocketIO } from 'src/app/types/socket.io.types';
 import { Store, select } from '@ngrx/store';
 import * as userAction from  '../../store/actions';
-import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 
 @Component({
@@ -65,7 +65,7 @@ export class MainComponent implements OnInit, OnDestroy {
           chatId: message.chatID
         };
         this.toastService.openMessageToast(toastMessageObj, {duration: 5000});
-      });
+    });
     this.user.avatar.url = this.user.avatar.url || types.Defaults.DEFAULT_AVATAR_URL;
     this.user$ = this.store.pipe(select('user'));
     this.user$.subscribe(user => {
@@ -76,6 +76,7 @@ export class MainComponent implements OnInit, OnDestroy {
       });
       this.transferService.setDataObs({allUnredMessagesAmount});
     });
+    this.subscribeDeleteMessagesInit();
   }
 
   ngOnDestroy() {
@@ -96,6 +97,13 @@ export class MainComponent implements OnInit, OnDestroy {
     });
   }
 
-
+   private subscribeDeleteMessagesInit(): void {
+    this.socketIoService.on(SocketIO.events.delete_message_out_of_chat)
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+      .subscribe((message: types.DeleteMessage) => {
+        const unreadUser: string = message.unread.find(userId => userId === this.user.username);
+        this.store.dispatch(new userAction.DeleteMessageUpdate(message))
+      });
+  }
 
 }

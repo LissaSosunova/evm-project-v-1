@@ -27,6 +27,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public deletedChats: Array<types.Chats> = [];
   public draftMessage: any[];
   public groupChats: Array<types.Chats> = [];
+  public editMessageMode: boolean = false;
   public inputMes: string;
   public isDraftMessageExist: boolean;
   public isDraftMessageSent: boolean = false;
@@ -56,6 +57,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   private isUserTyping: boolean = false;
   private unsubscribe$: Subject<void> = new Subject<void>();
   private user$: Observable<types.User>;
+  private editedMessage: types.Message;
 
   constructor(private transferService: TransferService,
               private route: ActivatedRoute,
@@ -71,32 +73,11 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.messageBoxElement = this.messageBox.nativeElement as HTMLDivElement;
-    this.footerElement = this.footer.nativeElement as HTMLDivElement;
-    this.arrowDownElement = this.arrowDown.nativeElement as HTMLDivElement;
-    this.scrollDownMessageWindow();
+    this.afterViewInit();
   }
 
   ngOnDestroy () {
-    this.socketIoService.socketEmit(SocketIO.events.user_left_chat, this.userObj);
-    if (this.inputMes) {
-      this.sendDraftMessage();
-    } else if (this.isDraftMessageSent && this.inputMes === '') {
-      this.deleteDraftMessage();
-    }
-
-    if (this.isUserTyping) {
-        const userIsTypingObj: types.UserIsTyping = {
-        userId: this.user.username,
-        name: this.user.name,
-        users: this.chats.users,
-        chatId: this.chatId,
-        typing: false
-      };
-    this.socketIoService.socketEmit(SocketIO.events.user_is_typing, userIsTypingObj);
-  }
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroy();
   }
 
   @HostListener('scroll', ['$event']) public scrollChatWindow (event) {
@@ -114,6 +95,53 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  public cancelEditing(): void {
+    this.editMessageMode = false;
+    this.control.setValue(' ');
+    this.inputMes = '';
+    setTimeout(() => {
+      this.changeChatWindowHeigth();
+    });
+  }
+
+  public completeEditing(): void {
+    if (this.user.username !== this.editedMessage.authorId) {
+      return;
+    }
+    const editedMessageObj = {
+      text: this.inputMes,
+      chatId: this.editedMessage.chatID,
+      userId: this.user.username,
+      authorId: this.editedMessage.authorId,
+      messageId: this.editedMessage._id
+    };
+    this.socketIoService.socketEmit(SocketIO.events.edit_message, editedMessageObj);
+    this.cancelEditing();
+  }
+
+  public deleteMessage(message: types.Message): void {
+    if (this.user.username !== message.authorId) {
+      return;
+    }
+    const deleteMessageObj = {
+      userId: this.user.username,
+      authorId: message.authorId,
+      messageId: message._id,
+      chatId: message.chatID,
+      unread: message.unread
+    };
+    this.socketIoService.socketEmit(SocketIO.events.delete_message, deleteMessageObj);
+  }
+
+  public editMessage(message: types.Message): void {
+    this.editMessageMode = true;
+    this.control.setValue(message.text);
+    this.editedMessage = message;
+    setTimeout(() => {
+      this.changeChatWindowHeigth();
+    });
+  }
+
   public sendMessage(): void {
     this.isMessages = true;
     const date = this.dateTransformService.nowUTC();
@@ -129,10 +157,17 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.isDraftMessageSent) {
        this.deleteDraftMessage();
        this.isDraftMessageSent = false;
-     }
+    }
     this.socketIoService.socketEmit(SocketIO.events.message, message);
     this.inputMes = '';
     this.control.setValue('');
+    this.scrollDownMessageWindow();
+  }
+
+  private afterViewInit(): void {
+    this.messageBoxElement = this.messageBox.nativeElement as HTMLDivElement;
+    this.footerElement = this.footer.nativeElement as HTMLDivElement;
+    this.arrowDownElement = this.arrowDown.nativeElement as HTMLDivElement;
     this.scrollDownMessageWindow();
   }
 
@@ -156,6 +191,28 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  private destroy(): void {
+    this.socketIoService.socketEmit(SocketIO.events.user_left_chat, this.userObj);
+    if (this.inputMes && !this.editMessageMode) {
+      this.sendDraftMessage();
+    } else if (this.isDraftMessageSent && this.inputMes === '') {
+      this.deleteDraftMessage();
+    }
+
+    if (this.isUserTyping) {
+        const userIsTypingObj: types.UserIsTyping = {
+        userId: this.user.username,
+        name: this.user.name,
+        users: this.chats.users,
+        chatId: this.chatId,
+        typing: false
+      };
+    this.socketIoService.socketEmit(SocketIO.events.user_is_typing, userIsTypingObj);
+  }
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   private init(): void {
     this.user$ = this.store.pipe(select('user'));
     this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
@@ -164,6 +221,8 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.user = this.transferService.dataGet('userData');
     this.chatId = this.route.snapshot.params.chatId;
     this.subscribeNewMessagesInit();
+    this.subscribeDeleteMessagesInit();
+    this.subscribeEditMessagesInit();
     this.userObj = {
       chatIdCurr: this.chatId,
       userId: this.user.username,
@@ -229,7 +288,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       };
       this.socketIoService.socketEmit(SocketIO.events.user_is_typing, userIsTypingObj);
       this.isUserTyping = false;
-      if (message) {
+      if (message && !this.editMessageMode) {
         this.sendDraftMessage();
         this.isDraftMessageSent = true;
       } else if (!message && this.isDraftMessageSent) {
@@ -303,6 +362,29 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  private subscribeDeleteMessagesInit(): void {
+    this.socketIoService.on(SocketIO.events.delete_message)
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+      .subscribe((message: types.DeleteMessage) => {
+        const messageIndex: number = this.arrayOfMessages.findIndex(item => item._id === message.messageId);
+        this.arrayOfMessages.splice(messageIndex, 1);
+      });
+  }
+
+  private subscribeEditMessagesInit(): void {
+    this.socketIoService.on(SocketIO.events.edit_message)
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+      .subscribe((message: types.EditMessage) => {
+        this.arrayOfMessages.find(item => {
+          if (item._id === message.messageId) {
+            item.text = message.text;
+            item.edited = true;
+          }
+          return item._id === message.messageId;
+        });
+      });
+  }
+
   private subscribeNewMessagesInit(): void {
     this.socketIoService.on(SocketIO.events.new_message)
       .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
@@ -316,12 +398,12 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     });
  }
 
- private subscribeUserIsTyping(): void {
-    this.socketIoService.on(SocketIO.events.user_is_typing)
-      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
-      .subscribe((obj: types.UserIsTyping) => {
-        this.userNameIsTyping = obj.name;
-        this.showUserIsTyping = obj.typing;
-      });
- }
+  private subscribeUserIsTyping(): void {
+     this.socketIoService.on(SocketIO.events.user_is_typing)
+        .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+        .subscribe((obj: types.UserIsTyping) => {
+          this.userNameIsTyping = obj.name;
+          this.showUserIsTyping = obj.typing;
+    });
+  }
 }
