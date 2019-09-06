@@ -46,7 +46,7 @@ class FindContact {
       const user = result.filter(user => {
         return userDb[0].contacts.every(contact => contact.id !== user.username)
       });
-      let resp = [];
+      const resp = [];
       user.forEach(item => {
         if(query != "" && auth.username !== item.username){
           contact = new FindContact(item);

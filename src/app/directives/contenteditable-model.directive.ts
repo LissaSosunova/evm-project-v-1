@@ -12,7 +12,7 @@ export class ContenteditableModelDirective implements OnChanges {
   constructor(private elRef: ElementRef) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.text.currentValue) {
+    if (changes.text && changes.text.currentValue) {
       this.elRef.nativeElement.innerText = changes.text.currentValue;
     }
   }
