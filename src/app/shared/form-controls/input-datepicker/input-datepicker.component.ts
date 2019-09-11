@@ -41,7 +41,7 @@ export class InputDatepickerComponent implements ControlValueAccessor, OnInit, O
 
   public localDateStr: string;
 
-  @ViewChild('datepicker') private datepicker: MatDatepicker<Date>;
+  @ViewChild('datepicker', {static: true}) private datepicker: MatDatepicker<Date>;
   // for unsubscribe all subscriptions
   private unsubscribe$: Subject<void> = new Subject();
   // For NG_VALUE_ACCESSOR

@@ -8,7 +8,7 @@ import { UserInfoPopupComponent } from './user-info-popup/user-info-popup.compon
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  @ViewChild('userPopup') private userPopup: UserInfoPopupComponent;
+  @ViewChild('userPopup', {static: true}) private userPopup: UserInfoPopupComponent;
 
   constructor() { }
 

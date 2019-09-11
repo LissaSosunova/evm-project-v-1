@@ -14,7 +14,7 @@ export class InputSearchComponent extends InputAbstract implements OnInit, OnCha
 
   public isValue: boolean = false;
 
-  @ViewChild('searchInput') private input: ElementRef;
+  @ViewChild('searchInput', {static: true}) private input: ElementRef;
 
   constructor() {
     super();

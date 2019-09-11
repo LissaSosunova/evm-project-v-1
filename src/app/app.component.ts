@@ -9,8 +9,8 @@ import { SocketIoService } from './services/socket.io.service';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'evm-proj';
   public documentWidth: number;
-  @ViewChild('sidebar') private sidebar: ElementRef;
-  @ViewChild('content') private content: ElementRef;
+  @ViewChild('sidebar', {static: true}) private sidebar: ElementRef;
+  @ViewChild('content', {static: true}) private content: ElementRef;
   private sidebarElement: HTMLDivElement;
   private contentElement: HTMLDivElement;
 

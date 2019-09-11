@@ -21,7 +21,8 @@ export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
   public password: string;
   public username: string;
   public nameOfUser: string;
-  @ViewChild('registrationForm') public registrationForm: NgForm;
+  public isPendingResponse: boolean = false;
+  @ViewChild('registrationForm', {static: true}) public registrationForm: NgForm;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -44,8 +45,10 @@ export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public setRegConf (nameOfUser: string, username: string, email: string, password: string, passConf: string): void {
+    this.isPendingResponse = true;
     if (password !== passConf) {
       this.errorMes = 'Passwords must be equal';
+      this.isPendingResponse = false;
       return;
     }
 
@@ -65,6 +68,7 @@ export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
           this.toastService.openToastSuccess('Check your email to complete registration', {duration: 6000});
           this.errorMes = '';
         }
+        this.isPendingResponse = false;
       }
     );
   }

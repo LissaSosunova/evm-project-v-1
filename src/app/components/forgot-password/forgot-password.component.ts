@@ -10,6 +10,7 @@ import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 export class ForgotPasswordComponent implements OnInit {
 
   public email: string;
+  public isPendingResponse: boolean = false;
 
   constructor(private dataService: DataService,
               private toastService: ToastService) { }
@@ -18,14 +19,17 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   public sendEmail(email: string): void {
+    this.isPendingResponse = true;
     this.dataService.forgotPassword(email).subscribe(res => {
       if (res.status === 404) {
         this.toastService.openToastFail('Wrong email');
       } else {
         this.toastService.openToastSuccess('Check your email to complete password resetting', {duration: 6000});
       }
+      this.isPendingResponse = false;
     }, err => {
       this.toastService.openToastFail('Server error');
+      this.isPendingResponse = false;
     });
   }
 

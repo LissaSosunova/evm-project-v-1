@@ -40,8 +40,8 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   public user$: Observable<types.User>;
   public nothingFound: boolean = false;
 
-  @ViewChild('userPopup') private userPopup: UserInfoPopupComponent;
-  @ViewChild('popupDetails') private confirmAction: PopupDetailsComponent;
+  @ViewChild('userPopup', {static: true}) private userPopup: UserInfoPopupComponent;
+  @ViewChild('popupDetails', {static: true}) private confirmAction: PopupDetailsComponent;
 
   private unsubscribe$: Subject<void> = new Subject();
 
