@@ -134,6 +134,8 @@ ul {
   border-radius: 20px;
   width: 70%;
   padding: 10px 20px 10px 20px;
+  display: flex;
+  justify-content: space-between;
 }
 .message-not-author {
   background-color: map-get($bg-color, 'gray-lighter');
@@ -148,6 +150,16 @@ ul {
 .author-name {
   font-size: 13px;
   color:  map-get($font-color, 'primary');
+  font-weight: 500;
+}
+.delete-btn, .edit-btn {
+  cursor: pointer;
+  color:  map-get($bg-color, 'dark');
+}
+.editing-message {
+  margin-top: 5px; 
+  font-size: 13px;
+  color:  map-get($bg-color, 'dark');
   font-weight: 500;
 }
 .date {
@@ -201,6 +213,24 @@ form {
       color: white;
     }
   
+  }
+
+  .btn-submit-check, .btn-submit-clear {
+    background-color: map-get($bg-color, 'dark');
+    font-size: 11px;
+    height: 36px;
+    align-items: center;
+    transition: 0.5s;
+    border: 0px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+
+  .edited-message {
+    font-size: 11px;
+    color:  map-get($bg-color, 'dark');
+    margin-right: 5px;
   }
 
   .disabled, .disabled:hover {

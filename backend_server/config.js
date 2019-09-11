@@ -1,5 +1,5 @@
 const backendPort = 5006;
-const frontendPort = 4200;
+const frontendPort = 3000;
 
 const config = {
 	backendLocal: `http://localhost:${String(backendPort)}`,

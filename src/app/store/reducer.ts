@@ -14,7 +14,7 @@ const userInitState: types.User = {
   notifications: []
 };
 
-export function userReducer(state: types.User = userInitState, action: any) {
+export function userReducer(state: types.User = userInitState, action: any): types.User {
   const updateState: types.User = {...state};
   switch (action.type) {
     case userAction.ActionTypes.UPDATE_CHAT_LIST: {
@@ -35,6 +35,7 @@ export function userReducer(state: types.User = userInitState, action: any) {
     case userAction.ActionTypes.INIT_USER_MODEL: {
       const user: types.User = action.payload;
       state = user;
+      user.chats.sort(sortChats);
       return user;
     }
     case userAction.ActionTypes.NO_UNREAD_MESSAGES: {
@@ -52,18 +53,28 @@ export function userReducer(state: types.User = userInitState, action: any) {
       updateState.avatar = payload;
       return updateState;
     }
+
+    case userAction.ActionTypes.DELETE_MESSAGE: {
+      const deletedMessage: types.DeleteMessage = action.payload;
+      updateState.chats.forEach(chat => {
+        if (chat.chatId === deletedMessage.chatId) {
+          chat.unreadMes--;
+        }
+      });
+      return updateState;
+    }
     default:
       return state;
     }
 
   }
 
-  function sortChats(a: types.Chats, b: types.Chats): number {
-  if (a.lastMessage && a.lastMessage.date < b.lastMessage.date) {
+function sortChats(a: types.Chats, b: types.Chats): number {
+  if (!a.lastMessage || !b.lastMessage) {
     return 1;
-  }
-  else {
+  } else if (a.lastMessage.date < b.lastMessage.date) {
+    return 1;
+  } else {
     return -1;
   }
 }
-
