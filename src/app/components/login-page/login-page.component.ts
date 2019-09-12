@@ -19,7 +19,8 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
   public username: string;
   public password: string;
   public isFormValid: boolean;
-  @ViewChild('loginForm') public loginForm: NgForm;
+  public isPendingResponse: boolean = false;
+  @ViewChild('loginForm', {static: true}) public loginForm: NgForm;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -33,13 +34,14 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-   
+
   }
 
   ngOnDestroy() {
   }
 
   public setAuthConf(username: string, password: string): void {
+    this.isPendingResponse = true;
       this.params = {
         username,
         password
@@ -55,6 +57,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
           this.router.navigate(['/main/home']);
         } else {
           this.errorMessage = data.message;
+          this.isPendingResponse = false;
         }
       }
     );

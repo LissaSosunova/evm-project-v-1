@@ -23,8 +23,8 @@ export class MultiLineEllipsisComponent implements OnInit, OnDestroy, AfterViewI
   public tooltipWidth: number;
   public maxHeight: number;
 
-  @ViewChild('multilineEllipsisWrap') public multilineEllipsisWrap: ElementRef;
-  @ViewChild('preview') public preview: ElementRef;
+  @ViewChild('multilineEllipsisWrap', {static: true}) public multilineEllipsisWrap: ElementRef;
+  @ViewChild('preview', {static: true}) public preview: ElementRef;
 
   private onWindowChangeCallback = this.getCoordsOfEllipsis.bind(this);
 

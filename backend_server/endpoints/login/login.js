@@ -32,6 +32,7 @@ router.post ('/login', function(req, res, next){
     } else {
         username = req.body.username;
         password = req.body.password;
+        
         User.findOne(
           {
             $or: [
@@ -56,7 +57,7 @@ router.post ('/login', function(req, res, next){
               return res.json({message: "Incorrect password"}).status(401);
             }
             const tokenKey = crypto.randomBytes(20).toString('hex');
-            const token = jwt.encode({username: username}, tokenKey); // config.secretkey
+            const token = jwt.encode({username: username}, tokenKey);
             res.json({success: true, access_token: token, token_key: tokenKey});
           })
         })

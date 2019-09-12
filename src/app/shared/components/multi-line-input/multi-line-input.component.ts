@@ -20,7 +20,7 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
   public currText: string;
   @Input() public placeholder: string; // optional
   @Input() public currMes: string;
-  @ViewChild('input') public input: ElementRef;
+  @ViewChild('input', {static: true}) public input: ElementRef;
   private inputElement: HTMLInputElement;
   private isInputFocused: boolean = false;
   @Input() private minHeight: string; // optional

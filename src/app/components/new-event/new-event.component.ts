@@ -35,9 +35,9 @@ export class NewEventComponent implements OnInit, OnDestroy {
     {label: '30', value: 30},
     {label: '45', value: 45}
   ];
-  @ViewChild('eventLeavePopup') public eventLeavePopup: NewEventLeavePopupComponent;
+  @ViewChild('eventLeavePopup', {static: true}) public eventLeavePopup: NewEventLeavePopupComponent;
 
-  @ViewChild('eventForm') private eventForm: NgForm;
+  @ViewChild('eventForm', {static: true}) private eventForm: NgForm;
 
   private unsubscribe$: Subject<void> = new Subject();
 

@@ -42,11 +42,11 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public user: types.User = {} as types.User;
   public userNameIsTyping: string;
 
-  @ViewChild('messageBox') private messageBox: ElementRef;
+  @ViewChild('messageBox', {static: true}) private messageBox: ElementRef;
   private messageBoxElement: HTMLDivElement;
-  @ViewChild('footer') private footer: ElementRef;
+  @ViewChild('footer', {static: true}) private footer: ElementRef;
   private footerElement: HTMLDivElement;
-  @ViewChild('arrowDown') public arrowDown: ElementRef;
+  @ViewChild('arrowDown', {static: true}) public arrowDown: ElementRef;
   private arrowDownElement: HTMLDivElement;
 
   private chats: types.ChatData;

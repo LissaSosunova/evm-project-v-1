@@ -13,10 +13,10 @@ export class ResetPasswordComponent implements OnInit {
 
   public password: string;
   public confPassword: string;
-
+  public isPendingResponse: boolean = false;
   private token: string;
   private tokenTime: string;
-  @ViewChild('resetPasswordForm') private resetPasswordForm: NgForm;
+  @ViewChild('resetPasswordForm', {static: true}) private resetPasswordForm: NgForm;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -29,8 +29,10 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   public sendPasswords(): void {
+    this.isPendingResponse = true;
     if (this.resetPasswordForm.value.pass !== this.resetPasswordForm.value.confPass) {
       this.toastService.openToastFail('Passwords must be equal');
+      this.isPendingResponse = false;
       return;
     }
     this.dataService.changePassword(this.resetPasswordForm.value.pass, this.token, this.tokenTime).subscribe(res => {
@@ -40,11 +42,13 @@ export class ResetPasswordComponent implements OnInit {
       } else {
         this.toastService.openToastFail('Server error');
       }
+      this.isPendingResponse = false;
     },
     err => {
       if (err.status === 401) {
         this.toastService.openToastFail('Invalid token!');
       }
+      this.isPendingResponse = false;
     });
   }
 

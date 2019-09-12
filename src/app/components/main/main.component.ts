@@ -22,7 +22,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   public user: types.User = {} as types.User;
   public user$: Observable<types.User>;
-  @ViewChild('uploadFile') public uploadFile: ElementRef;
+  @ViewChild('uploadFile', {static: true}) public uploadFile: ElementRef;
   private unsubscribe$: Subject<void> = new Subject();
 
   constructor(private route: ActivatedRoute,
@@ -102,7 +102,9 @@ export class MainComponent implements OnInit, OnDestroy {
       .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe((message: types.DeleteMessage) => {
         const unreadUser: string = message.unread.find(userId => userId === this.user.username);
-        this.store.dispatch(new userAction.DeleteMessageUpdate(message))
+        if (unreadUser) {
+          this.store.dispatch(new userAction.DeleteMessageUpdate(message));
+        }
       });
   }
 
