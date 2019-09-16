@@ -18,7 +18,7 @@ router.get('/confirm_email/:token', async (req, res, next) => {
             const pendingUserPassword = await datareader(ConfUser, auth, 'findWithPassword');
             const defaultAvatar = {
                 owner: 'default',
-                url: "src/img/default-profile-image.png"
+                url: "assets/img/default-profile-image.png"
             };
         
             const user = new User;

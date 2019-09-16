@@ -233,7 +233,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initDraftMessagesSubscription();
     this.subscribeUserIsTyping();
     const thisChat = this.user.chats.find(chat => chat.chatId === this.chatId);
-    if (thisChat.unreadMes > 0) {
+    if (thisChat && thisChat.unreadMes > 0) {
       this.socketIoService.socketEmit(SocketIO.events.user_read_message, {userId: this.user.username, chatId: this.chatId});
       this.store.dispatch(new userAction.UserReadAllMessages({unread: 0, chatId: this.chatId}));
     }
