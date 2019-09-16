@@ -1,28 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {OptionsInput} from 'fullcalendar';
-import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
-import {Store} from '@ngrx/store';
-import * as userAction from '../../store/actions';
-import {Observable} from 'rxjs';
+import { TransferService } from 'src/app/services/transfer.service';
 
 @Component({
   selector: 'app-event-calendar',
   templateUrl: './event-calendar.component.html',
   styleUrls: ['./event-calendar.component.scss']
 })
-export class EventCalendarComponent implements OnInit {
+
+export class EventCalendarComponent implements OnInit, OnDestroy {
 
   public calendarOptions: OptionsInput;
   public user: types.User;
-  public user$: Observable<types.User>;
 
-  constructor(private route: ActivatedRoute,
-              private store: Store<types.User>) {}
+  constructor(private transferService: TransferService) {}
 
   ngOnInit() {
-    this.user = this.route.snapshot.data.userData;
-    this.store.dispatch(new userAction.InitUserModel(this.user));
+    this.user = this.transferService.dataGet('userData');
     const events = this.user.events.map(event => {
       if (event.date_type === types.dateTypeEvent.DIAPASON_OF_DATES) {
         return {
@@ -66,7 +61,7 @@ export class EventCalendarComponent implements OnInit {
       eventClick: event => {
         console.log(event);
       }
-      //[
+      // [
       //  {
       //    title: 'All Day Event',
       //    start: '2019-09-01'
@@ -121,8 +116,12 @@ export class EventCalendarComponent implements OnInit {
       //    url: 'http://google.com/',
       //    start: '2019-09-28'
       //  }
-     // ]
+    // ]
     };
+}
+
+ngOnDestroy() {
+
 }
 
   private getDateString(dateUTC: number): string {

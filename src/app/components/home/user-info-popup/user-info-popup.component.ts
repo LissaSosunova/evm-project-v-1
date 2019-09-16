@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { types } from 'src/app/types/types';
 import { PopupControls, PopupControlsService } from 'src/app/services/popup-controls.service';
 
@@ -11,6 +11,7 @@ export class UserInfoPopupComponent implements OnInit {
 
   public popup: PopupControls;
   public popupConfig: types.FormPopupConfig;
+  @Input() public userInfo: types.Contact;
 
   constructor(private popupControlsService: PopupControlsService) { }
 
@@ -22,8 +23,7 @@ export class UserInfoPopupComponent implements OnInit {
       isFooter: true,
       isHeader: true,
       footer: {
-        isCloseBtn: true,
-        submitBtnText: 'OK'
+        isCloseBtn: true
       }
     };
   }

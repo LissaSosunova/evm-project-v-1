@@ -1,12 +1,12 @@
 import { AboutComponent } from './components/about/about.component';
 import { ChatsComponent } from './components/chats/chats.component';
-import { ChatListComponent } from './components/chats/chat-list/chat-list.component'
+import { ChatListComponent } from './components/chats/chat-list/chat-list.component';
 import { ChatWindowComponent } from './components/chats/chat-window/chat-window.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { EventCalendarComponent } from './components/event-calendar/event-calendar.component';
 import { EventsComponent } from './components/events/events.component';
 import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
-import { GetDraftMessagesResolverService } from './resolvers/get-draft-messages-resolver.service'
+import { GetDraftMessagesResolverService } from './resolvers/get-draft-messages-resolver.service';
 import { HomeComponent } from './components/home/home.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { MainComponent } from './components/main/main.component';
@@ -65,10 +65,7 @@ const routes: Routes = [
       },
       {
         path: 'calendar',
-        component: EventCalendarComponent,
-        resolve: {
-          userData: GetDataUserResolverService
-        }
+        component: EventCalendarComponent
       },
       {
         path: 'contacts',
@@ -80,12 +77,6 @@ const routes: Routes = [
       {
         path: 'chats',
         component: ChatsComponent,
-        // children: [
-        //   {
-        //     path: 'chat-list',
-        //     component: ChatListComponent
-        //   }
-        // ]
       },
       {
         path: 'chat-window/:chatId',
@@ -94,12 +85,6 @@ const routes: Routes = [
           draftMessage: GetDraftMessagesResolverService,
           chatMessages: GetChatResolverService
          }
-        // children: [
-        //   {
-        //     path: 'chat-list',
-        //     component: ChatListComponent
-        //   }
-        // ]
       },
       {
         path: 'events',

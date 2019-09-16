@@ -12,6 +12,7 @@ body {
 #container {
   #content {
     padding: 30px 50px 30px 20px;
+    box-sizing: border-box;
   }
 }
 
@@ -82,3 +83,10 @@ input, button {
 }
 
 $font-primary: Montserrat;
+
+
+@media only screen and (max-width: 48em) {
+  #container #content {
+    padding-right: 5px;
+  }
+}

@@ -8,9 +8,10 @@ import { SocketIoService } from 'src/app/services/socket.io.service';
 import { SessionStorageService } from 'src/app/services/session.storage.service';
 import { SocketIO } from 'src/app/types/socket.io.types';
 import { Store, select } from '@ngrx/store';
-import * as userAction from  '../../store/actions';
+import * as userAction from '../../store/actions';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ToastService } from 'src/app/shared/toasts/services/toast.service';
+import { AvatarService } from 'src/app/services/avatar.service';
 
 @Component({
   selector: 'app-main',
@@ -21,6 +22,7 @@ import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 export class MainComponent implements OnInit, OnDestroy {
 
   public user: types.User = {} as types.User;
+  public avatar: string;
   public user$: Observable<types.User>;
   @ViewChild('uploadFile', {static: true}) public uploadFile: ElementRef;
   private unsubscribe$: Subject<void> = new Subject();
@@ -32,11 +34,19 @@ export class MainComponent implements OnInit, OnDestroy {
               private socketIoService: SocketIoService,
               private sessionStorageService: SessionStorageService,
               private toastService: ToastService,
-              private store: Store<types.User>) {
+              private store: Store<types.User>,
+              private avatarService: AvatarService) {
     }
 
   ngOnInit() {
     this.user = this.route.snapshot.data.userData;
+    this.user.avatar = this.avatarService.parseAvatar(this.user.avatar);
+    this.user.contacts.forEach(contact => {
+      contact.avatar = this.avatarService.parseAvatar(contact.avatar);
+    });
+    this.user.chats.forEach(chatItem => {
+      chatItem.avatar = this.avatarService.parseAvatar(chatItem.avatar);
+    });
     this.store.dispatch(new userAction.InitUserModel(this.user));
     this.transferService.dataSet({name: 'userData', data: this.user});
     const token = this.sessionStorageService.getValue('_token');
@@ -66,7 +76,7 @@ export class MainComponent implements OnInit, OnDestroy {
         };
         this.toastService.openMessageToast(toastMessageObj, {duration: 5000});
     });
-    this.user.avatar.url = this.user.avatar.url || types.Defaults.DEFAULT_AVATAR_URL;
+
     this.user$ = this.store.pipe(select('user'));
     this.user$.subscribe(user => {
       this.user = user;
@@ -86,14 +96,22 @@ export class MainComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  public deleteAvatar(): void {
+    this.data.deleteAvatar({userId: this.user.username}).subscribe(response => {
+      this.store.dispatch(new userAction.UpdateAvatarURL(response));
+    });
+  }
 
   public uploadAvatar(event): void {
     const files = this.uploadFile.nativeElement.files;
     const formData: FormData = new FormData();
     formData.append('image', files[0]);
     formData.append('userId', this.user.username);
-    this.data.uploadAvatar(formData, this.user.username).subscribe(res => {
-      this.store.dispatch(new userAction.UpdateAvatarURL(res));
+    this.data.uploadAvatar(formData, this.user.username).subscribe((res) => {
+      const avatar: types.Avatar = this.avatarService.parseAvatar(res);
+      this.store.dispatch(new userAction.UpdateAvatarURL(avatar));
+    }, err => {
+      this.toastService.openToastFail('Error in uploading avatar');
     });
   }
 

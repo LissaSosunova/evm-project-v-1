@@ -1,5 +1,5 @@
-import { 
-  Component, 
+import {
+  Component,
   Input,
   OnInit
       } from '@angular/core';
@@ -26,15 +26,15 @@ export class PopupDetailsComponent implements OnInit {
   ngOnInit() {
     this.popup = this.popupControlsService.create(true);
       this.popupConfig = {
-        header: "Confirm action",
+        header: 'Confirm action',
         isHeaderCloseBtn: true,
         isFooter: true,
         isHeader: true,
         footer: {
           isCloseBtn: true,
-          submitBtnText: 'OK'
+          isSubmitBtn: true
         }
-    }
+    };
   }
 
   public open(): void {

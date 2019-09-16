@@ -70,6 +70,10 @@ export class DataService {
     return this.http.post(URL_BACK + '/delete_draft_message', query, {headers: this.getHeaders()});
   }
 
+  public deleteAvatar(query: {userId: string}): Observable<any> {
+    return this.http.post(`${URL_BACK}/delete_avatar`, query, {headers: this.getHeaders()});
+  }
+
   public getDraftMessage(userId: string, chatId: string): Observable<any> {
     const query = {authorId: userId};
     return this.http.get(`${URL_BACK}/get_draft_message/${chatId}`, {headers: this.getHeaders(), params: query});

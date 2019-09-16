@@ -26,7 +26,7 @@ export module types {
 
   export interface Chats {
     _id: string;
-    avatar: string;
+    avatar: Avatar;
     chatId: string;
     id: string;
     name: string;
@@ -76,8 +76,14 @@ export module types {
 
 
   export interface Avatar {
-    url: string;
+    url?: string;
     owner: string;
+    avatar?: AvatarObject;
+  }
+
+  export interface AvatarObject {
+    contentType: string;
+    image: string;
   }
   export interface Notifications {
     type: string;

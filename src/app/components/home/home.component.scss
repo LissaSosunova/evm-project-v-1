@@ -103,3 +103,13 @@
       }
     }
   }
+
+  @media only screen and (max-width: 48em) {
+    .block-with-btns {
+      .icon-left, .icon-right {
+        i {
+          font-size: 75px;
+        }
+      }
+    }
+  }

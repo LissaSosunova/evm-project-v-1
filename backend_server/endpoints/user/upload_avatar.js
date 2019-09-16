@@ -36,7 +36,19 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+const fileFilter = function (req, file, cb) {
+	const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png'];
+	if (allowedMimes.includes(file.mimetype)) {
+		cb(null, true);
+	} else {
+		cb({
+			success: false,
+			message: 'Invalid file type. Only jpg, png image files are allowed.'
+		}, false);
+	}
+};
+
+const upload = multer({ storage, fileFilter });
 
 
 router.post('/upload_avatar', upload.single('image'), async function (req, res, next) {
@@ -48,7 +60,7 @@ router.post('/upload_avatar', upload.single('image'), async function (req, res, 
       auth = jwt.decode(req.headers['authorization'], req.headers['token_key']);
     } catch (err) {
       return res.sendStatus(401)
-    }
+	}
     const params = {
       $or: [
         {username: auth.username},
@@ -66,8 +78,9 @@ router.post('/upload_avatar', upload.single('image'), async function (req, res, 
 
 	const avatarObjToSave = {
 		owner: req.headers.userid,
-		url: `${config.filesDomain}/uploads/${req.headers.userid}/avatars/${fileName}`
+		avatar: finalImg
 	};
+
 	const queryParam = {
 		query: params,
 		objNew: {$set: {avatar : avatarObjToSave}}
@@ -84,11 +97,19 @@ router.post('/upload_avatar', upload.single('image'), async function (req, res, 
 			$set : { "chats.$.avatar" : avatarObjToSave }
 		}
 	};
+	const queryParams = {
+		query: {$or: [
+		  {username: auth.username},
+		  {email: auth.username}
+		]},
+		elementMatch: {avatar: 1}
+	  };
 	try {
 		await datareader(User, queryParam, 'updateOne');
 		await datareader(User, updateAvatarInContacts, 'updateMany');
 		await datareader(User, updateAvatarInChats, 'updateMany');
-		res.json(avatarObjToSave);
+		const savedAvatar = await datareader(User, queryParams, 'findElementMatch');
+		res.json(savedAvatar[0].avatar);
 	} catch(err) {
 		console.error('/upload_avatar', err);
       	res.sendStatus(500);

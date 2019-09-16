@@ -29,9 +29,9 @@ export class UserReadAllMessages implements Action {
 }
 
 export class UpdateAvatarURL implements Action {
-	public readonly type = ActionTypes.UPDATE_AVATAR;
+  public readonly type = ActionTypes.UPDATE_AVATAR;
 
-	constructor(public payload: types.Avatar) {}
+  constructor(public payload: types.Avatar) {}
 }
 
 export class DeleteMessageUpdate implements Action {

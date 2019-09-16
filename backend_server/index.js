@@ -24,7 +24,8 @@ const $deleteDraftMessage = require('./endpoints/chat/delete_draft_message');
 const $getDraftMessage = require('./endpoints/chat/get_draft_message');
 const $confirmEmail = require('./endpoints/registration/confirm_email');
 const $uploadAvatar = require('./endpoints/user/upload_avatar');
-const $get_avatar = require('./endpoints/user/get_avatar');
+// Depricated
+// const $get_avatar = require('./endpoints/user/get_avatar');
 const $deleteAvatar = require('./endpoints/user/delete_avatar');
 const $forgotPassword = require('./endpoints/registration/forgot_password');
 const $resetPassword = require('./endpoints/registration/reset_password');
@@ -106,8 +107,8 @@ app.route('/get_draft_message/:id/')
 app.route('/upload_avatar')
   .post($uploadAvatar);  
 
-app.route('/uploads/:userId/avatars/:fileName')
-  .get($get_avatar);
+// app.route('/uploads/:userId/avatars/:fileName')
+//   .get($get_avatar);
 
 app.route('/delete_avatar')
   .post($deleteAvatar);    

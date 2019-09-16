@@ -39,6 +39,7 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   public user: types.User = {} as types.User;
   public user$: Observable<types.User>;
   public nothingFound: boolean = false;
+  public selectedContact: types.Contact;
 
   @ViewChild('userPopup', {static: true}) private userPopup: UserInfoPopupComponent;
   @ViewChild('popupDetails', {static: true}) private confirmAction: PopupDetailsComponent;
@@ -187,7 +188,8 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.nothingFound = false;
   }
 
-  public onUserInfoPopupOpen(): void {
+  public onUserInfoPopupOpen(contact: types.Contact): void {
+    this.selectedContact = contact;
     this.userPopup.open();
   }
 
