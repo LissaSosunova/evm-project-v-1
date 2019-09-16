@@ -20,6 +20,7 @@ module.exports = {
     backendDomain: config.backendLocal,
     frontendDomain: config.frontendDomainLocal,
     expireResetPasswordLink: 600000,
+    expireChangeEmailLink: 600000,
     mongodb: config.mongodbLocal,
     backendPort,
     frontendPort

@@ -4,7 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "node ./index.js"
+        "start": "node ./index.js",
+        "create-user": "node ./admin_api/create_user.js",
+        "delete-user": "node ./admin_api/delete_user.js"
     },
     "dependencies": {
         "bcrypt": "^3.0.6",
@@ -25,6 +27,7 @@
     "devDependencies": {
         "bcrypt": "^3.0.6",
         "body-parser": "^1.18.2",
+        "colors": "^1.3.3",
         "express": "^4.16.3",
         "fs": "0.0.1-security",
         "jwt-simple": "^0.5.3",
@@ -34,6 +37,7 @@
         "node-static": "^0.7.11",
         "nodemailer": "^6.3.0",
         "path": "^0.12.7",
-        "socket.io": "^2.2.0"
+        "socket.io": "^2.2.0",
+        "yargs": "^14.0.0"
     }
 }

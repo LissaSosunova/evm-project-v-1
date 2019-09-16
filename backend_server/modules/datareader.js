@@ -60,12 +60,7 @@ function dbQuery (collection, params, action) {
         else resolve(d);
       })
     }
-    else if (action === 'deleteOne') {
-      collection.deleteOne((e, d) => {
-        if (e) reject(e);
-        else resolve(d);
-      })
-    }
+
     else if (action === 'arrayFilter') {
       const query = params.queryField1;
       const condition = params.contidition;
@@ -76,6 +71,13 @@ function dbQuery (collection, params, action) {
     }
     else if (action === 'insertOne') {
       collection.insertOne(params, (e, d) => {
+        if (e) reject(e);
+        else resolve(d);
+      })
+    }
+
+    else if (action === 'deleteOne') {
+      collection.deleteOne(params, (e, d) => {
         if (e) reject(e);
         else resolve(d);
       })

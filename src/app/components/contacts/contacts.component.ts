@@ -119,14 +119,13 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       ]
     };
-    
+
     if (this.private_chat &&
       this.private_chat !== '0') {
         this.router.navigate(['/main/chat-window', this.private_chat]);
     } else {
       this.data.createNewPrivateChat(this.createNewChatParams).subscribe(
         resp => {
-          console.log(resp);
           this.user = Object.assign({}, resp.user);
           this.store.dispatch(new userAction.InitUserModel(this.user));
           this.private_chat = resp.chat.id;

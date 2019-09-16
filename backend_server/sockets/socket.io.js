@@ -302,7 +302,7 @@ function runWebsocketsIO(server, expressApp) {
             if (onlineClients[socket.userId] && Object.keys(onlineClients[socket.userId]).length === 0) {
               delete onlineClients[socket.userId];
             }
-            if (socket.chatIdCurr) {
+            if (socket.chatIdCurr && clientsInChat[socket.chatIdCurr]) {
               delete clientsInChat[socket.chatIdCurr][socket.userId][socket.token];
             }
             if (clientsInChat[socket.chatIdCurr] && 
