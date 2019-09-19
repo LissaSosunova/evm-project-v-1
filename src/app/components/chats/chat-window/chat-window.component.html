@@ -1,8 +1,8 @@
 <section class="chat-window-container">  
-    <div class="row">
+    <div class="row chat-wrapper">
         <app-section-spinner [loading]="isLoadingMessages" [position]="'absolute'"></app-section-spinner>
         <div class="messages-container
-        col-xs-9
+        col-xs-12
                 col-sm-8
                 col-md-8
                 col-lg-8">
@@ -47,49 +47,61 @@
                 </div>
             </div>
         </div>
-        <div class="menu-block col-xs-4
+        <div class="col-xs-12
                     col-sm-4
                     col-md-4
-                    col-lg-4">
-            <div class="col-xs-12
-                col-sm-12
-                col-md-12
-                col-lg-12
-                block-with-chat-lists">
-            <div class="block-chat-list">
-                <span class="block-header">Privat chat list</span>
-                <div class="btns-block">
-                    <button class="m-btn confirm">
-                        <i class="material-icons">search</i>
-                    </button>
-                    <button class="m-btn confirm">
-                        <i class="material-icons">add</i>
-                    </button>
-                </div>
-                <app-chat-list flag='private'></app-chat-list>
-            </div>
-        </div>
-            <div class="col-xs-12
-                col-sm-12
-                col-md-12
-                col-lg-12
-                block-with-chat-lists">
+                    col-lg-4
+                    non-visible"
+                appClickOutside
+                (mClickOutside)="clickOutsideMenuBlock()">
+            <div class="material-icons show-chat-list" 
+                (click)="showChatLists()"
+                >
+                keyboard_arrow_left
+            </div>    
+            <div class="menu-block
+                        hidden"
+                        #menuBlock
+                        >
+                <div class="col-xs-12
+                    col-sm-12
+                    col-md-12
+                    col-lg-12
+                    block-with-chat-lists">
                 <div class="block-chat-list">
-                    <span class="block-header">Group chat list</span>
-                <div class="btns-block">
-                    <button class="m-btn confirm">
-                        <i class="material-icons">search</i>
-                    </button>
-                    <button class="m-btn confirm">
-                        <i class="material-icons">add</i>
-                    </button>
+                    <span class="block-header">Privat chat list</span>
+                    <div class="btns-block">
+                        <button class="m-btn confirm">
+                            <i class="material-icons">search</i>
+                        </button>
+                        <button class="m-btn confirm">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </div>
+                    <app-chat-list flag='private'></app-chat-list>
                 </div>
-                <app-chat-list flag='group'></app-chat-list>
-                    
+            </div>
+                <div class="col-xs-12
+                    col-sm-12
+                    col-md-12
+                    col-lg-12
+                    block-with-chat-lists">
+                    <div class="block-chat-list">
+                        <span class="block-header">Group chat list</span>
+                    <div class="btns-block">
+                        <button class="m-btn confirm">
+                            <i class="material-icons">search</i>
+                        </button>
+                        <button class="m-btn confirm">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </div>
+                    <app-chat-list flag='group'></app-chat-list>
+                        
+                </div>
             </div>
         </div>
     </div>
-    
 
     </div>
     
@@ -100,7 +112,7 @@
         </div>
         <div class="user-is-typing" *ngIf="showUserIsTyping"> {{userNameIsTyping}} is typing</div>  
         <form class="row">
-        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-8 input-wrap">
             <app-multi-line-input
             [formControl]="control"
             [placeholder]="'Write a message'"
@@ -109,7 +121,7 @@
             [currMes]="inputMes">
             </app-multi-line-input>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-3 col-xs-4 buttons">
             <button class="btn-submit-check" 
                     *ngIf="editMessageMode"
                     (click)="completeEditing()"
@@ -125,6 +137,7 @@
             <button class="btn-submit-send"
             (click)="sendMessage()"
             [disabled]="control.invalid || editMessageMode"
+            *ngIf="isSendBtn"
             [ngClass]="{'disabled': control.invalid || editMessageMode}">
                 <i class="material-icons">send</i>
             </button>

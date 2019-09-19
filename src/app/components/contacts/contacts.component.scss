@@ -29,7 +29,7 @@
   width: 100%;
   flex-direction: column;
   align-items: center;
-  margin-left: 16px;
+  // margin-left: 16px;
 
     span {
       font-size: 16px;
@@ -63,7 +63,7 @@
   height: 100%;
   width: 100%;
   overflow: auto;
-  min-width: 400px;
+  // min-width: 400px;
 }
 
 .contacts-ul {
@@ -186,4 +186,18 @@
 
 .nothing-found {
   text-align: center;
+}
+
+@media only screen and (max-width: 48em) {
+  .small-screen {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0; 
+  }
+
+  .contacts-ul {
+    margin-left: -52px;
+    width: 110%;
+  }
 }

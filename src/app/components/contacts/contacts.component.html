@@ -1,4 +1,4 @@
-<div class="content-rows-contacts row">
+<div class="content-rows-contacts row small-screen">
   <!-- Menu -->
   <div id="menu-switcher" class="tabs-nav">
     <div class="row row-nav">
@@ -52,7 +52,7 @@
     </div>
   </div>
   <!-- Exist contacts -->
-  <div class="div-with-all-contacts col-xs-12
+  <div class="div-with-all-contacts small-screen col-xs-12
               col-sm-12
               col-md-12
               col-lg-12">
@@ -63,10 +63,10 @@
       <section *ngIf="isContactsConfirmed">
           <ul class="contacts-ul">
           <li *ngFor="let item of contactsConfirmed" class="direction-row">
-            <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
+            <div class="col-xs-8 small-screen"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
             <div class="col-xs-4 btn-align">
               <button class="m-btn confirm"
-                      (click)="onUserInfoPopupOpen()">
+                      (click)="onUserInfoPopupOpen(item)">
                 <i class="material-icons">visibility</i>
               </button>
               <button class="m-btn confirm"
@@ -94,7 +94,7 @@
         <section *ngIf="isContactsAwaiting">
             <ul class="contacts-ul">
                 <li *ngFor="let item of contactsAwaiting" class="direction-row">
-                  <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
+                  <div class="col-xs-8 small-screen"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
                   <div class="col-xs-4 btn-align">
                     <button class="m-btn confirm" (click)="confNewUser(item.id)">
                       <i class="material-icons">check</i>
@@ -116,7 +116,7 @@
         <section *ngIf="iscontactsRequested">
             <ul class="contacts-ul">
                 <li *ngFor="let item of contactsRequested" class="direction-row">
-                  <div class="col-xs-8"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
+                  <div class="col-xs-8 small-screen"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
                   <div class="col-xs-4 btn-align">
                     <button class="m-btn cancel"
                             (click)="onConfirmActionPopupOpen('delete request')">
@@ -140,7 +140,7 @@
       <div class="contactList-user2">
         <ul class="contacts-ul">
           <li *ngFor="let item of querySearch" class="direction-row">
-            <div class="col-xs-8"><img src="{{item.avatar.url}}">{{item.name}}</div>
+            <div class="col-xs-8 small-screen"><img src="{{item.avatar.url}}">{{item.name}}</div>
             <div class="col-xs-4 btn-align">
               <button class="m-btn cancel" (click)="addNewUser(item.id)">
                 <i class="material-icons">check</i>
@@ -153,6 +153,6 @@
     </div>
   </div>
 </div>
-<app-user-info-popup #userPopup></app-user-info-popup>
+<app-user-info-popup #userPopup [userInfo]="selectedContact"></app-user-info-popup>
 <app-popup-details #popupDetails actionName={{actionName}}></app-popup-details>
 

@@ -8,7 +8,7 @@ router.get('/uploads/:userId/avatars/:fileName', function (req, res, next) {
 	const fileName = req.params.fileName;
 	try {
 		fs.readFile(path.join(__dirname, `../../uploads/${userId}/avatars/${fileName}`), (err, data) => {
-			if(err) throw err;
+			if(err) console.error('get avatar error', err);
 			else {
 				res.end(data);
 			}

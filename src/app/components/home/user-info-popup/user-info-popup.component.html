@@ -3,7 +3,16 @@
     [config]="popupConfig"
     (onClose)="onClose()"
     >
-  <div id="popupConteiner">
-    This is popup for user info!
+  <div id="popupContainer">
+    <div class="avatar">
+      <span>
+        <img src={{userInfo.avatar.url}}>
+      </span>
+    </div>
+    <div>
+      <span>
+        Name: {{userInfo.name}}
+      </span>
+    </div>
   </div>
 </app-popup> 

@@ -28,3 +28,6 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Run preview in browser
 ng serve -o
+
+## Deploy
+[evm](https://evm-client.herokuapp.com/)

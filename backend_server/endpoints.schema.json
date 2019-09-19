@@ -472,6 +472,26 @@
                 "status": "Number"
             },
             "redirect": "${config.frontendDomain}/reset-password/:token/:tokenTime"
+        },
+        {
+            "endpoint": "change_email",
+            "type": "post",
+            "requestObject": {
+                "username": "String",
+                "newEmail": "String"
+            },
+            "responseObject": {
+                "status": "Number", 
+                "message": "String"
+            }
+        },
+        {
+            "enpoint": "confirm_change_email/:token/:email/:tokenTime",
+            "type": "get",
+            "responseObject": {
+                "status": "Number", 
+                "message": "String"
+            }
         }
     ]
 

@@ -95,7 +95,7 @@ export class PopupComponent implements OnInit, DoCheck {
                   // Default values
                   isCloseBtn: false,
                   closeBtnText: 'Cancel',
-                  isSubmitBtn: true,
+                  isSubmitBtn: !!this.config.footer.isSubmitBtn,
                   submitBtnText: 'Save',
                   isSubmitLoading: false,
                   isRemoveBtn: true,

@@ -5,7 +5,7 @@ const config = require('../../config');
 
 router.post('/change_email', async (req, res, next) => {
     const username = req.body.username;
-    const newEmail = req.body.email;
+    const newEmail = req.body.newEmail;
     let auth;
     if(!req.headers['authorization']) {
       return res.sendStatus(401)

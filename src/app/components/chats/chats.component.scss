@@ -105,3 +105,11 @@ form {
     background-color: map-get($disabled, 'grey');
     color: black;
   }
+
+
+  @media only screen and (max-width: 48em) {
+    .small-screen {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }

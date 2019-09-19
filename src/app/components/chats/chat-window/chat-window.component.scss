@@ -132,7 +132,7 @@ ul {
 
 .message-body {
   border-radius: 20px;
-  width: 70%;
+  // width: 70%;
   padding: 10px 20px 10px 20px;
   display: flex;
   justify-content: space-between;
@@ -239,6 +239,10 @@ form {
     color: black;
   }
 
+  .show-chat-list {
+    display: none;
+  }
+
   app-section-spinner {
     display: block;
     width: 66.7%;
@@ -250,12 +254,72 @@ form {
     }
 }
 
+.hidden {
+  display: block;
+}
+
+.chat-wrapper {
+  flex-wrap: nowrap
+}
+
 @media only screen and (max-width: 768px) {
-  .messages-container {
-    height: 45%;
-  }
 
   div.row {
     height: 90%;
   }
+}
+
+@media only screen and (max-width: 48em) {
+  .hidden {
+    display: none;
+  }
+
+  .buttons {
+    padding-left: 0;
+    padding-right: 0; 
+  }
+
+  .chat-wrapper {
+    margin-right: 0;
+  }
+
+  .btn-submit-check, .btn-submit-clear {
+    margin-right: 1px;
+  }
+  
+  .messages-container {
+    padding-left: 0;
+  }
+
+  .input-wrap {
+    padding-left: 0;
+  }
+
+  .show-chat-list {
+    display: block;
+    position: absolute;
+    right: -5px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 6;
+  }
+
+  .menu-block {
+    position: absolute;
+    right: 10px;
+    z-index: 6;
+    width: 100%;
+  }
+
+  .non-visible {
+    width: 0;
+    flex-basis: 0;
+    max-width: 0;
+    padding: 0;
+  }
+
+  footer {
+    width: 100%;
+  }
+
 }

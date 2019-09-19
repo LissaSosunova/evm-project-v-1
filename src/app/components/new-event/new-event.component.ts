@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { NewEventLeavePopupComponent } from './new-event-leave-popup/new-event-leave-popup.component';
 import { types } from 'src/app/types/types';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 import { TransferService } from 'src/app/services/transfer.service';
 import { CheckboxDropdownOption } from 'src/app/shared/types/checkbox-dropdow';
 import { NgForm } from '@angular/forms';
-import { takeUntil, take } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { DateTransformService } from '../../services/date-transform.service';
 import { DataService } from '../../services/data.service';
 
@@ -83,6 +83,8 @@ export class NewEventComponent implements OnInit, OnDestroy {
       if (response.status === 200) {
         this.toastService.openToastSuccess('New event was successfully saved');
         this.openConfirmPopup = false;
+        this.user.events.push(this.eventToDb);
+        this.transferService.dataSet({name: 'userData', data: this.user});
       } else {
         this.toastService.openToastFail('Server error');
       }
@@ -133,4 +135,3 @@ export class NewEventComponent implements OnInit, OnDestroy {
   }
 
 }
-
