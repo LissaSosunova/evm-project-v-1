@@ -30,7 +30,7 @@ export class NewEventLeavePopupComponent implements OnInit {
       isHeader: true,
       footer: {
         isCloseBtn: true,
-        submitBtnText: 'OK'
+        isSubmitBtn: true
       }
     };
     this.actionSubject.next(false);
