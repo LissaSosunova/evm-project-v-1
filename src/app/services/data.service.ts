@@ -17,12 +17,22 @@ export class DataService {
   constructor(private http: HttpClient,
             private sessionStorageService: SessionStorageService) { }
 
-  public addUser(query: types.AddUser): Observable<any> {
-    return this.http.post(URL_BACK + '/add_user/', query, {headers: this.getHeaders()});
+
+  // Depricated, moved to sockets
+  // public addUser(query: types.AddUser): Observable<any> {
+  //   return this.http.post(URL_BACK + '/add_user/', query, {headers: this.getHeaders()});
+  // }
+
+  // public confUser(query: types.AddUser): Observable<any> {
+  //   return this.http.post(URL_BACK + '/confirm_user/', query, {headers: this.getHeaders()});
+  // }
+
+  public changeEmail(params: {username: string; newEmail: string}): Observable<{status: number; message: string}> {
+    return this.http.post<{status: number; message: string}>(`${URL_BACK}/change_email`, params, {headers: this.getHeaders()});
   }
 
-  public confUser(query: types.AddUser): Observable<any> {
-    return this.http.post(URL_BACK + '/confirm_user/', query, {headers: this.getHeaders()});
+  public changePasswordAuth(params: {oldPassword: string; newPassword: string}): Observable<any> {
+    return this.http.post(`${URL_BACK}/change_password_auth`, params, {headers: this.getHeaders()});
   }
 
   public createNewPrivateChat(params: types.CreateNewChat): Observable<any> {

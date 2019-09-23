@@ -2,6 +2,7 @@
     *ngIf="popup.isOpened"
     [config]="popupConfig"
     (onClose)="onClose()"
+    (onSubmit)="onSubmit()"
     >
   <div id="popupConteiner">
     Are you sure you want to {{actionName}}?

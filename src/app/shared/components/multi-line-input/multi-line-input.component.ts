@@ -1,5 +1,6 @@
-import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+
 
 @Component({
   selector: 'app-multi-line-input',
@@ -25,6 +26,7 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
   private isInputFocused: boolean = false;
   @Input() private minHeight: string; // optional
   @Input() private maxHeight: string; // optional
+  @Output() public enterKey: EventEmitter<void> = new EventEmitter<void>();
 
   constructor() { }
 
@@ -43,7 +45,7 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
       this.showPlaceholder = true;
     } else if (this.inputElement && changes.currMes.currentValue !== '' && !changes.currMes.isFirstChange()) {
       this.showPlaceholder = false;
-    } 
+    }
   }
 
   public onChangeInput(event: string): void {
@@ -61,6 +63,15 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
       this.showPlaceholder = true;
     }
     this.isInputFocused = false;
+  }
+
+  public onEnter(event: KeyboardEvent): void {
+    if (event.shiftKey && event.key === 'Enter') {
+      return;
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      this.enterKey.emit();
+    }
   }
 
   public onFocus(): void {

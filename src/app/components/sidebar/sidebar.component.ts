@@ -19,6 +19,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   public currParentUrl: string;
   public currChildUrl: string;
+  public contactsAwaiting: number;
   public sidebarIsExpanded: boolean;
   public totalUnreadMessagesAmount: number;
   @Input() private documentWidth: number;
@@ -41,6 +42,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     .subscribe(obj => {
       if (obj.allUnredMessagesAmount || obj.allUnredMessagesAmount === 0) {
         this.totalUnreadMessagesAmount = obj.allUnredMessagesAmount;
+      }
+      if (obj.name === 'awaitingContacts') {
+        this.contactsAwaiting = obj.data;
       }
     });
   }

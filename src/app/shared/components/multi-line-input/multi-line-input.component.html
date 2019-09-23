@@ -6,7 +6,8 @@
             [text]="text"
             #input
             (focus)="onFocus()"
-            (blur)="onBlur()">
+            (blur)="onBlur()"
+            (keyup)="onEnter($event)">
   </div>
   <div class="placeholder" 
       *ngIf="showPlaceholder"

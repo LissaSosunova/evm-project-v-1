@@ -185,6 +185,10 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  public onEnterKey(): void {
+    this.sendMessage();
+  }
+
   public sendMessage(): void {
     this.isMessages = true;
     const date = this.dateTransformService.nowUTC();

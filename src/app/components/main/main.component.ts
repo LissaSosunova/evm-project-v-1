@@ -87,6 +87,39 @@ export class MainComponent implements OnInit, OnDestroy {
       this.transferService.setDataObs({allUnredMessagesAmount});
     });
     this.subscribeDeleteMessagesInit();
+    let contactsAwaiting: number = 0;
+    this.user.contacts.forEach(contact => {
+      if (contact.status === 2) {
+        contactsAwaiting++;
+      }
+    });
+    this.transferService.setDataObs({name: 'awaitingContacts', data: contactsAwaiting});
+
+    this.socketIoService.on(SocketIO.events.add_user_request).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: types.Contact) => {
+      this.toastService.openToastSuccess('You have recieved a new request in adding contact!');
+      contactsAwaiting++;
+      this.transferService.setDataObs({name: 'awaitingContacts', data: contactsAwaiting});
+      response.avatar = this.avatarService.parseAvatar(response.avatar);
+      this.store.dispatch(new userAction.AddUser(response));
+    });
+
+    this.socketIoService.on(SocketIO.events.confirm_user_request).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: {userId: string}) => {
+      this.store.dispatch(new userAction.ConfirmUser(response));
+      const newUser: types.Contact = this.user.contacts.find(contact => contact.id === response.userId);
+      this.toastService.openToastSuccess(`User ${newUser.name} has confirmed your request!`);
+    });
+
+    this.socketIoService.on(SocketIO.events.reject_request).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: {userId: string}) => {
+      this.store.dispatch(new userAction.DeleteRequest(response));
+    });
+
+    this.socketIoService.on(SocketIO.events.delete_contact).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: {userId: string; chatId: string}) => {
+      this.store.dispatch(new userAction.DeleteUser(response));
+    });
   }
 
   ngOnDestroy() {

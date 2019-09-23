@@ -14,6 +14,13 @@ export module SocketIO {
         all_online_users = 'all_online_users',
         delete_message = 'delete_message',
         edit_message = 'edit_message',
-        delete_message_out_of_chat = 'delete_message_out_of_chat'
+        delete_message_out_of_chat = 'delete_message_out_of_chat',
+        add_user = 'add_user',
+        add_user_request = 'add_user_request',
+        confirm_user = 'confirm_user',
+        confirm_user_request = 'confirm_user_request',
+        delete_contact = 'delete_contact',
+        reject_request = 'reject_request',
+        delete_request = 'delete_request'
     }
 }

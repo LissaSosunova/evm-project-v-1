@@ -92,13 +92,14 @@
           title="contacts">
             <i class="material-icons">contacts</i>
             <i class="label" *ngIf="sidebarIsExpanded">Contacts</i>
+            <app-counter [counter]="contactsAwaiting"></app-counter>
           </a>
         </li>
         <li *ngIf="currChildUrl != 'chats'">
           <a routerLink="main/chats" title="chats">
             <i class="material-icons">chat</i>
             <i class="label" *ngIf="sidebarIsExpanded">Chat</i>
-            <i class="message-counter" *ngIf="totalUnreadMessagesAmount > 0">{{totalUnreadMessagesAmount}}</i>
+            <app-counter [counter]="totalUnreadMessagesAmount"></app-counter>
           </a>
         </li>
         <li *ngIf="currChildUrl != 'events'">

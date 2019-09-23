@@ -63,6 +63,52 @@ export function userReducer(state: types.User = userInitState, action: any): typ
       });
       return updateState;
     }
+    case userAction.ActionTypes.ADD_USER: {
+      const contact: types.Contact = action.payload;
+      updateState.contacts.push(contact);
+      return updateState;
+    }
+    case userAction.ActionTypes.CONFIRM_USER: {
+      const userConf: {userId: string} = action.payload;
+      updateState.contacts.find(contact => {
+        if (contact.id === userConf.userId) {
+          contact.status = 1;
+        }
+        return contact.id === userConf.userId;
+      });
+      return updateState;
+    }
+    case userAction.ActionTypes.DELETE_REQUEST: {
+      const deleteUserId: {userId: string} = action.payload;
+      updateState.contacts.find((contact, index) => {
+        if (contact.id === deleteUserId.userId) {
+          updateState.contacts.splice(index, 1);
+        }
+        return contact.id === deleteUserId.userId;
+      });
+      return updateState;
+    }
+    case userAction.ActionTypes.DELETE_CONTACT: {
+      const payload: {userId: string; chatId: string} = action.payload;
+      updateState.contacts.find((contact, index) => {
+        if (contact.id === payload.userId) {
+          updateState.contacts.splice(index, 1);
+        }
+        return contact.id === payload.userId;
+      });
+      updateState.chats.find((chat, index) => {
+        if (chat.chatId === payload.chatId) {
+          updateState.chats.splice(index, 1);
+        }
+        return chat.chatId === payload.chatId;
+      });
+      return updateState;
+    }
+    case userAction.ActionTypes.ADD_CHAT: {
+      const newChat: types.Chats = action.payload;
+      updateState.chats.push(newChat);
+      return updateState;
+    }
     default:
       return state;
     }
