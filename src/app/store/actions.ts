@@ -7,7 +7,12 @@ export enum ActionTypes {
   INIT_USER_MODEL = 'user_model',
   NO_UNREAD_MESSAGES = 'no_unread_messages',
   UPDATE_AVATAR = 'update_avatar',
-  DELETE_MESSAGE = 'delete_message'
+  DELETE_MESSAGE = 'delete_message',
+  ADD_USER = 'add_user',
+  CONFIRM_USER = 'confirm_user',
+  DELETE_REQUEST = 'delete_request',
+  DELETE_CONTACT = 'delete_contact',
+  ADD_CHAT = 'add_chat'
 }
 
 export class UpdateChatList implements Action {
@@ -38,4 +43,35 @@ export class DeleteMessageUpdate implements Action {
   public readonly type = ActionTypes.DELETE_MESSAGE;
 
   constructor(public payload: types.DeleteMessage) {}
+}
+
+export class AddUser implements Action {
+  public readonly type = ActionTypes.ADD_USER;
+
+  constructor(public payload: types.Contact) {}
+}
+
+export class ConfirmUser implements Action {
+  public readonly type = ActionTypes.CONFIRM_USER;
+
+  constructor(public payload: {userId: string}) {}
+}
+
+export class DeleteRequest implements Action {
+  public readonly type = ActionTypes.DELETE_REQUEST;
+
+  constructor(public payload: {userId: string}) {}
+}
+
+export class DeleteUser implements Action {
+  public readonly type = ActionTypes.DELETE_CONTACT;
+
+  constructor(public payload: {userId: string; chatId: string}) {}
+}
+
+export class AddChat implements Action {
+  public readonly type = ActionTypes.ADD_CHAT;
+
+  constructor(public payload: types.Chats) {}
+
 }

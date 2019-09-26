@@ -49,7 +49,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.data.setAuth(this.params).subscribe(
       data => {
         this.dataResp = data as types.LoginResp;
-        if (this.dataResp.success === true) {
+        if (this.dataResp.success) {
           this.token = this.dataResp.access_token;
           const tokenKey = this.dataResp.token_key;
           this.sessionStorageService.setValue(this.token, '_token');

@@ -6,8 +6,19 @@ const ObjectId =  require('mongodb').ObjectID;
 const onlineClients = {};
 const clientsInChat = {};
 
+class ContactData {
+  constructor(user) {
+    this.id = user.username;
+    this.email = user.email;
+    this.name = user.name;
+    this.avatar = user.avatar;
+    this.private_chat = '0';
+    this.status = user.status;
+  }
+}
 
-function runWebsocketsIO(server, expressApp) {
+
+function runWebsocketsIO(server) {
     const io = require('socket.io').listen(server);
     console.info('Socket IO is running');
 
@@ -51,6 +62,226 @@ function runWebsocketsIO(server, expressApp) {
               socket.emit("all_online_users", Object.keys(onlineClients));
               socket.broadcast.emit("user", {userId: obj.userId});
         });
+        socket.on("add_user", async obj => {
+          /**
+           * obj = {
+           *  queryUserId: string;
+           *  userId: string;
+           * }
+           */
+          if (obj.queryUserId === obj.userId) {
+            return
+          }
+          let exsistCont = false;
+          const queryParamDb = {
+              username: obj.userId
+          };
+
+          try {
+            const result = await datareader(User, queryParamDb, 'findOne');
+            exsistCont = result.contacts.some(item => {
+              return item.id === obj.queryUserId 
+           });
+            if (exsistCont) {
+              return
+            }
+            const findRes = await datareader(User, {username: obj.queryUserId}, 'findOne');
+            findRes.private_chat = '0';
+            findRes.status = 3;
+            const contact = new ContactData(findRes);
+            const updateParams = {
+              query: {username: obj.userId},
+              objNew:  {$push: {contacts: contact}}
+            };
+            const updateRes = await datareader(User, updateParams, 'updateOne');
+            //добавить найденому другу тоже со статусом ожидания подтверждения с его стороны
+            const params2 = {
+              $or: [
+                {username: contact.id},
+                {email: contact.email}
+              ]
+            };
+            const result2 = new ContactData(result);
+            result2.private_chat = '0';
+            result2.status = 2;
+            const addParams = {
+              query: params2,
+              objNew:  {$push: {contacts: result2}}
+            };
+            const updateFindedUser = await datareader(User, addParams, 'updateOne');
+            if (onlineClients[obj.queryUserId]) {
+              Object.keys(onlineClients[obj.queryUserId]).forEach(token => {
+                onlineClients[obj.queryUserId][token].emit('add_user_request', result2);
+              });
+            }
+            if(onlineClients[obj.userId]) {
+              Object.keys(onlineClients[obj.userId]).forEach(token => {
+                onlineClients[obj.userId][token].emit('add_user', contact);
+              });
+            }
+          } catch(error) {
+            console.error ('add_user', error);
+          }
+
+        });
+        socket.on('confirm_user', async obj => {
+          /**
+           * obj = {
+           *  queryUserId: string;
+           *  userId: string;
+           * }
+           */
+          if (obj.queryUserId === obj.userId) {
+            return
+          }
+          const params1 = {username: obj.userId};
+          const params2 = {username: obj.queryUserId};
+          try {
+            const response2 = await datareader(User, params2, 'findOne');
+            const update2 = {
+              query: {"username" : response2.username, "contacts.id": obj.userId},
+              objNew: {$set : {"contacts.$.status" : 1 }}
+            };
+            await datareader(User, update2, 'updateOne' );
+            const response1 = await datareader(User, params1, 'findOne');
+            const update1 = {
+              query: {"username" : response1.username, "contacts.id": obj.queryUserId},
+              objNew: {$set : { "contacts.$.status" : 1 }}
+            }
+            await datareader(User, update1, 'updateOne');
+            if (onlineClients[obj.queryUserId]) {
+              Object.keys(onlineClients[obj.queryUserId]).forEach(token => {
+                onlineClients[obj.queryUserId][token].emit('confirm_user_request', {userId: obj.userId});
+              })
+            }  
+            if(onlineClients[obj.userId]) {
+              Object.keys(onlineClients[obj.userId]).forEach(token => {
+                onlineClients[obj.userId][token].emit('confirm_user', {userId: obj.queryUserId});
+              })
+            }
+            
+          } catch(error) {
+            console.error('confirm_user', error);
+          }
+        });
+        socket.on("delete_request", async obj => {
+          /**
+           * obj = {
+           *  queryUserId: string;
+           *  userId: string;
+           * }
+           */
+          const queryParamDb = {
+            query: {username: obj.userId},
+            objNew: {$pull: {contacts: {id: obj.queryUserId}}}
+          };
+          const queryDb = {
+            query: {username: obj.queryUserId},
+            objNew: {$pull: {contacts: {id: obj.userId}}}
+          }
+          try {
+            await datareader(User, queryParamDb, 'updateOne');
+            await datareader(User, queryDb, 'updateOne');
+            if (onlineClients[obj.queryUserId]) {
+              Object.keys(onlineClients[obj.queryUserId]).forEach(token => {
+                onlineClients[obj.queryUserId][token].emit('reject_request', {userId: obj.userId});
+              });  
+            }
+            if(onlineClients[obj.userId]) {
+              Object.keys(onlineClients[obj.userId]).forEach(token => {
+                onlineClients[obj.userId][token].emit('delete_request', {userId: obj.queryUserId});
+              });
+            }
+          } catch (error) {
+            console.error('confirm_user', error);
+          }
+
+        });
+
+        // socket.on("reject_request", async obj => {
+        //   /**
+        //    * obj = {
+        //    *  queryUserId: string;
+        //    *  userId: string;
+        //    * }
+        //    */
+        //   const queryParamDb = {
+        //     query: {username: obj.userId},
+        //     objNew: {$pull: {contacts: {id: obj.queryUserId}}}
+        //   };
+        //   const queryDb = {
+        //     query: {username: obj.queryUserId},
+        //     objNew: {$pull: {contacts: {id: obj.userId}}}
+        //   }
+        //   try {
+        //     await datareader(User, queryParamDb, 'updateOne');
+        //     await datareader(User, queryDb, 'updateOne');
+        //     if (onlineClients[obj.queryUserId]) {
+        //       Object.keys(onlineClients[obj.queryUserId]).forEach(token => {
+        //         onlineClients[obj.queryUserId][token].emit('delete_request', {userId: obj.userId});
+        //       });  
+        //     }
+        //     if(onlineClients[obj.userId]) {
+        //       Object.keys(onlineClients[obj.userId]).forEach(token => {
+        //         onlineClients[obj.userId][token].emit('reject_request', {userId: obj.queryUserId});
+        //       });
+        //     }
+        //   } catch (error) {
+        //     console.error('confirm_user', error);
+        //   }
+
+        // });
+
+        socket.on("delete_contact", async obj => {
+          /**
+           * obj = {
+           *  userId: string;
+           *  deleteContactId: string;
+           *  chatIdToDelete: string
+           * }
+           */
+
+          const deleteContactInMyList = {
+            query: {username: obj.userId},
+            objNew: {$pull: {contacts: {id: obj.deleteContactId}}}
+          };
+          const deleteContactInOtherList = {
+            query: {username: obj.deleteContactId},
+            objNew: {$pull: {contacts: {id: obj.userId}}}
+          };
+          const deleteChatInMyContact = {
+            query: {username: obj.userId, "chats.id": obj.deleteContactId},
+            objNew: {$set: {"chats.$.type": 4}}
+          };
+          const deleteChatInOtherList = {
+            query: {username: obj.deleteContactId, "chats.id": obj.userId},
+            objNew: {$set: {"chats.$.type": 4}}
+          }
+          const deleteChat = {
+            query: {$and: [{'users.username': obj.userId}, {'users.username': obj.deleteContactId}]},
+            objNew: {$set:{type: 4}}
+          };
+          try {
+            await datareader(User, deleteContactInMyList, 'updateOne');
+            await datareader(User, deleteContactInOtherList, 'updateOne');
+            await datareader(User, deleteChatInMyContact, 'updateOne');
+            await datareader(User, deleteChatInOtherList, 'updateOne');
+            await datareader(Chat, deleteChat, 'updateOne');
+            if (onlineClients[obj.deleteContactId]) {
+              Object.keys(onlineClients[obj.deleteContactId]).forEach(token => {
+                onlineClients[obj.deleteContactId][token].emit('delete_contact', {userId: obj.userId, chatId: obj.chatIdToDelete});
+              });  
+            }
+            if(onlineClients[obj.userId]) {
+              Object.keys(onlineClients[obj.userId]).forEach(token => {
+                onlineClients[obj.userId][token].emit('delete_contact', {userId: obj.deleteContactId,  chatId: obj.chatIdToDelete});
+              });
+            }
+          } catch (error) {
+            console.error('delete_contact', error);
+          }
+        });
+
         socket.on("user_left", obj => {
             /**
             obj = {

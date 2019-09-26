@@ -25,6 +25,7 @@
                     <span>
                         Awaiting for confirmation
                     </span>
+          <app-counter [counter]="contactsAwaiting.length"></app-counter>          
       </div>
         <div class="col-xs-6
                     col-sm-6
@@ -78,7 +79,7 @@
                       <i class="material-icons">chat_bubble_outline</i>
                     </button>
               <button class="m-btn cancel"
-                      (click)="onConfirmActionPopupOpen('delete contact')">
+                      (click)="onConfirmActionPopupOpen('delete contact', item.id)">
                 <i class="material-icons">close</i>
               </button>
             </div>
@@ -89,7 +90,7 @@
 <!-- Contacts awaiting for confirmation -->
     <div class="contactList-user1 tab" id="avaiting" *ngIf="currTab === 'avaiting'">
         <section *ngIf="!isContactsAwaiting">
-          <div class="empty-data">You don't have any requst from users</div>
+          <div class="empty-data">You don't have any request from users</div>
         </section>
         <section *ngIf="isContactsAwaiting">
             <ul class="contacts-ul">
@@ -100,7 +101,7 @@
                       <i class="material-icons">check</i>
                     </button>
                     <button class="m-btn cancel"
-                            (click)="onConfirmActionPopupOpen('reject request')">
+                            (click)="onConfirmActionPopupOpen('reject request', item.id)">
                       <i class="material-icons">close</i>
                     </button>
                   </div>
@@ -119,7 +120,7 @@
                   <div class="col-xs-8 small-screen"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
                   <div class="col-xs-4 btn-align">
                     <button class="m-btn cancel"
-                            (click)="onConfirmActionPopupOpen('delete request')">
+                            (click)="onConfirmActionPopupOpen('delete request', item.id)">
                       <i class="material-icons">close</i>
                     </button>
                   </div>
@@ -154,5 +155,6 @@
   </div>
 </div>
 <app-user-info-popup #userPopup [userInfo]="selectedContact"></app-user-info-popup>
-<app-popup-details #popupDetails actionName={{actionName}}></app-popup-details>
+<app-popup-details #popupDetails actionName={{actionName}}
+                    (submit)="confirmActionClick()"></app-popup-details>
 

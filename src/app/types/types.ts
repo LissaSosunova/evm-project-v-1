@@ -8,7 +8,7 @@ export module types {
     id: string;
     name: string;
     private_chat: string;
-    _id: string;
+    _id?: string;
     status: number;
   }
 
@@ -32,8 +32,8 @@ export module types {
     name: string;
     users: CreateNewChatUser[];
     type: number;
-    unreadMes: number;
-    lastMessage: Message;
+    unreadMes?: number;
+    lastMessage?: Message;
   }
 
   export interface ContactForToastMessage {
@@ -91,6 +91,13 @@ export module types {
     _id: string;
     id: string;
     status: boolean;
+  }
+
+  export interface SearchContact {
+    avatar: Avatar;
+    email: string;
+    id: string;
+    name: string;
   }
 
   export interface EventDb {
@@ -266,6 +273,11 @@ export interface UserIsTyping {
     GROUP_OR_EVENT_CHAT = 2,
     BLOCKED_CHAT = 3,
     DELETED_CHAT = 4
+  }
+  export enum ContactAction {
+    DELETE_CONTACT = 'delete contact',
+    REJECT_REQUEST = 'reject request',
+    DELETE_REQUEST = 'delete request'
   }
 
   export enum Defaults {

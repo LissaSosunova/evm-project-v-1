@@ -1,3 +1,5 @@
+// DEPRICATED!!! Moved to sockets!
+
 const router = require('express').Router() // импортируем роутер
 // плагин для аватрок
 const multer = require('multer');

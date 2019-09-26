@@ -61,6 +61,7 @@ import { EmailConfirmedComponent } from './components/email-confirmed/email-conf
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { NewMessageToastComponent } from './shared/toasts/components/new-message-toast/new-message-toast.component';
+import { CounterComponent } from './shared/components/counter/counter.component';
 
 
 @NgModule({
@@ -118,7 +119,8 @@ import { NewMessageToastComponent } from './shared/toasts/components/new-message
     EmailConfirmedComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    NewMessageToastComponent
+    NewMessageToastComponent,
+    CounterComponent
   ],
   imports: [
     BrowserModule,

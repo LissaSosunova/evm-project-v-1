@@ -11,11 +11,8 @@ const $changeStatus = require('./endpoints/events/change_status');
 const $postUser = require('./endpoints/registration/post_user');
 const $getUser = require('./endpoints/user/get_user');
 const $findUser = require('./endpoints/user/find_user');
-const $addUser = require('./endpoints/user/add_user');
-const $confirmUser = require('./endpoints/user/confirm_user');
 const $deleteContact = require('./endpoints/user/delete_contact');
 const $privateChat = require('./endpoints/chat/private_chat');
-const $sendMessage = require('./endpoints/chat/send_message');
 const $newPrivateChat = require('./endpoints/chat/new_private_chat');
 const $deleteChat = require('./endpoints/chat/delete_chat');
 const $renewChat = require('./endpoints/chat/renew_chat');
@@ -24,14 +21,13 @@ const $deleteDraftMessage = require('./endpoints/chat/delete_draft_message');
 const $getDraftMessage = require('./endpoints/chat/get_draft_message');
 const $confirmEmail = require('./endpoints/registration/confirm_email');
 const $uploadAvatar = require('./endpoints/user/upload_avatar');
-// Depricated
-// const $get_avatar = require('./endpoints/user/get_avatar');
 const $deleteAvatar = require('./endpoints/user/delete_avatar');
 const $forgotPassword = require('./endpoints/registration/forgot_password');
 const $resetPassword = require('./endpoints/registration/reset_password');
 const $changePassword = require('./endpoints/registration/change_password');
 const $changeEmail = require('./endpoints/user/change_email');
 const $confirmChangeEmail = require('./endpoints/user/confirm_change_email');
+const $changePasswordAuth = require('./endpoints/user/change_password_auth');
 const socketIO = require('./sockets/socket.io');
 
 app.use(bodyParser.text());
@@ -62,12 +58,6 @@ app.route('/user')
 app.route('/find_user')
   .post($findUser);
 
-app.route('/add_user')
-  .post($addUser);
-
-app.route('/confirm_user')
-  .post($confirmUser);
-
 app.route('/delete_contact')
   .post($deleteContact);
 
@@ -92,9 +82,6 @@ app.route('/private_chat/:id/')
 app.route('/new_private_chat/')
   .post($newPrivateChat);
 
-app.route('/send_message')
-  .post($sendMessage);
-
 app.route('/set_draft_message')  
   .post($setDraftMessage);
 
@@ -106,9 +93,6 @@ app.route('/get_draft_message/:id/')
 
 app.route('/upload_avatar')
   .post($uploadAvatar);  
-
-// app.route('/uploads/:userId/avatars/:fileName')
-//   .get($get_avatar);
 
 app.route('/delete_avatar')
   .post($deleteAvatar);    
@@ -131,9 +115,12 @@ app.route('/change_email')
 app.route('/confirm_change_email/:token/:email/:tokenTime')
   .get($confirmChangeEmail)  
 
+app.route('/change_password_auth')
+  .post($changePasswordAuth);
+
 const server = app.listen(port); 
 console.info('Backend server is listening on port ' + port);
 
-socketIO(server, app);
+socketIO(server);
 
 module.exports = { app };

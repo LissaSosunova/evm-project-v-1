@@ -1,7 +1,9 @@
 import {
   Component,
   Input,
-  OnInit
+  OnInit,
+  Output,
+  EventEmitter
       } from '@angular/core';
 import { types } from 'src/app/types/types';
 import {
@@ -18,6 +20,7 @@ export class PopupDetailsComponent implements OnInit {
   public popup: PopupControls;
   public popupConfig: types.FormPopupConfig;
   @Input() public actionName: string;
+  @Output() public submit: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     private popupControlsService: PopupControlsService
@@ -48,5 +51,9 @@ export class PopupDetailsComponent implements OnInit {
     if (this.popup) {
       this.popup.close();
     }
+  }
+
+  public onSubmit(): void {
+    this.submit.emit();
   }
 }

@@ -1,11 +1,11 @@
 <section class="chat-window-container">  
     <div class="row chat-wrapper">
-        <app-section-spinner [loading]="isLoadingMessages" [position]="'absolute'"></app-section-spinner>
         <div class="messages-container
         col-xs-12
                 col-sm-8
                 col-md-8
                 col-lg-8">
+            <app-section-spinner [loading]="isLoadingMessages" [position]="'absolute'"></app-section-spinner>
             <div class="message-box" (scroll)="scrollChatWindow($event)" #messageBox >
                 
                 <section [ngSwitch]="isMessages">
@@ -118,7 +118,8 @@
             [placeholder]="'Write a message'"
             [minHeight]="35"
             [maxHeight]="250"
-            [currMes]="inputMes">
+            [currMes]="inputMes"
+            (enterKey)="onEnterKey()">
             </app-multi-line-input>
         </div>
         <div class="col-sm-3 col-xs-4 buttons">

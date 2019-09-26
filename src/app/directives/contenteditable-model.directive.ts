@@ -17,9 +17,15 @@ export class ContenteditableModelDirective implements OnChanges {
     }
   }
 
-  @HostListener ('keyup') public onKeyup() {
+  @HostListener ('keyup', ['$event']) public onKeyup(event: KeyboardEvent): void {
     const value = this.elRef.nativeElement.innerText;
     this.changeInput.emit(value);
+    if (event.shiftKey && event.key === 'Enter') {
+      return;
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      this.elRef.nativeElement.innerText = '';
+    }
   }
 
 }
