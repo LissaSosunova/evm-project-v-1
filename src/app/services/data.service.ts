@@ -17,89 +17,75 @@ export class DataService {
   constructor(private http: HttpClient,
             private sessionStorageService: SessionStorageService) { }
 
-
-  // Depricated, moved to sockets
-  // public addUser(query: types.AddUser): Observable<any> {
-  //   return this.http.post(URL_BACK + '/add_user/', query, {headers: this.getHeaders()});
-  // }
-
-  // public confUser(query: types.AddUser): Observable<any> {
-  //   return this.http.post(URL_BACK + '/confirm_user/', query, {headers: this.getHeaders()});
-  // }
-
-  public changeEmail(params: {username: string; newEmail: string}): Observable<{status: number; message: string}> {
-    return this.http.post<{status: number; message: string}>(`${URL_BACK}/change_email`, params, {headers: this.getHeaders()});
+  public changeEmail(params: {username: string; newEmail: string}): Observable<types.Server200Response> {
+    return this.http.post<types.Server200Response>(`${URL_BACK}/change_email`, params, {headers: this.getHeaders()});
   }
 
-  public changePasswordAuth(params: {oldPassword: string; newPassword: string}): Observable<any> {
-    return this.http.post(`${URL_BACK}/change_password_auth`, params, {headers: this.getHeaders()});
+  public changePasswordAuth(params: {oldPassword: string; newPassword: string}): Observable<types.Server200Response> {
+    return this.http.post<types.Server200Response>(`${URL_BACK}/change_password_auth`, params, {headers: this.getHeaders()});
   }
 
-  public createNewPrivateChat(params: types.CreateNewChat): Observable<any> {
-    return this.http.post(URL_BACK + '/new_private_chat/', params, {headers: this.getHeaders()});
+  public createNewPrivateChat(params: types.CreateNewChat): Observable<types.Chats> {
+    return this.http.post<types.Chats>(URL_BACK + '/new_private_chat/', params, {headers: this.getHeaders()});
   }
 
-  public findUser(query: types.FindUser): Observable<any> {
-    return this.http.post(URL_BACK + '/find_user/', query, {headers: this.getHeaders()});
+  public findUser(query: types.FindUser): Observable<types.SearchContact[]> {
+    return this.http.post<types.SearchContact[]>(URL_BACK + '/find_user/', query, {headers: this.getHeaders()});
   }
 
-  public getPrivatChat(params: string, queryNum: string, queryMessagesAmount: string, messagesShift: string): Observable<any> {
+  public getPrivatChat(params: string, queryNum: string, queryMessagesAmount: string, messagesShift: string): Observable<types.PrivateChat | types.Message[]> {
     const query = {
       queryNum,
       queryMessagesAmount,
       messagesShift
     };
-    return this.http.get(`${URL_BACK}/private_chat/${params}`, {headers : this.getHeaders(),  params: query});
+    return this.http.get<types.PrivateChat | types.Message[]>(`${URL_BACK}/private_chat/${params}`, {headers : this.getHeaders(),  params: query});
   }
 
-  public getUser(): Observable<any> {
-    return this.http.get(URL_BACK + '/user/', {headers: this.getHeaders()});
+  public getUser(): Observable<types.User> {
+    return this.http.get<types.User>(URL_BACK + '/user/', {headers: this.getHeaders()});
   }
 
-  public setAuth(params: types.Login): Observable<any> {
-    return this.http.post(URL_BACK + '/login/', params);
+  public setAuth(params: types.Login): Observable<types.LoginServerResponse> {
+    return this.http.post<types.LoginServerResponse>(URL_BACK + '/login/', params);
   }
 
-  public setReg(params: types.Registration): Observable<any> {
-    return this.http.post(URL_BACK + '/user/', params,  {responseType: 'text'});
+  public setReg(params: types.Registration): Observable<types.Server200Response> {
+    return this.http.post<types.Server200Response>(URL_BACK + '/user/', params);
   }
 
   public saveEvent(event: types.EventDb): Observable<any> {
     return this.http.post(URL_BACK + '/new_event/', event, {headers: this.getHeaders()});
   }
 
-  public sendDraftMessage(query: types.DraftMessage): Observable<any> {
-    return this.http.post(URL_BACK + '/set_draft_message', query, {headers: this.getHeaders()});
+  public sendDraftMessage(query: types.DraftMessage): Observable<types.Server200Response> {
+    return this.http.post<types.Server200Response>(URL_BACK + '/set_draft_message', query, {headers: this.getHeaders()});
   }
 
-  public sendMessage(query: types.Message): Observable<any> {
-    return this.http.post(URL_BACK + '/send_message', query, {headers: this.getHeaders()});
+  public deleteDraftMessage(query: types.DraftMessageDeleteObj): Observable<types.Server200Response> {
+    return this.http.post<types.Server200Response>(URL_BACK + '/delete_draft_message', query, {headers: this.getHeaders()});
   }
 
-  public deleteDraftMessage(query: types.DraftMessageDeleteObj): Observable<any> {
-    return this.http.post(URL_BACK + '/delete_draft_message', query, {headers: this.getHeaders()});
+  public deleteAvatar(query: {userId: string}): Observable<{owner: string; url: string}> {
+    return this.http.post<{owner: string; url: string}>(`${URL_BACK}/delete_avatar`, query, {headers: this.getHeaders()});
   }
 
-  public deleteAvatar(query: {userId: string}): Observable<any> {
-    return this.http.post(`${URL_BACK}/delete_avatar`, query, {headers: this.getHeaders()});
-  }
-
-  public getDraftMessage(userId: string, chatId: string): Observable<any> {
+  public getDraftMessage(userId: string, chatId: string): Observable<types.DraftMessageFromServer> {
     const query = {authorId: userId};
-    return this.http.get(`${URL_BACK}/get_draft_message/${chatId}`, {headers: this.getHeaders(), params: query});
+    return this.http.get<types.DraftMessageFromServer>(`${URL_BACK}/get_draft_message/${chatId}`, {headers: this.getHeaders(), params: query});
   }
 
-  public uploadAvatar(obj: FormData, userId: string): Observable<any> {
-    return this.http.post(URL_BACK + '/upload_avatar', obj, {headers: this.getHeaderForUploadFile(userId)});
+  public uploadAvatar(obj: FormData, userId: string): Observable<types.UploadAvatarResponse> {
+    return this.http.post<types.UploadAvatarResponse>(URL_BACK + '/upload_avatar', obj, {headers: this.getHeaderForUploadFile(userId)});
   }
 
-  public forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${URL_BACK}/forgot_password`, {email});
+  public forgotPassword(email: string): Observable<types.Server200Response> {
+    return this.http.post<types.Server200Response>(`${URL_BACK}/forgot_password`, {email});
   }
 
-  public changePassword(password: string, token: string, tokenTime: string): Observable<any> {
+  public changePassword(password: string, token: string, tokenTime: string): Observable<types.Server200Response> {
     const headers = new HttpHeaders({'authorization': token});
-    return this.http.post(`${URL_BACK}/change_password`, {password, tokenTime}, {headers});
+    return this.http.post<types.Server200Response>(`${URL_BACK}/change_password`, {password, tokenTime}, {headers});
   }
 
   private getHeaders(): HttpHeaders {

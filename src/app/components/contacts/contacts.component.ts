@@ -93,7 +93,7 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketIOService.socketEmit(SocketIO.events.confirm_user, {queryUserId: query, userId: this.user.username});
   }
 
-  public confirmActionClick(): void {
+  public confirmActionClick(deleteChat: boolean): void {
     if (this.actionName === types.ContactAction.DELETE_REQUEST || this.actionName === types.ContactAction.REJECT_REQUEST) {
       this.socketIOService.socketEmit(SocketIO.events.delete_request, {queryUserId: this.selectedUser, userId: this.user.username});
       this.confirmAction.onClose();
@@ -105,7 +105,13 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         chatIdToDelete = undefined;
       }
-      this.socketIOService.socketEmit(SocketIO.events.delete_contact, {deleteContactId: this.selectedUser, userId: this.user.username, chatIdToDelete});
+      const obj =  {
+        deleteContactId: this.selectedUser,
+        userId: this.user.username,
+        chatIdToDelete,
+        deleteChat
+      };
+      this.socketIOService.socketEmit(SocketIO.events.delete_contact, obj);
       this.confirmAction.onClose();
     }
   }

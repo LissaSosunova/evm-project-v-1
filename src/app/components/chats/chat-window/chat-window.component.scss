@@ -155,6 +155,16 @@ ul {
 .delete-btn, .edit-btn {
   cursor: pointer;
   color:  map-get($bg-color, 'dark');
+  margin: 0 5px;
+}
+.menu-btn {
+  cursor: pointer;
+  color:  map-get($bg-color, 'dark');
+  border-radius: 50%;
+  padding: 5px;
+}
+.menu-btn:hover {
+  background-color:  map-get($bg-color, 'gray');
 }
 .editing-message {
   margin-top: 5px; 

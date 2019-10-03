@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, RouterEvent, NavigationEnd, NavigationStart } from '@angular/router';
+import { Router, RouterEvent, NavigationEnd, NavigationStart, GuardsCheckStart, ResolveStart } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 
@@ -17,12 +17,19 @@ export class RouterService {
     this.routeSubj$ = new BehaviorSubject<string>(currRoute);
 
     this.router.events.subscribe((event: RouterEvent) => {
-      if (event instanceof NavigationStart) {
+      if (event instanceof NavigationStart || event instanceof ResolveStart) {
         const oldUrl = (event.url).split('?')[0];
         const newUrl = this.router.url.split('?')[0];
         if (oldUrl !== newUrl) {
           this.routeSubj$.next(event.url);
           this.prevRoute$.next(this.router.url);
+        }
+      }
+      if (event instanceof GuardsCheckStart) {
+        const oldUrl = (event.url).split('?')[0];
+        const newUrl = this.router.url.split('?')[0];
+        if (oldUrl !== newUrl) {
+          this.routeSubj$.next(this.router.url);
         }
       }
     });

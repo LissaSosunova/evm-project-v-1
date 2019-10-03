@@ -237,7 +237,8 @@ function runWebsocketsIO(server) {
            * obj = {
            *  userId: string;
            *  deleteContactId: string;
-           *  chatIdToDelete: string
+           *  chatIdToDelete: string;
+           *  deleteChat: boolean
            * }
            */
 
@@ -249,14 +250,7 @@ function runWebsocketsIO(server) {
             query: {username: obj.deleteContactId},
             objNew: {$pull: {contacts: {id: obj.userId}}}
           };
-          const deleteChatInMyContact = {
-            query: {username: obj.userId, "chats.id": obj.deleteContactId},
-            objNew: {$set: {"chats.$.type": 4}}
-          };
-          const deleteChatInOtherList = {
-            query: {username: obj.deleteContactId, "chats.id": obj.userId},
-            objNew: {$set: {"chats.$.type": 4}}
-          }
+          
           const deleteChat = {
             query: {$and: [{'users.username': obj.userId}, {'users.username': obj.deleteContactId}]},
             objNew: {$set:{type: 4}}
@@ -264,9 +258,32 @@ function runWebsocketsIO(server) {
           try {
             await datareader(User, deleteContactInMyList, 'updateOne');
             await datareader(User, deleteContactInOtherList, 'updateOne');
-            await datareader(User, deleteChatInMyContact, 'updateOne');
-            await datareader(User, deleteChatInOtherList, 'updateOne');
-            await datareader(Chat, deleteChat, 'updateOne');
+            
+            if (obj.deleteChat) {
+              const deleteChatInMyContact = {
+                query: {username: obj.userId, "chats.id": obj.deleteContactId},
+                objNew: {$pull: {chats: {chatId: obj.chatIdToDelete}}}
+              };
+              const deleteChatInOtherList = {
+                query: {username: obj.deleteContactId, "chats.id": obj.userId},
+                objNew: {$pull: {chats: {chatId: obj.chatIdToDelete}}}
+              };
+              await datareader(Chat, {$and: [{'users.username': obj.userId}, {'users.username': obj.deleteContactId}]}, 'deleteOne');
+              await datareader(User, deleteChatInMyContact, 'updateOne');
+              await datareader(User, deleteChatInOtherList, 'updateOne');
+            } else {
+              const deleteChatInMyContact = {
+                query: {username: obj.userId, "chats.id": obj.deleteContactId},
+                objNew: {$set: {"chats.$.type": 4}}
+              };
+              const deleteChatInOtherList = {
+                query: {username: obj.deleteContactId, "chats.id": obj.userId},
+                objNew: {$set: {"chats.$.type": 4}}
+              };
+              await datareader(User, deleteChatInMyContact, 'updateOne');
+              await datareader(User, deleteChatInOtherList, 'updateOne');
+              await datareader(Chat, deleteChat, 'updateOne');
+            }
             if (onlineClients[obj.deleteContactId]) {
               Object.keys(onlineClients[obj.deleteContactId]).forEach(token => {
                 onlineClients[obj.deleteContactId][token].emit('delete_contact', {userId: obj.userId, chatId: obj.chatIdToDelete});

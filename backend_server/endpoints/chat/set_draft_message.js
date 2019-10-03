@@ -41,7 +41,7 @@ router.post('/set_draft_message', async function (req, res, next){
       await datareader(Chat, deleteDraftMessParams, 'updateOne');
       await datareader(Chat, updateParams, 'updateOne');
     }
-    res.json({code: 200});
+    res.json({status: 200, message: 'message saved'});
   } catch (err) {
     res.sendStatus(500);
   }

@@ -31,8 +31,8 @@ const transporter = require('../../modules/transporterNodemailer');
       ]
     };
     const dublicate = {
-      name: 'MongoError',
-      statuscode: 409
+      message: 'MongoError',
+      status: 409
     };
     const defaultAvatar = {
       owner: 'default',
@@ -60,7 +60,7 @@ const transporter = require('../../modules/transporterNodemailer');
             user.password = hash;
             user.save(err => {
               if (err) res.json(err)
-              else res.json({message: "Created"}).status(201)
+              else res.json({status: 201, message: "Created"}).status(201)
             })
           }
         })
@@ -84,7 +84,7 @@ const transporter = require('../../modules/transporterNodemailer');
           else {
             confUser.password = hash;
             await datareader(confUser, null, 'save');
-            res.json({status: 200, info: 'Email sent'});
+            res.json({status: 200, message: 'Email sent'});
           }
         }); 
     }

@@ -44,7 +44,7 @@ router.post('/change_password_auth', async (req, res, next) => {
                         return res.status(500);
                     } else {
                         await datareader(User, {query: authParams, objNew: {password: hash}}, 'updateOne');
-                        return res.json({message: 'password was changed'});
+                        return res.json({message: 'password was changed', status: 200});
                     }
                 }) 
             }

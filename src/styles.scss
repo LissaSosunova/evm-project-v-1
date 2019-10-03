@@ -49,6 +49,13 @@ input, button {
   stroke: map-get($bg-color, 'green') !important;
 }
 
+.mat-menu-panel {
+  min-width: auto !important;
+}
+
+.mat-badge-content {
+  background-color:  map-get($bg-color, 'orange');
+}
 
 @font-face {
   font-family: 'Material Icons';

@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { TransferService} from '../services/transfer.service';
-import { Observable } from 'rxjs';
 import { types } from '../types/types';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
@@ -9,12 +7,11 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
   providedIn: 'root'
 })
 
-export class GetDraftMessagesResolverService implements Resolve<types.DraftMessage> {
+export class GetDraftMessagesResolverService implements Resolve<types.DraftMessageFromServer> {
 
-  constructor(private dataService: DataService,
-              private transferService: TransferService) { }
+  constructor(private dataService: DataService) { }
 
-  public async resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<types.DraftMessage> {
+  public async resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<types.DraftMessageFromServer> {
     const chatId = route.params.chatId;
     const userData: types.User = await this.dataService.getUser().toPromise();
     return this.dataService.getDraftMessage(userData.username, chatId).toPromise();

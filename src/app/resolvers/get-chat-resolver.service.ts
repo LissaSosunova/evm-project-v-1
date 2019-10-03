@@ -7,11 +7,11 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 @Injectable({
   providedIn: 'root'
 })
-export class GetChatResolverService implements Resolve<types.ChatData> {
+export class GetChatResolverService implements Resolve<types.PrivateChat | types.Message[]> {
 
   constructor(private dataService: DataService) { }
 
-  public resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<types.ChatData> {
+  public resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<types.PrivateChat | types.Message[]> {
     const chatId = route.params.chatId;
     return this.dataService.getPrivatChat(chatId, '0', String(types.Defaults.QUERY_MESSAGES_AMOUNT), '0');
   }

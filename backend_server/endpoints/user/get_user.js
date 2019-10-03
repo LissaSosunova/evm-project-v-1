@@ -86,9 +86,11 @@ router.get('/user', async function (req, res, next) {
       const unreadNumInChats = [];
       unreadMes.forEach(item => {
         const obj = {};
-        obj.chatId = String(item[0]._id);
-        obj.unreadMes = item[0].query.length;
-        unreadNumInChats.push(obj);
+        if (item && item.length > 0) {
+          obj.chatId = String(item[0]._id);
+          obj.unreadMes = item[0].query.length;
+          unreadNumInChats.push(obj);
+        }
       });
       user.chats.forEach(item => {
         unreadNumInChats.forEach(el => {
@@ -98,7 +100,7 @@ router.get('/user', async function (req, res, next) {
           }
         })
         lastMes.forEach(el => {
-          if (item.chatId && item.chatId == el._id) {
+          if (el && item.chatId && item.chatId == el._id) {
              item.lastMessage = el.messages[0];
           }
         })

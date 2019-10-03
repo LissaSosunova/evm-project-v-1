@@ -15,7 +15,9 @@
                                     <span class="chat-time">01.01.2019</span>
                             </div>
                             <div class="col-sm-1" *ngIf="item.unreadMes > 0">
-                              <div class="unread-mes">{{item.unreadMes}}</div>
+                              <div matBadge="{{item.unreadMes}}"
+                                >
+                                </div>
                             </div>
                         </div>
             </li>

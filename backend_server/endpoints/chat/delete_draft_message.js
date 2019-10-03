@@ -26,7 +26,7 @@ router.post('/delete_draft_message', async function (req, res, next){
   };
   try {
     await datareader(Chat, deleteDraftMessParams, 'updateOne');
-    res.json({code: 200});
+    res.json({status: 200, message: 'message was deleted'});
   } catch (err) {
     res.sendStatus(500);
   }

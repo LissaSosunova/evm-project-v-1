@@ -67,6 +67,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public onClickOutside(event: MouseEvent): void {
     if (this.documentWidth < 500 && this.sidebarIsExpanded) {
       this.sidebarIsExpanded = false;
+      this.transferService.setDataObs({toggleSidebarState: this.sidebarIsExpanded});
       this.pageMaskService.close();
     }
   }
@@ -74,8 +75,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public toggleSidebar(): void {
     this.sidebarIsExpanded = !this.sidebarIsExpanded;
     if (this.documentWidth < 500 && this.sidebarIsExpanded) {
+      this.transferService.setDataObs({toggleSidebarState: this.sidebarIsExpanded});
       this.pageMaskService.open();
     } else if (this.documentWidth < 500 && !this.sidebarIsExpanded) {
+      this.transferService.setDataObs({toggleSidebarState: this.sidebarIsExpanded});
       this.pageMaskService.close();
     }
  }

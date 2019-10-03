@@ -23,7 +23,7 @@ export class ContenteditableModelDirective implements OnChanges {
     if (event.shiftKey && event.key === 'Enter') {
       return;
     } else if (event.key === 'Enter') {
-      event.preventDefault();
+      // event.preventDefault();
       this.elRef.nativeElement.innerText = '';
     }
   }

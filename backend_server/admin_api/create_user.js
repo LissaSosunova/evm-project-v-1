@@ -2,6 +2,8 @@ const datareader = require('../modules/datareader');
 const User = require( '../models/user');
 const argv = require ('yargs').argv;
 const bcrypt = require ('bcrypt');
+const path = require('path');
+const fs = require('fs');
 const colors = require('colors');
 
 /**
@@ -20,13 +22,30 @@ function validateEmail(email) {
 
 (async function() {
     try {
-        const email = argv.email;
-        const password = argv.password;
-        const username = argv.username;
-        const name = argv.name;
+        let userData = {};
+        let email;
+        let password;
+        let username;
+        let name;
+        const pathfile = argv.credsUser;
+        if(pathfile) {
+            userData = JSON.parse(fs.readFileSync(path.resolve(__dirname, pathfile), 'utf8'));
+            email = userData.email;
+            password = userData.password;
+            username = userData.username;
+            name = userData.name;
+        } else {
+            email = argv.email;
+            password = argv.password;
+            username = argv.username;
+            name = argv.name;
+        }
         if (!email || !password || !username || !name) {
             console.error(`Some input params are missed`.red);
-            console.info(`To create user type in console something like this \n npm run create-user -- --username testUsername --name Test --email test@mail.com --password qwerty`.green);
+            console.info(`To create user type in console something like this \n 
+            npm run create-user -- --username testUsername --name Test --email test@mail.com --password qwerty \n
+            Or npm run create-user -- --credsUser ../testUserCreds.json 
+            `.green);
             process.exit();
             return
         }

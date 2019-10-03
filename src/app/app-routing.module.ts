@@ -84,7 +84,8 @@ const routes: Routes = [
         resolve: {
           draftMessage: GetDraftMessagesResolverService,
           chatMessages: GetChatResolverService
-         }
+        },
+        //runGuardsAndResolvers: 'always'
       },
       {
         path: 'events',

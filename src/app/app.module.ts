@@ -23,7 +23,7 @@ import { HomeComponent } from './components/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { InputEmailComponent } from './shared/form-controls/input-email/input-email.component';
 import { InputPasswordComponent } from './shared/form-controls/input-password/input-password.component';
-import { MatTooltipModule, MatButtonModule, MatCheckboxModule, MatInputModule } from '@angular/material';
+import { MatTooltipModule, MatButtonModule, MatCheckboxModule, MatInputModule, MatBadgeModule } from '@angular/material';
 import { MultiLineInputComponent } from './shared/components/multi-line-input/multi-line-input.component';
 import { NewEventComponent } from './components/new-event/new-event.component';
 import { NewEventLeavePopupComponent } from './components/new-event/new-event-leave-popup/new-event-leave-popup.component';
@@ -31,6 +31,7 @@ import { InputSearchComponent} from './shared/form-controls/input-search/input-s
 import { InputTextComponent } from './shared/form-controls/input-text/input-text.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { MainComponent } from './components/main/main.component';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material';
 import { NgModule } from '@angular/core';
 import { PopupComponent } from './shared/components/popup/popup.component';
@@ -62,6 +63,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { NewMessageToastComponent } from './shared/toasts/components/new-message-toast/new-message-toast.component';
 import { CounterComponent } from './shared/components/counter/counter.component';
+import { MessageTextComponent } from './components/chats/chat-window/message-text/message-text.component';
 
 
 @NgModule({
@@ -120,7 +122,8 @@ import { CounterComponent } from './shared/components/counter/counter.component'
     ForgotPasswordComponent,
     ResetPasswordComponent,
     NewMessageToastComponent,
-    CounterComponent
+    CounterComponent,
+    MessageTextComponent
   ],
   imports: [
     BrowserModule,
@@ -133,9 +136,11 @@ import { CounterComponent } from './shared/components/counter/counter.component'
     MatButtonModule,
     MatCheckboxModule,
     MatInputModule,
+    MatBadgeModule,
     MatSnackBarModule,
     MatDatepickerModule,
     MatIconModule,
+    MatMenuModule,
     MatNativeDateModule,
     MatRadioModule,
     MatSelectModule,
