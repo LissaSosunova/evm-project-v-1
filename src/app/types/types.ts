@@ -192,7 +192,7 @@ export module types {
     chatID: string;
     authorId: string;
     text: string;
-    users: string[];
+    users?: string[];
     edited: boolean;
     unread?: string[];
     date: number; // timeStamp (to UTC)
@@ -266,23 +266,61 @@ export interface UserIsTyping {
   typing: boolean;
 }
 
-  export type StepState = 'login' | 'registration' | 'about' | 'main';
+export interface DraftMessageFromServer {
+  draftMessages: DraftMessage[];
+  _id: string;
+}
 
-  export enum ChatType {
-    PRIVATE_CHAT = 1,
-    GROUP_OR_EVENT_CHAT = 2,
-    BLOCKED_CHAT = 3,
-    DELETED_CHAT = 4
-  }
-  export enum ContactAction {
-    DELETE_CONTACT = 'delete contact',
-    REJECT_REQUEST = 'reject request',
-    DELETE_REQUEST = 'delete request'
-  }
+export interface Server200Response {
+  status: number;
+  message: string;
+}
 
-  export enum Defaults {
-    DEFAULT_AVATAR_URL = 'assets/img/default-profile-image.png',
-    QUERY_MESSAGES_AMOUNT = 20
-  }
+export interface PrivateChat {
+  draftMessages: DraftMessage[];
+  messages: Message[];
+  type: number;
+  users: UsersInChat[];
+  _id: string;
+}
+
+export interface UsersInChat {
+  email: string;
+  name: string;
+  username: string;
+  _id: string;
+}
+
+export interface LoginServerResponse {
+  success?: boolean;
+  access_token?: string;
+  token_key?: string;
+  message?: string;
+}
+
+export interface UploadAvatarResponse {
+  avatar: AvatarObject;
+  owner: string;
+}
+
+export type StepState = 'login' | 'registration' | 'about' | 'main';
+
+export enum ChatType {
+  PRIVATE_CHAT = 1,
+  GROUP_OR_EVENT_CHAT = 2,
+  BLOCKED_CHAT = 3,
+  DELETED_CHAT = 4
+}
+
+export enum ContactAction {
+  DELETE_CONTACT = 'delete contact',
+  REJECT_REQUEST = 'reject request',
+  DELETE_REQUEST = 'delete request'
+}
+
+export enum Defaults {
+  DEFAULT_AVATAR_URL = 'assets/img/default-profile-image.png',
+  QUERY_MESSAGES_AMOUNT = 20
+}
 
 }

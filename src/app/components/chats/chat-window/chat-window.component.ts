@@ -5,9 +5,10 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
-  HostListener
+  HostListener,
+  ChangeDetectorRef
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, NavigationStart, NavigationEnd } from "@angular/router";
 import { types } from "src/app/types/types";
 import { TransferService } from "src/app/services/transfer.service";
 import { DataService } from "src/app/services/data.service";
@@ -38,7 +39,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public blockedChats: Array<types.Chats> = [];
   public control: FormControl;
   public deletedChats: Array<types.Chats> = [];
-  public draftMessage: any[];
+  public draftMessage: types.DraftMessageFromServer;
   public groupChats: Array<types.Chats> = [];
   public editMessageMode: boolean = false;
   public inputMes: string;
@@ -64,16 +65,16 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   private arrowDownElement: HTMLDivElement;
   @ViewChild('menuBlock', { static: true }) private menuBlock: ElementRef;
   private menuBlockElement: HTMLDivElement;
-
   private chats: types.ChatData;
   private chatId: string;
-
   private messagesShift: number = 0;
   private userObj: { chatIdCurr: string; userId: string; token: string };
   private isUserTyping: boolean = false;
   private unsubscribe$: Subject<void> = new Subject<void>();
   private user$: Observable<types.User>;
   private editedMessage: types.Message;
+  private sidebarExpand: boolean;
+  private pattern: RegExp = /[^\s]/;
 
   constructor(
     private transferService: TransferService,
@@ -88,7 +89,17 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.init();
+    let notFirstInit: boolean = false;
+    this.route.params.subscribe(param => {
+      if (notFirstInit) {
+        this.destroy();
+      }
+      this.init();
+      notFirstInit = true;
+      setTimeout(() => {
+        this.afterViewInit();
+      });
+    });
   }
 
   ngAfterViewInit() {
@@ -134,13 +145,17 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public clickOutsideMenuBlock(): void {
     this.menuBlockElement.classList.add('hidden');
-    this.pageMaskService.close();
+    if (!this.sidebarExpand) {
+      this.pageMaskService.close();
+    }
   }
 
   public completeEditing(): void {
     if (this.user.username !== this.editedMessage.authorId) {
       return;
     }
+    this.inputMes = this.inputMes.replace(/\n/g, '<br/>');
+    this.inputMes = this.inputMes.replace('<br/><br/>', '');
     const editedMessageObj = {
       text: this.inputMes,
       chatId: this.editedMessage.chatID,
@@ -174,7 +189,8 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public editMessage(message: types.Message): void {
     this.editMessageMode = true;
-    this.control.setValue(message.text);
+    const text: string = message.text.replace(/<br\/>/g, '\n');
+    this.control.setValue(text);
     this.editedMessage = message;
     const documentWidth: number = document.documentElement.clientWidth;
     if (documentWidth < 380) {
@@ -186,10 +202,16 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public onEnterKey(): void {
-    this.sendMessage();
+    if (this.control.valid && !this.editMessageMode) {
+      this.sendMessage();
+    } else if (this.control.valid && this.editMessageMode) {
+      this.completeEditing();
+    }
   }
 
   public sendMessage(): void {
+    this.inputMes = this.inputMes.replace(/\n/g, '<br/>');
+    this.inputMes = this.inputMes.replace('<br/><br/>', '');
     this.isMessages = true;
     const date = this.dateTransformService.nowUTC();
     const message: types.Message = {
@@ -277,6 +299,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private init(): void {
+    this.unsubscribe$ = new Subject<void>();
     this.user$ = this.store.pipe(select('user'));
     this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
@@ -305,6 +328,12 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
         new userAction.UserReadAllMessages({ unread: 0, chatId: this.chatId })
       );
     }
+    this.transferService.dataObj$.pipe(takeUntil(this.unsubscribe$))
+    .subscribe(res => {
+      if (res.toggleSidebarState !== undefined) {
+        this.sidebarExpand = res.toggleSidebarState;
+      }
+    });
   }
 
   private deleteDraftMessage(): void {
@@ -323,8 +352,8 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       this.changeChatWindowHeigth();
     });
     let draftMessageItem: types.DraftMessage;
-    if (this.draftMessage && this.draftMessage.length > 0) {
-      draftMessageItem = this.draftMessage[0].draftMessages.find(item => {
+    if (this.draftMessage) {
+      draftMessageItem = this.draftMessage.draftMessages.find(item => {
         return item.authorId === this.user.username;
       });
     }
@@ -333,11 +362,11 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.isDraftMessageExist) {
       this.control = new FormControl(
         draftMessageItem.text,
-        Validators.required
+        [Validators.required, Validators.pattern(this.pattern)]
       );
       this.isDraftMessageSent = true;
     } else {
-      this.control = new FormControl('', Validators.required);
+      this.control = new FormControl('', [Validators.required, Validators.pattern(this.pattern)]);
     }
 
     this.control.valueChanges
@@ -354,6 +383,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe(message => {
+        message = message.replace(/\n\n\n/, '');
         const userIsTypingObj: types.UserIsTyping = {
           userId: this.user.username,
           name: this.user.name,
@@ -412,7 +442,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
         String(queryMessagesAmount),
         String(messagesShift)
       )
-      .subscribe(response => {
+      .subscribe((response: types.Message[]) => {
         this.isLoadingMessages = false;
         if (response && response.length < 20) {
           this.moreMessages = false;

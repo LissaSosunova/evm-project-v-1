@@ -4,6 +4,7 @@ import { types } from 'src/app/types/types';
 import { DataService } from 'src/app/services/data.service';
 import { NgForm } from '@angular/forms';
 import { SessionStorageService } from 'src/app/services/session.storage.service';
+import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 
 @Component({
   selector: 'app-login-page',
@@ -25,7 +26,8 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private data: DataService,
-              private sessionStorageService: SessionStorageService) {
+              private sessionStorageService: SessionStorageService,
+              private toastService: ToastService) {
    }
 
 
@@ -59,6 +61,10 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
           this.errorMessage = data.message;
           this.isPendingResponse = false;
         }
+      },
+      err => {
+        this.toastService.openToastFail('Server error');
+        this.isPendingResponse = false;
       }
     );
   }

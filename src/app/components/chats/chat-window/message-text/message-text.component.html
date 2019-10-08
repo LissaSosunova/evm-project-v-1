@@ -1,0 +1,4 @@
+<span *ngFor="let paragraph of text; let i = index">
+  <span>{{paragraph}}</span>
+  <br *ngIf="i !== text.length - 1" />
+</span>

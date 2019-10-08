@@ -19,8 +19,9 @@ import {
 export class PopupDetailsComponent implements OnInit {
   public popup: PopupControls;
   public popupConfig: types.FormPopupConfig;
+  public deleteChat: boolean;
   @Input() public actionName: string;
-  @Output() public submit: EventEmitter<void> = new EventEmitter<void>();
+  @Output() public submit: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(
     private popupControlsService: PopupControlsService
@@ -54,6 +55,6 @@ export class PopupDetailsComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    this.submit.emit();
+    this.submit.emit(this.deleteChat);
   }
 }

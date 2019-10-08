@@ -20,19 +20,23 @@
                                         <span class="date"> {{item.date | date: 'dd.MM.yy'}}, ({{item.date | date: 'HH:mm:ss'}}): &nbsp;&nbsp;&nbsp;</span>
                                         <span class="edited-message"
                                             *ngIf="item.edited">Edited</span>
-                                        <span class="text">{{item.text}}</span>
+                                        <span class="text">
+                                            <app-message-text [textToParse]="item.text"></app-message-text>
+                                        </span> 
                                     </div>
-                                    <div>
-                                        <span class="material-icons edit-btn"
-                                            *ngIf="item.authorId === user.username"
-                                            (click)="editMessage(item)">
-                                            edit
-                                        </span>
-                                        <span class="material-icons delete-btn"
-                                            *ngIf="item.authorId === user.username"
-                                            (click)="deleteMessage(item)">
-                                            delete
-                                        </span>
+                                    <div *ngIf="item.authorId === user.username">
+                                        <span class="material-icons menu-btn" 
+                                                [matMenuTriggerFor]="menu">more_vert</span>
+                                        <mat-menu #menu="matMenu">
+                                            <span class="material-icons edit-btn"
+                                                (click)="editMessage(item)">
+                                                edit
+                                            </span>
+                                            <span class="material-icons delete-btn"
+                                                (click)="deleteMessage(item)">
+                                                delete
+                                            </span>
+                                        </mat-menu>
                                     </div>
                                     
                                 </div>

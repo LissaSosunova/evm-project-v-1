@@ -7,4 +7,8 @@
   <div id="popupConteiner">
     Are you sure you want to {{actionName}}?
   </div>
+  <div class="delete-chat" *ngIf="actionName === 'delete contact'">
+    <mat-checkbox [(ngModel)]="deleteChat"></mat-checkbox>
+    Delete also chat
+  </div>
 </app-popup>

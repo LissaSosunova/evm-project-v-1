@@ -45,11 +45,14 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
       this.showPlaceholder = true;
     } else if (this.inputElement && changes.currMes.currentValue !== '' && !changes.currMes.isFirstChange()) {
       this.showPlaceholder = false;
+    } else if (this.inputElement && changes.currMes.currentValue === '' && !changes.currMes.isFirstChange()) {
+      this.currText = '';
     }
   }
 
   public onChangeInput(event: string): void {
     this.currText = event;
+    this.currText = this.currText.replace(/\n\n\n/, '');
     if (this.onTouched) {
       this.onTouched();
     }
@@ -71,6 +74,10 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
     } else if (event.key === 'Enter') {
       event.preventDefault();
       this.enterKey.emit();
+      this.isInputFocused = true;
+      setTimeout(() => {
+        this.inputElement.focus();
+      });
     }
   }
 

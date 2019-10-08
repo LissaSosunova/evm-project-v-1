@@ -24,7 +24,7 @@ router.get('/get_draft_message/:id/', async function (req, res, next){
     }
   try {
     const result = await datareader(Chat, queryParams, 'findElementMatch');
-    res.json(result);
+    res.json(result[0]);
   } catch (err) {
     res.sendStatus(500);
   }

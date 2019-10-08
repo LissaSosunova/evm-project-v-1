@@ -61,14 +61,17 @@ export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.data.setReg(this.params).subscribe(
       data => {
-        const response = JSON.parse(data);
-        if (response.name === 'MongoError' || response.statuscode === 409) {
+        const response = data;
+        if (response.message === 'MongoError' || response.status === 409) {
           this.errorMes = 'User with such username or e-mail is already exists. Try another username or e-mail';
         } else {
           this.toastService.openToastSuccess('Check your email to complete registration', {duration: 6000});
           this.errorMes = '';
         }
         this.isPendingResponse = false;
+      },
+      err => {
+        this.toastService.openToastFail('Server error');
       }
     );
   }

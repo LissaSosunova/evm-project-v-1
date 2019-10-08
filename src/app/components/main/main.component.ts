@@ -62,6 +62,7 @@ export class MainComponent implements OnInit, OnDestroy {
       });
     this.socketIoService.on(SocketIO.events.message_out_of_chat).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe(message => {
+        const messageText: string = message.text.replace(/<br\/>/g, '\n');
         const contactOfIncomingMessage: types.Contact = this.user.contacts.find(contact => contact.id === message.authorId);
         if (!contactOfIncomingMessage) {
           // тот случай, когда нет в контактах автора входящего сообщения
@@ -70,7 +71,7 @@ export class MainComponent implements OnInit, OnDestroy {
         const toastMessageObj: types.ContactForToastMessage = {
           text: `New message from ${contactOfIncomingMessage.name}`,
           avatar: contactOfIncomingMessage.avatar.url,
-          message: message.text,
+          message: messageText,
           userId: message.authorId,
           chatId: message.chatID
         };
