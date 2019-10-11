@@ -5,10 +5,9 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
-  HostListener,
-  ChangeDetectorRef
+  HostListener
 } from "@angular/core";
-import { ActivatedRoute, Router, NavigationStart, NavigationEnd } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { types } from "src/app/types/types";
 import { TransferService } from "src/app/services/transfer.service";
 import { DataService } from "src/app/services/data.service";
@@ -201,6 +200,10 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  public onChatIdEmit(chatId: string): void {
+    this.clickOutsideMenuBlock();
+  }
+
   public onEnterKey(): void {
     if (this.control.valid && !this.editMessageMode) {
       this.sendMessage();
@@ -304,7 +307,6 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
     });
-    this.user = this.transferService.dataGet('userData');
     this.chatId = this.route.snapshot.params.chatId;
     this.subscribeNewMessagesInit();
     this.subscribeDeleteMessagesInit();

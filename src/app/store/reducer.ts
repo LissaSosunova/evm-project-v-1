@@ -109,6 +109,11 @@ export function userReducer(state: types.User = userInitState, action: any): typ
       updateState.chats.push(newChat);
       return updateState;
     }
+    case userAction.ActionTypes.NEW_EVENT: {
+      const newEvent: types.EventDb = action.payload;
+      updateState.events.push(newEvent);
+      return updateState;
+    }
     default:
       return state;
     }

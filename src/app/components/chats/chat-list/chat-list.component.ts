@@ -25,9 +25,9 @@ import * as userAction from '../../../store/actions';
   styleUrls: ['./chat-list.component.scss']
 })
 export class ChatListComponent implements OnInit, OnDestroy {
-  @Input() flag: string;
-  @Input() size: string;
-  @Output() id: EventEmitter<string> = new EventEmitter<string>();
+  @Input() public flag: string;
+  @Input() public size: string;
+  @Output() public chatIdEmit: EventEmitter<string> = new EventEmitter<string>();
   public blockedChats: Array<types.Chats> = [];
   public chatId: string;
   public deletedChats: Array<types.Chats>;
@@ -57,6 +57,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
 
   public goToChat(chatId): void {
     this.chatId = chatId;
+    this.chatIdEmit.emit(chatId);
     this.router.navigate([`/main/chat-window/`, chatId], {relativeTo: this.route.parent});
   }
   public getChatList(): void {

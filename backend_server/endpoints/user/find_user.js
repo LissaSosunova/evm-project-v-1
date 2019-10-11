@@ -6,18 +6,7 @@ const jwt = require('jwt-simple');
 // импортируем модель пользователя и евента
 const User = require('../../models/user');
 const datareader = require('../../modules/datareader');
-
-// импортируем файл конфигурации (баловство, конечно, надо генерировать это на лету и хранить где-нибудь)
-const config = require('../../config');
-
-class FindContact {
-    constructor(FoundContact) {
-      this.id = FoundContact.username;
-      this.email = FoundContact.email;
-      this.name = FoundContact.name;
-      this.avatar = FoundContact.avatar;
-    }
-  }
+const FindContact = require('../../modules/findContact');
 
   router.post('/find_user', async function (req, res, next) {
     let auth;

@@ -6,7 +6,6 @@ const port = process.env.PORT || config.backendPort;
 const $login = require('./endpoints/login/login');
 const $account = require('./endpoints/user/account');
 const $event = require('./endpoints/events/event');
-const $newEvent = require('./endpoints/events/new_event');
 const $changeStatus = require('./endpoints/events/change_status');
 const $postUser = require('./endpoints/registration/post_user');
 const $getUser = require('./endpoints/user/get_user');
@@ -45,9 +44,6 @@ app.route('/profile')
 
 app.route('/event/:id/')
   .get($event);
-
-app.route('/new_event')
-  .post($newEvent);
 
 app.route('/user')
   .post($postUser);

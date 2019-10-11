@@ -110,6 +110,7 @@ export module types {
     members: eventMembers;
     additional: string;
     notification?: eventNotification;
+    authorId: string;
   }
 
   export interface EventDateDb {
@@ -156,7 +157,7 @@ export module types {
   }
 
   export interface eventMembers {
-    invited: string[]
+    invited: string[];
   }
 
   export interface DraftMessage {

@@ -34,6 +34,7 @@
           [ngModel]="option.isChecked"
           (ngModelChange)="select(option, $event)"
           ></mat-checkbox>
+          <span class="avatar" *ngIf="!!option?.options?.avatar"><img src="{{option.options.avatar}}"></span>
           <span class="app-dropdown__text-item">{{option.text}}</span>
         </label>
       </div>    

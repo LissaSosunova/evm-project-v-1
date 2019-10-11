@@ -56,28 +56,14 @@ export class MainComponent implements OnInit, OnDestroy {
       token: token
     };
     this.socketIoService.socketEmit(SocketIO.events.user, dataObj);
-    this.socketIoService.on(SocketIO.events.chats_model).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
-      .subscribe(message => {
-        this.store.dispatch(new userAction.UpdateChatList(message));
-      });
-    this.socketIoService.on(SocketIO.events.message_out_of_chat).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
-      .subscribe(message => {
-        const messageText: string = message.text.replace(/<br\/>/g, '\n');
-        const contactOfIncomingMessage: types.Contact = this.user.contacts.find(contact => contact.id === message.authorId);
-        if (!contactOfIncomingMessage) {
-          // тот случай, когда нет в контактах автора входящего сообщения
-          // шлём запрос на сервер, чтобы получить его имя и аватарку
-        }
-        const toastMessageObj: types.ContactForToastMessage = {
-          text: `New message from ${contactOfIncomingMessage.name}`,
-          avatar: contactOfIncomingMessage.avatar.url,
-          message: messageText,
-          userId: message.authorId,
-          chatId: message.chatID
-        };
-        this.toastService.openMessageToast(toastMessageObj, {duration: 5000});
-    });
-
+    this.chatsModelSubscribe();
+    this.messageOutOfChatSubscribe();
+    this.addUserRequestSubscribe();
+    this.subscribeDeleteMessagesInit();
+    this.confirmUserRequestSubscribe();
+    this.rejectRequestSubscribe();
+    this.deleteContactSubscribe();
+    this.subscribeNewEvents();
     this.user$ = this.store.pipe(select('user'));
     this.user$.subscribe(user => {
       this.user = user;
@@ -86,40 +72,6 @@ export class MainComponent implements OnInit, OnDestroy {
         allUnredMessagesAmount = allUnredMessagesAmount + chatItem.unreadMes;
       });
       this.transferService.setDataObs({allUnredMessagesAmount});
-    });
-    this.subscribeDeleteMessagesInit();
-    let contactsAwaiting: number = 0;
-    this.user.contacts.forEach(contact => {
-      if (contact.status === 2) {
-        contactsAwaiting++;
-      }
-    });
-    this.transferService.setDataObs({name: 'awaitingContacts', data: contactsAwaiting});
-
-    this.socketIoService.on(SocketIO.events.add_user_request).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
-    .subscribe((response: types.Contact) => {
-      this.toastService.openToastSuccess('You have recieved a new request in adding contact!');
-      contactsAwaiting++;
-      this.transferService.setDataObs({name: 'awaitingContacts', data: contactsAwaiting});
-      response.avatar = this.avatarService.parseAvatar(response.avatar);
-      this.store.dispatch(new userAction.AddUser(response));
-    });
-
-    this.socketIoService.on(SocketIO.events.confirm_user_request).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
-    .subscribe((response: {userId: string}) => {
-      this.store.dispatch(new userAction.ConfirmUser(response));
-      const newUser: types.Contact = this.user.contacts.find(contact => contact.id === response.userId);
-      this.toastService.openToastSuccess(`User ${newUser.name} has confirmed your request!`);
-    });
-
-    this.socketIoService.on(SocketIO.events.reject_request).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
-    .subscribe((response: {userId: string}) => {
-      this.store.dispatch(new userAction.DeleteRequest(response));
-    });
-
-    this.socketIoService.on(SocketIO.events.delete_contact).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
-    .subscribe((response: {userId: string; chatId: string}) => {
-      this.store.dispatch(new userAction.DeleteUser(response));
     });
   }
 
@@ -149,6 +101,75 @@ export class MainComponent implements OnInit, OnDestroy {
     });
   }
 
+  private addUserRequestSubscribe(): void {
+    let contactsAwaiting: number = 0;
+    this.user.contacts.forEach(contact => {
+      if (contact.status === 2) {
+        contactsAwaiting++;
+      }
+    });
+    this.transferService.setDataObs({name: 'awaitingContacts', data: contactsAwaiting});
+
+    this.socketIoService.on(SocketIO.events.add_user_request).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: types.Contact) => {
+      this.toastService.openToastSuccess('You have recieved a new request in adding contact!');
+      contactsAwaiting++;
+      this.transferService.setDataObs({name: 'awaitingContacts', data: contactsAwaiting});
+      response.avatar = this.avatarService.parseAvatar(response.avatar);
+      this.store.dispatch(new userAction.AddUser(response));
+    });
+  }
+
+  private chatsModelSubscribe(): void {
+    this.socketIoService.on(SocketIO.events.chats_model).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe(message => {
+      this.store.dispatch(new userAction.UpdateChatList(message));
+    });
+  }
+
+  private confirmUserRequestSubscribe(): void {
+    this.socketIoService.on(SocketIO.events.confirm_user_request).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: {userId: string}) => {
+      this.store.dispatch(new userAction.ConfirmUser(response));
+      const newUser: types.Contact = this.user.contacts.find(contact => contact.id === response.userId);
+      this.toastService.openToastSuccess(`User ${newUser.name} has confirmed your request!`);
+    });
+  }
+
+  private deleteContactSubscribe(): void {
+    this.socketIoService.on(SocketIO.events.delete_contact).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: {userId: string; chatId: string}) => {
+      this.store.dispatch(new userAction.DeleteUser(response));
+    });
+  }
+
+  private messageOutOfChatSubscribe(): void {
+    this.socketIoService.on(SocketIO.events.message_out_of_chat).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+      .subscribe(message => {
+        const messageText: string = message.text.replace(/<br\/>/g, '\n');
+        const contactOfIncomingMessage: types.Contact = this.user.contacts.find(contact => contact.id === message.authorId);
+        if (!contactOfIncomingMessage) {
+          // тот случай, когда нет в контактах автора входящего сообщения
+          // шлём запрос на сервер, чтобы получить его имя и аватарку
+        }
+        const toastMessageObj: types.ContactForToastMessage = {
+          text: `New message from ${contactOfIncomingMessage.name}`,
+          avatar: contactOfIncomingMessage.avatar.url,
+          message: messageText,
+          userId: message.authorId,
+          chatId: message.chatID
+        };
+        this.toastService.openMessageToast(toastMessageObj, {duration: 5000});
+    });
+  }
+
+  private rejectRequestSubscribe(): void {
+    this.socketIoService.on(SocketIO.events.reject_request).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: {userId: string}) => {
+      this.store.dispatch(new userAction.DeleteRequest(response));
+    });
+  }
+
    private subscribeDeleteMessagesInit(): void {
     this.socketIoService.on(SocketIO.events.delete_message_out_of_chat)
       .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
@@ -158,6 +179,15 @@ export class MainComponent implements OnInit, OnDestroy {
           this.store.dispatch(new userAction.DeleteMessageUpdate(message));
         }
       });
+  }
+
+  private subscribeNewEvents(): void {
+    this.socketIoService.on(SocketIO.events.new_event)
+    .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((event: types.EventDb) => {
+      this.store.dispatch(new userAction.NewEvent(event));
+      this.toastService.openToastSuccess(`You are invited to new event!`);
+    });
   }
 
 }

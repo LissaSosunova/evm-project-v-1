@@ -69,10 +69,7 @@ const routes: Routes = [
       },
       {
         path: 'contacts',
-        component: ContactsComponent,
-        resolve: {
-          userData: GetDataUserResolverService
-        }
+        component: ContactsComponent
       },
       {
         path: 'chats',
@@ -85,7 +82,6 @@ const routes: Routes = [
           draftMessage: GetDraftMessagesResolverService,
           chatMessages: GetChatResolverService
         },
-        //runGuardsAndResolvers: 'always'
       },
       {
         path: 'events',
