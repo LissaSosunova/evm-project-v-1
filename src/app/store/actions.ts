@@ -12,7 +12,8 @@ export enum ActionTypes {
   CONFIRM_USER = 'confirm_user',
   DELETE_REQUEST = 'delete_request',
   DELETE_CONTACT = 'delete_contact',
-  ADD_CHAT = 'add_chat'
+  ADD_CHAT = 'add_chat',
+  NEW_EVENT = 'new_event'
 }
 
 export class UpdateChatList implements Action {
@@ -73,5 +74,11 @@ export class AddChat implements Action {
   public readonly type = ActionTypes.ADD_CHAT;
 
   constructor(public payload: types.Chats) {}
+}
+
+export class NewEvent implements Action {
+  public readonly type = ActionTypes.NEW_EVENT;
+
+  constructor(public payload: types.EventDb) {}
 
 }

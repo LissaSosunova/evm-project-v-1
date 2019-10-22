@@ -9,7 +9,7 @@ import { CheckboxDropdownOption } from '../../types/checkbox-dropdow';
 export class CheckboxDropdownComponent implements OnInit, OnChanges {
 
   @Input() public label: string;
-  @Input() public options: CheckboxDropdownOption[];
+  @Input() public options: CheckboxDropdownOption<{avatar: string}>[];
 
   // do not display arrow after filter
   @Input() public hideArrow: boolean;
@@ -21,7 +21,7 @@ export class CheckboxDropdownComponent implements OnInit, OnChanges {
   @Input() public checked: string[];
   @Input() public disabled: boolean = false;
 
-  @Output() public onSelect: EventEmitter<CheckboxDropdownOption[]> = new EventEmitter<CheckboxDropdownOption[]>();
+  @Output() public onSelect: EventEmitter<CheckboxDropdownOption<{avatar: string}>[]> = new EventEmitter<CheckboxDropdownOption<{avatar: string}>[]>();
   @Output() public clickedOutside: EventEmitter<any> = new EventEmitter<any>();
   public isPanelShown: boolean = false;
   public filterQuery: string;
@@ -60,21 +60,21 @@ export class CheckboxDropdownComponent implements OnInit, OnChanges {
     }
     const selectCount = this.options.reduce((prev, curr) => {
       if (curr.isChecked) {
-        return prev + 1
+        return prev + 1;
       }
       return prev;
     }, 0);
 
     if (selectCount === 0) {
-      return 'Select'
+      return 'Select';
     } else {
       return `${selectCount} selected`;
     }
   }
 
-  public select(option: CheckboxDropdownOption, event?: boolean) {
+  public select(option: CheckboxDropdownOption<{avatar: string}>, event?: boolean) {
     setTimeout(() => {
-      let optionIdsArr: CheckboxDropdownOption[] = [];
+      let optionIdsArr: CheckboxDropdownOption<{avatar: string}>[] = [];
       if (option.isChecked) {
         option.isChecked = false;
       } else {

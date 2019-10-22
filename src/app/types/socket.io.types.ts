@@ -21,6 +21,8 @@ export module SocketIO {
         confirm_user_request = 'confirm_user_request',
         delete_contact = 'delete_contact',
         reject_request = 'reject_request',
-        delete_request = 'delete_request'
+        delete_request = 'delete_request',
+        new_event = 'new_event',
+        new_event_confirm = 'new_event_confirm'
     }
 }

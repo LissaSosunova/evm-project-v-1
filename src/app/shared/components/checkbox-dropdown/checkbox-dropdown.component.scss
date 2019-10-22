@@ -50,7 +50,7 @@
   
     &__option {
       cursor: pointer;
-      min-height: 25px;
+      min-height: 36px;
       padding: 10px;
       font-weight: 600;
       &:hover {
@@ -84,3 +84,12 @@
   .input-wrap {
       margin: 20px 10px 10px;
   }
+
+  .avatar {
+    margin: 0 10px;
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+  }
+}

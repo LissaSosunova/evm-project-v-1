@@ -5,7 +5,7 @@
                 col-sm-8
                 col-md-8
                 col-lg-8">
-            <app-section-spinner [loading]="isLoadingMessages" [position]="'absolute'"></app-section-spinner>
+            <app-section-spinner [loading]="isLoadingMessages" [diameter]="'100'" [position]="'absolute'"></app-section-spinner>
             <div class="message-box" (scroll)="scrollChatWindow($event)" #messageBox >
                 
                 <section [ngSwitch]="isMessages">
@@ -82,7 +82,7 @@
                             <i class="material-icons">add</i>
                         </button>
                     </div>
-                    <app-chat-list flag='private'></app-chat-list>
+                    <app-chat-list flag='private' (chatIdEmit)="onChatIdEmit($event)"></app-chat-list>
                 </div>
             </div>
                 <div class="col-xs-12
@@ -100,7 +100,7 @@
                             <i class="material-icons">add</i>
                         </button>
                     </div>
-                    <app-chat-list flag='group'></app-chat-list>
+                    <app-chat-list flag='group' (chatIdEmit)="onChatIdEmit($event)"></app-chat-list>
                         
                 </div>
             </div>

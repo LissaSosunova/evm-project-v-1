@@ -44,7 +44,7 @@ function validateEmail(email) {
             console.error(`Some input params are missed`.red);
             console.info(`To create user type in console something like this \n 
             npm run create-user -- --username testUsername --name Test --email test@mail.com --password qwerty \n
-            Or npm run create-user -- --credsUser ../testUserCreds.json 
+            Or npm run create-user -- --credsUser ./testUserCreds.json 
             `.green);
             process.exit();
             return

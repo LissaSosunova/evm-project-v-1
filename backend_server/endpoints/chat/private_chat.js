@@ -6,16 +6,6 @@ const datareader = require('../../modules/datareader');
 const url = require('url');
 const queryString = require('querystring');
 
-class ChatData {
-  constructor(chat) {
-    this.id = chat._id;
-    this.users = chat.users;
-    this.email = chat.email;
-    this.messages = chat.messages;
-    this.type = chat.type;
-  }
-}
-
 router.get('/private_chat/:id/', async function (req, res, next){
     if(!req.headers['authorization']) {
       return res.sendStatus(401)

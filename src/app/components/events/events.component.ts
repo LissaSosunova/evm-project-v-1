@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Store, select } from '@ngrx/store';
+import { types } from 'src/app/types/types';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-events',
@@ -7,9 +10,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EventsComponent implements OnInit {
 
-  constructor() { }
+  public user$: Observable<types.User>;
+
+  constructor(private store: Store<types.User>) { }
 
   ngOnInit() {
+    this.user$ = this.store.pipe(select('user'));
   }
 
 }

@@ -1,14 +1,17 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { NewEventLeavePopupComponent } from './new-event-leave-popup/new-event-leave-popup.component';
 import { types } from 'src/app/types/types';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 import { TransferService } from 'src/app/services/transfer.service';
 import { CheckboxDropdownOption } from 'src/app/shared/types/checkbox-dropdow';
 import { NgForm } from '@angular/forms';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { DateTransformService } from '../../services/date-transform.service';
 import { DataService } from '../../services/data.service';
+import { SocketIoService } from 'src/app/services/socket.io.service';
+import { SocketIO } from 'src/app/types/socket.io.types';
+import { select, Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-new-event',
@@ -27,7 +30,7 @@ export class NewEventComponent implements OnInit, OnDestroy {
     types.dateTypeEvent.EXACT_DATE_WITH_TIME
   ];
   public dateTypesForTemplate: typeof types.dateTypeEvent;
-  public contactsForDropDown: CheckboxDropdownOption[];
+  public contactsForDropDown: CheckboxDropdownOption<{avatar: string}>[];
   public hours: {label: string, value: number}[] = [];
   public minutes: {label: string, value: number}[] = [
     {label: '00', value: 0},
@@ -39,28 +42,38 @@ export class NewEventComponent implements OnInit, OnDestroy {
 
   @ViewChild('eventForm', {static: true}) private eventForm: NgForm;
 
+  private user$: Observable<types.User>;
   private unsubscribe$: Subject<void> = new Subject();
 
   constructor(private toastService: ToastService,
               private transferService: TransferService,
               private dateTransformService: DateTransformService,
-              private dataService: DataService) { }
+              private socketIOService: SocketIoService,
+              private dataService: DataService,
+              private store: Store<types.User>) { }
 
   ngOnInit() {
-    this.user = this.transferService.dataGet('userData');
+    this.user$ = this.store.pipe(select('user'));
+    this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
+      this.user = user;
+      this.contactsForDropDown = this.user.contacts.map(contact => {
+        return {
+          id: contact.id,
+          text: contact.name,
+          isChecked: false,
+          options: {
+            avatar: contact.avatar.url
+          }
+        };
+      });
+    });
     this.eventForm.valueChanges
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(form => {
             this.openConfirmPopup = Object.keys(form).some(key => !!form[key]);
           });
-    this.contactsForDropDown = this.user.contacts.map(contact => {
-      return {
-        id: contact.id,
-        text: contact.name,
-        isChecked: false
-      };
-    });
     this.initEventModel();
+    this.initNewEventConfirm();
   }
 
   ngOnDestroy () {
@@ -77,21 +90,13 @@ export class NewEventComponent implements OnInit, OnDestroy {
       place: this.event.place,
       members: this.event.members,
       additional: this.event.additional,
-      date: this.dateToUTC(this.event.date)
+      date: this.dateToUTC(this.event.date),
+      authorId: this.user.username
     };
-    this.dataService.saveEvent(this.eventToDb).subscribe(response => {
-      if (response.status === 200) {
-        this.toastService.openToastSuccess('New event was successfully saved');
-        this.openConfirmPopup = false;
-        this.user.events.push(this.eventToDb);
-        this.transferService.dataSet({name: 'userData', data: this.user});
-      } else {
-        this.toastService.openToastFail('Server error');
-      }
-    });
+    this.socketIOService.socketEmit(SocketIO.events.new_event, this.eventToDb);
   }
 
-  public selectedContacts(selected: CheckboxDropdownOption[]): void {
+  public selectedContacts(selected: CheckboxDropdownOption<{avatar: string}>[]): void {
     const selectedUserIds: string[] = selected.map(user => {
       return user.id;
     });
@@ -132,6 +137,20 @@ export class NewEventComponent implements OnInit, OnDestroy {
       };
       this.hours.push(obj);
     }
+  }
+
+  private initNewEventConfirm(): void {
+    this.socketIOService.on(SocketIO.events.new_event_confirm).pipe(takeUntil(this.unsubscribe$), distinctUntilChanged())
+    .subscribe((response: {message: string, eventId: string}) => {
+      this.toastService.openToastSuccess('New event was successfully saved');
+      this.openConfirmPopup = false;
+      this.user.events.push(this.eventToDb);
+      this.transferService.dataSet({name: 'userData', data: this.user});
+      this.eventToDb._id = response.eventId;
+    },
+    err => {
+      this.toastService.openToastFail('Server error');
+    });
   }
 
 }

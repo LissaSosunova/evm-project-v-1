@@ -10,22 +10,13 @@ const User = require('../../models/user');
 const datareader = require('../../modules/datareader');
 // импортируем файл конфигурации (баловство, конечно, надо генерировать это на лету и хранить где-нибудь)
 const config = require('../../config');
+const ContactData = require('../../modules/contactData');
 
 // Для контатов поле статуза имеет значение:
 // status == 1 -- ПОДТВЕРДИЛИ ДОБАВЛЕНИЕ,
 // status == 2 -- ЖДУТ ПОДТВЕРЖДЕНИЕ (от контакта, у которого в бд висит этот статус),
 // status == 3 - ПРИГЛАШЕННЫЕ, НО НЕ ПОДТВЕРДИЛИ (контакт ждет, когда подтвердят добавление)
 
-class ContactData {
-    constructor(user) {
-      this.id = user.username;
-      this.email = user.email;
-      this.name = user.name;
-      this.avatar = user.avatar;
-      this.private_chat = '0';
-      this.status = user.status;
-    }
-  }
 
 class UserData {
   constructor(user) {

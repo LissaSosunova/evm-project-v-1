@@ -1,7 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {OptionsInput} from 'fullcalendar';
 import { types } from 'src/app/types/types';
-import { TransferService } from 'src/app/services/transfer.service';
+import { Store, select } from '@ngrx/store';
+import { Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { CalendarComponent } from '../calendar/calendar';
 
 @Component({
   selector: 'app-event-calendar',
@@ -13,40 +16,54 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
 
   public calendarOptions: OptionsInput;
   public user: types.User;
+  private user$: Observable<types.User>;
+  private unsubscribe$: Subject<void> = new Subject();
+  @ViewChild('calendar', {static: true}) public calendar: CalendarComponent;
 
-  constructor(private transferService: TransferService) {}
+  constructor(private store: Store<types.User>) {}
 
   ngOnInit() {
-    this.user = this.transferService.dataGet('userData');
-    const events = this.user.events.map(event => {
-      if (event.date_type === types.dateTypeEvent.DIAPASON_OF_DATES) {
-        return {
-          id: event._id,
-          title: event.name,
-          start: this.getDateString(event.date.startDate),
-          end: this.getDateString(event.date.endDate)
-        };
-      } else if (event.date_type === types.dateTypeEvent.EXACT_DATE) {
-        return {
-          id: event._id,
-          title: event.name,
-          start: this.getDateString(event.date.startDate)
-        };
-      } else if (event.date_type === types.dateTypeEvent.DIAPASON_OF_DATES_WITH_TIME) {
-        return {
-          id: event._id,
-          title: event.name,
-          start: this.getDateStringWithTime(event.date.startDate),
-          end: this.getDateStringWithTime(event.date.endDate)
-        };
-      } else if (event.date_type === types.dateTypeEvent.EXACT_DATE_WITH_TIME) {
-        return {
-          id: event._id,
-          title: event.name,
-          start: this.getDateStringWithTime(event.date.startDate)
-        };
+    let init: boolean = true;
+    this.user$ = this.store.pipe(select('user'));
+    this.user$.pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe(user => {
+      this.user = user;
+      const event = this.mapEvents();
+      const newEvent = event[event.length - 1];
+      if (!init) {
+        this.calendar.renderEvent(newEvent);
       }
+      init = false;
     });
+    this.initCalendar();
+}
+
+ngOnDestroy() {
+  this.unsubscribe$.next();
+  this.unsubscribe$.complete();
+}
+
+  private getDateString(dateUTC: number): string {
+    const year = new Date(dateUTC).getFullYear();
+    let month = new Date(dateUTC).getMonth();
+    month++;
+    let monthValue;
+    let dayValue;
+    if (month < 10) {
+      monthValue = '0' + String(month);
+    } else {
+      monthValue = String(month);
+    }
+    const day = new Date(dateUTC).getDate();
+    if (day < 10) {
+      dayValue = '0' + String(day);
+    } else {
+      dayValue = String(day);
+    }
+    return `${year}-${monthValue}-${dayValue}`;
+  }
+
+  private initCalendar(): void {
     this.calendarOptions = {
       height: 455,
       fixedWeekCount : false,
@@ -57,9 +74,9 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
         center: 'title',
         right: 'today prev,next'
       },
-      events: events,
+      events: this.mapEvents(),
       eventClick: event => {
-        console.log(event);
+        console.log(event); // тут будем переходить на ивент по клику
       }
       // [
       //  {
@@ -118,31 +135,6 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
       //  }
     // ]
     };
-}
-
-ngOnDestroy() {
-
-}
-
-  private getDateString(dateUTC: number): string {
-    const year = new Date(dateUTC).getFullYear();
-    let month = new Date(dateUTC).getMonth();
-    month++;
-    let monthValue;
-    let dayValue;
-    if (month < 10) {
-      monthValue = '0' + String(month);
-    } else {
-      monthValue = String(month);
-    }
-    const day = new Date(dateUTC).getDate();
-    if (day < 10) {
-      dayValue = '0' + String(day);
-    } else {
-      dayValue = String(day);
-    }
-      monthValue = '0' + String(month);
-    return `${year}-${monthValue}-${dayValue}`;
   }
 
   private getDateStringWithTime(dateUTC: number): string {
@@ -162,6 +154,39 @@ ngOnDestroy() {
       minutesValue = String(minutes);
     }
     return `${date}T${hourValue}:${minutesValue}:00`;
+  }
+
+  private mapEvents(): {id: string; title: string; start: string; end?: string}[] {
+    const events = this.user.events.map(event => {
+      if (event.date_type === types.dateTypeEvent.DIAPASON_OF_DATES) {
+        return {
+          id: event._id,
+          title: event.name,
+          start: this.getDateString(event.date.startDate),
+          end: this.getDateString(event.date.endDate)
+        };
+      } else if (event.date_type === types.dateTypeEvent.EXACT_DATE) {
+        return {
+          id: event._id,
+          title: event.name,
+          start: this.getDateString(event.date.startDate)
+        };
+      } else if (event.date_type === types.dateTypeEvent.DIAPASON_OF_DATES_WITH_TIME) {
+        return {
+          id: event._id,
+          title: event.name,
+          start: this.getDateStringWithTime(event.date.startDate),
+          end: this.getDateStringWithTime(event.date.endDate)
+        };
+      } else if (event.date_type === types.dateTypeEvent.EXACT_DATE_WITH_TIME) {
+        return {
+          id: event._id,
+          title: event.name,
+          start: this.getDateStringWithTime(event.date.startDate)
+        };
+      }
+    });
+    return events;
   }
 
 }

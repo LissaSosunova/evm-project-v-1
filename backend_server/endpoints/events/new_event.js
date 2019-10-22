@@ -1,3 +1,4 @@
+// Depricated!!! Moved to sockets
 const router = require('express').Router();
 const jwt = require('jwt-simple');
 const Event = require('../../models/event');
@@ -33,7 +34,6 @@ class EventData {
       ]
     };
     const event = new Event;
-    console.log('date', req.body.date);
     event.name = req.body.name;
     event.status = req.body.status;
     event.date_type = req.body.date_type;
@@ -46,7 +46,6 @@ class EventData {
       if (err) { res.json(err)}
       else {
         const createdEvent = new EventData(event);
-        console.log('createdEvent', createdEvent);
         datareader(User, params, 'findOne')
           .then((response) =>{
             User.updateOne({username: response.username}, {$push: {events:createdEvent}}, (e, d) => {
@@ -57,13 +56,15 @@ class EventData {
           .then((response) =>{
             if(event.members && event.members.invited && event.members.invited.length !== 0){
               event.notification.id = event._id;
-              event.members.invited.forEach(function (item) {
-                User.updateOne({username: item.username}, {$push: {events:createdEvent}}, (e, d) => {
+              event.members.invited.forEach(item => {
+                User.updateOne({username: item}, {$push: {events:createdEvent}}, (e, d) => {
                   if (e) throw new Error(e);
-                  else return response;
+                  else {
+                    return response;
+                  }
                 });
                 if(event.status === true){
-                  User.updateOne({username: item.username}, {$push: {notifications:event.notification}}, (e, d) => {
+                  User.updateOne({username: item}, {$push: {notifications:event.notification}}, (e, d) => {
                     if (e) throw new Error(e);
                     else return response;
                   });
@@ -72,7 +73,7 @@ class EventData {
             }
           })
           .then((response) => {
-            res.json({status: 200});
+            res.json({status: 200, message: "Saved", eventId: createdEvent.id});
           })
       }
     })

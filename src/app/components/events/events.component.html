@@ -1,3 +1,7 @@
-<p>
-  events works!
-</p>
+<ng-container *ngIf="user$ | async as user">
+  <ul class="event-list">
+    <li *ngFor="let event of user.events">
+      {{event.name}}
+    </li>
+  </ul>
+</ng-container>

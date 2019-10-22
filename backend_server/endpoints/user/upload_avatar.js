@@ -5,7 +5,6 @@ const fs = require('fs');
 const datareader = require('../../modules/datareader');
 const jwt = require('jwt-simple');
 const path = require('path');
-const config = require('../../config');
 let fileName;
 
 const storage = multer.diskStorage({
@@ -109,6 +108,13 @@ router.post('/upload_avatar', upload.single('image'), async function (req, res, 
 		await datareader(User, updateAvatarInContacts, 'updateMany');
 		await datareader(User, updateAvatarInChats, 'updateMany');
 		const savedAvatar = await datareader(User, queryParams, 'findElementMatch');
+		fs.readdir(path.join(__dirname,`../../uploads/${req.headers.userid}/avatars/`), (err, items) => {
+			items.forEach((file) => {
+				fs.unlinkSync(path.join(__dirname,`../../uploads/${req.headers.userid}/avatars/${file}`));
+			});
+			fs.rmdirSync(path.join(__dirname,`../../uploads/${req.headers.userid}/avatars/`));
+			fs.rmdirSync(path.join(__dirname,`../../uploads/${req.headers.userid}`));
+		});
 		res.json(savedAvatar[0].avatar);
 	} catch(err) {
 		console.error('/upload_avatar', err);
