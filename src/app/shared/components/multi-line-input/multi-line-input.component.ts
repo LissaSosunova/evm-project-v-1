@@ -16,7 +16,7 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
 
   public onChange: Function;
   public onTouched: Function;
-  public text: string;
+  @Input() text: string;
   public showPlaceholder: boolean = true;
   public currText: string;
   @Input() public placeholder: string; // optional

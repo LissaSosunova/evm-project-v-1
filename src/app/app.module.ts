@@ -64,6 +64,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { NewMessageToastComponent } from './shared/toasts/components/new-message-toast/new-message-toast.component';
 import { CounterComponent } from './shared/components/counter/counter.component';
 import { MessageTextComponent } from './components/chats/chat-window/message-text/message-text.component';
+import { TextFieldComponent } from './shared/form-controls/text-field/text-field.component';
 
 
 @NgModule({
@@ -123,7 +124,8 @@ import { MessageTextComponent } from './components/chats/chat-window/message-tex
     ResetPasswordComponent,
     NewMessageToastComponent,
     CounterComponent,
-    MessageTextComponent
+    MessageTextComponent,
+    TextFieldComponent
   ],
   imports: [
     BrowserModule,

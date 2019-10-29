@@ -3,7 +3,7 @@
             contenteditable="true"
             appContenteditableModel
             (changeInput)="onChangeInput($event)"
-            [text]="text"
+            [innerHtml]="text"
             #input
             (focus)="onFocus()"
             (blur)="onBlur()"

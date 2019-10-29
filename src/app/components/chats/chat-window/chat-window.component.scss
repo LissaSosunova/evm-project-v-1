@@ -179,7 +179,6 @@ ul {
 }
 .text {
   font-size: 14px;
-  font-style: italic; 
   color:  map-get($bg-color, 'darker');
 }
 
@@ -198,7 +197,7 @@ footer {
     bottom: 0;
     min-height: $footer-height;
     width: 85%;
-    padding: 16px 0;
+    padding: 16px;
     box-sizing: border-box;
     height: auto;
 }
@@ -224,7 +223,24 @@ form {
     }
   
   }
-
+  .btn-submit-emo{
+    margin-left: 10px;
+    background-color: #9bb00f;
+    font-size: 11px;
+    height: 36px;
+    width: 36px;
+    padding-right: 10px;
+    align-items: center;
+    transition: 0.5s;
+    border: 0px;
+    border-radius: 50%;
+    cursor: pointer;
+    &:hover, &:active{
+      background-color: #1c2001;
+      color: white;
+    }
+  
+  }
   .btn-submit-check, .btn-submit-clear {
     background-color: map-get($bg-color, 'dark');
     font-size: 11px;
@@ -285,8 +301,8 @@ form {
   }
 
   .buttons {
-    padding-left: 0;
-    padding-right: 0; 
+    padding: 10px 0px 10px 0px;
+    position: relative;
   }
 
   .chat-wrapper {
@@ -332,4 +348,26 @@ form {
     width: 100%;
   }
 
+}
+
+.smile {
+  font-size: 1.5em;
+  line-height: 1.6em;
+  padding: 5px;
+  display: inline;
+  &:hover {
+      cursor: pointer;
+  }
+}
+.smile-container {
+  position: absolute;
+  bottom: 80px;
+  right: 90px;
+  width: 350px;
+  background-color: map-get($bg-color, 'light-olive');
+  padding: 20px;
+  border: 1px solid map-get($bg-color, 'dark');
+}
+.invisible {
+  display: none;
 }

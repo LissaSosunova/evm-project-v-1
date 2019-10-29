@@ -1,0 +1,16 @@
+<mat-form-field>
+    <textarea
+    autofocus
+    matInput
+    #input
+    cdkTextareaAutosize
+    #autosize="cdkTextareaAutosize"
+    cdkAutosizeMinRows="1"
+    cdkAutosizeMaxRows="20"
+    [innerHtml]="text"
+    (focus)="writeMessage($event)"
+    [(ngModel)]="text"
+    (changeInput)="onChangeInput($event)"
+    >
+</textarea>
+  </mat-form-field>
