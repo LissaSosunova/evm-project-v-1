@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
 import { DataService } from 'src/app/services/data.service';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
+import { NewGroupChatPopupComponent } from './new-group-chat-popup/new-group-chat-popup.component';
 
 @Component({
   selector: 'app-chats',
@@ -20,6 +21,8 @@ export class ChatsComponent implements OnInit, OnDestroy {
   public user: types.User = {} as types.User;
   public user$: Observable<types.User>;
 
+  @ViewChild('newGroupChatPopup', {static: true}) private newGroupChatPopup: NewGroupChatPopupComponent;
+
   constructor(
               private route: ActivatedRoute,
               private router: Router,
@@ -33,11 +36,7 @@ export class ChatsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy () {
-
-  }
-
-  public init(): void {
-    this.user$ = this.store.select('user');
+    this.newGroupChatPopup.onClose();
   }
 
   public getChat(id: string): void {
@@ -46,6 +45,14 @@ export class ChatsComponent implements OnInit, OnDestroy {
         console.log(response);
       }
     );
+  }
+
+  public newGroupChat(): void {
+    this.newGroupChatPopup.open();
+  }
+
+  private init(): void {
+    this.user$ = this.store.select('user');
   }
 
 }

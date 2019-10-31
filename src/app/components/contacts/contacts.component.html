@@ -11,7 +11,7 @@
         [ngClass]="{'not-active-tab': currTab !== 'contacts',  'active': currTab === 'contacts'}"
                     (click)="switcher('contacts')"
                     data-cy="contacts">
-                    <span>
+                    <span class="tab-item">
                       Contact list
                     </span>
                   </div>
@@ -24,10 +24,10 @@
               [ngClass]="{'not-active-tab': currTab !== 'avaiting',  'active': currTab === 'avaiting'}"
                     (click)="switcher('avaiting')"
                     data-cy="avaiting">
-                    <span>
+                    <span class="tab-item">
                         Awaiting for confirmation
                     </span>
-          <app-counter [counter]="contactsAwaiting.length"></app-counter>          
+                    <span *ngIf="contactsAwaiting.length > 0" matBadge="{{contactsAwaiting.length}}"></span>   
       </div>
         <div class="col-xs-6
                     col-sm-6
@@ -38,7 +38,7 @@
               [ngClass]="{'not-active-tab': currTab !== 'requested',  'active': currTab === 'requested'}"
                     (click)="switcher('requested')"
                     data-cy="requested">
-                    <span>
+                    <span class="tab-item">
                         Requested
                     </span>
       </div>
@@ -50,7 +50,7 @@
               [ngClass]="{'not-active-tab': currTab !== 'add',  'active': currTab === 'add'}"
                     (click)="switcher('add')"
                     data-cy="add">
-                    <span>
+                    <span class="tab-item">
                         Add new contact
                     </span>
       </div>

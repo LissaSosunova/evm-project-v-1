@@ -1,4 +1,219 @@
 <form name="eventForm"
+#eventForm="ngForm"
+(ngSubmit)="saveEvent()"
+class="main-block">
+  <div class="col-xs-12 row row-div">
+    <!-- Title -->
+    <div class="col-xs-3 middle-xs end-xs name-field">
+      Create event title
+    </div>
+    <div class="col-xs-4 input-container">
+        <app-input-text [placeholder]="'Event title'"
+        name="eventTitle"
+        [(ngModel)]="event.name"
+        [required]="true"
+        >
+        </app-input-text>
+    </div>
+    <!-- Date -->
+    <div class="col-xs-12 row row-div top-xs">
+        <div class="col-xs-3 middle-xs end-xs name-field add-margin">
+            Set type of date for event
+          </div>
+          <div class="col-xs-3 input-container add-margin">
+              <mat-radio-group [(ngModel)]="event.dateType"
+                                    name="dateType"
+                                    #dateType="ngModel">
+                  <mat-radio-button class="radio-button"
+                                    *ngFor="let dateType of dateTypes"
+                                    [value]="dateType"
+                                    (click)="selectDateOption()">
+                    {{dateType}}
+                  </mat-radio-button>
+                </mat-radio-group>
+          </div>
+          <div class="col-xs-6">
+            <!-- Selectet type of dates -->
+            <div *ngIf="event.dateType === dateTypesForTemplate.DIAPASON_OF_DATES">
+                <div class="input-container"> 
+                  <app-input-datepicker 
+                                        [placeholder]="'Select start date'"
+                                        [floatLabel]="'auto'"
+                                        [(ngModel)]="event.date.startDate"
+                                        name="startDate"
+                                        [format]="'MMM d, y'">
+                  </app-input-datepicker>
+                  <app-input-datepicker 
+                                        [placeholder]="'Select end date'"
+                                        [floatLabel]="'auto'"
+                                        [(ngModel)]="event.date.endDate"
+                                        name="endDate"
+                                        [format]="'MMM d, y'">
+                  </app-input-datepicker>
+                </div>
+              </div>
+            
+              <div *ngIf="event.dateType === dateTypesForTemplate.DIAPASON_OF_DATES_WITH_TIME">
+                <div class="line">
+                  <div class="input-container" >
+                    <app-input-datepicker 
+                                          [placeholder]="'Select start date'"
+                                          [floatLabel]="'auto'"
+                                          [(ngModel)]="event.date.startDate"
+                                          name="startDate"
+                                          [format]="'MMM d, y'">
+                    </app-input-datepicker>
+                  </div>
+                  <div class="select-container">
+                    <app-select [options]="hours"
+                                [placeholder]="'Select hour'"
+                                [(ngModel)]="event.date.startHours"
+                                name="startHour">
+                    </app-select>
+                  </div>
+                  <div class="select-container">  
+                    <app-select [options]="minutes"
+                                [placeholder]="'Select minutes'"
+                                [(ngModel)]="event.date.startMinutes"
+                                name="startMinutes">
+                    </app-select>
+                  </div>
+                </div>
+                <div class="line">
+                  <div class="input-container">
+                    <app-input-datepicker 
+                                          [placeholder]="'Select end date'"
+                                          [floatLabel]="'auto'"
+                                          [(ngModel)]="event.date.endDate"
+                                          name="endDate"
+                                          [format]="'MMM d, y'">
+                    </app-input-datepicker>
+                  </div>
+                  <div class="select-container">
+                    <app-select [options]="hours"
+                      [placeholder]="'Select hour'"
+                      [(ngModel)]="event.date.endHours"
+                      name="endtHour">
+                    </app-select>
+                  </div>
+                  <div class="select-container">
+                    <app-select [options]="minutes"
+                                [placeholder]="'Select minutes'"
+                                [(ngModel)]="event.date.endMinutes"
+                                name="endMinutes">
+                    </app-select>
+                  </div> 
+                </div>
+              </div>
+            
+              <div *ngIf="event.dateType === dateTypesForTemplate.EXACT_DATE">
+                <div class="input-container">
+                  <app-input-datepicker
+                                        [placeholder]="'Select date'"
+                                        [floatLabel]="'auto'"
+                                        [(ngModel)]="event.date.startDate"
+                                        name="startDate"
+                                        [format]="'MMM d, y'">
+                  </app-input-datepicker>
+                </div>
+              </div>
+            
+              <div *ngIf="event.dateType === dateTypesForTemplate.EXACT_DATE_WITH_TIME">
+                <div class="line">
+                  <div class="input-container">
+                    <app-input-datepicker
+                                            [placeholder]="'Select date'"
+                                            [floatLabel]="'auto'"
+                                            [(ngModel)]="event.date.startDate"
+                                            name="startDate"
+                                            [format]="'MMM d, y'">
+                    </app-input-datepicker>
+                  </div>
+                  <div class="select-container">
+                    <app-select [options]="hours"
+                                [placeholder]="'Select hour'"
+                                [(ngModel)]="event.date.startHours"
+                                name="startHour">
+                    </app-select>
+                  </div>
+                  <div class="select-container">  
+                    <app-select [options]="minutes"
+                                [placeholder]="'Select minutes'"
+                                [(ngModel)]="event.date.startMinutes"
+                                name="startMinutes">
+                    </app-select>
+                  </div>
+                </div>
+              </div>
+          </div>
+    </div>
+  
+
+  <!-- Contacts  -->
+  <div class="col-xs-12 row">
+      <div class="col-xs-3 middle-xs end-xs name-field">
+         Select members
+        </div>
+        <div class="col-xs-6">
+            <div class="input-container">
+                <app-checkbox-dropdown [options]="contactsForDropDown"
+                                        [label]="'Participants'"
+                                        (onSelect)="selectedContacts($event)">
+                </app-checkbox-dropdown>
+              </div>
+        </div>
+      </div>
+      <div class="col-xs-12 row">
+        <div class="col-xs-3 middle-xs end-xs name-field">
+            Set location of event
+          </div>
+        <div class="input-container col-xs-4">
+          <app-input-text [placeholder]="'Event location'"
+                          name="eventLocation"
+                          [(ngModel)]="event.place.location">
+          </app-input-text>
+        </div>
+        <div class="col-xs-12 row">
+          <div class="col-xs-3 end-xs name-field add-margin">
+            Additional info about event
+          </div>
+        <div class="input-container col-xs-6">
+          <app-multi-line-input [placeholder]="'Additional info'"
+                                [minHeight]="80"
+                                [(ngModel)]="event.additional"
+                                name="additional"
+          >
+          </app-multi-line-input>
+        </div>
+      </div>
+      <div class="col-xs-12 row">
+        <div class="col-xs-6 col-xs-offset-3 add-margin">
+            <label>
+                <mat-checkbox [(ngModel)]="event.status"
+                              name="status">
+                </mat-checkbox>
+                <span clas="remind">Remind me</span>
+              </label>
+        </div>
+      </div>
+      <div class="col-xs-12 row">
+          <div class="col-xs-6 col-xs-offset-3">
+              <button type="submit" 
+                class="btn-submit-event"
+                [disabled]="eventForm.invalid"
+                [ngClass]="{'disabled': eventForm.invalid}">Save event</button>
+          </div>
+        </div>
+  </div>
+  </div>
+</form>
+<!-- End form -->
+
+
+
+
+
+<!-- <form name="eventForm"
       #eventForm="ngForm"
       (ngSubmit)="saveEvent()">
   <div class="input-container">
@@ -160,6 +375,6 @@
           class="btn-submit-event"
           [disabled]="eventForm.invalid"
           [ngClass]="{'disabled': eventForm.invalid}">Save event</button>
-</form>  
+</form>   -->
 
 <app-new-event-leave-popup #eventLeavePopup></app-new-event-leave-popup>

@@ -1,24 +1,10 @@
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  HostListener,
-  Output
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
 import { TransferService } from 'src/app/services/transfer.service';
 import { DataService } from 'src/app/services/data.service';
 import { FormControl, Validators, NgForm } from '@angular/forms';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  takeUntil
-} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
 import { DateTransformService } from 'src/app/services/date-transform.service';
 import { Observable, Subject } from 'rxjs';
 import { SocketIoService } from 'src/app/services/socket.io.service';
@@ -28,6 +14,8 @@ import { select, Store } from '@ngrx/store';
 import * as userAction from '../../../store/actions';
 import { PageMaskService } from 'src/app/services/page-mask.service';
 import { ChatEmotions } from 'src/app/constants/chat-emotions';
+import { GroupChatInfoPopupComponent } from './group-chat-info-popup/group-chat-info-popup.component';
+import { NewGroupChatPopupComponent } from '../new-group-chat-popup/new-group-chat-popup.component';
 
 @Component({
   selector: 'app-chat-window',
@@ -68,7 +56,9 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   private arrowDownElement: HTMLDivElement;
   @ViewChild('menuBlock', { static: true }) private menuBlock: ElementRef;
   private menuBlockElement: HTMLDivElement;
-  private chats: types.ChatData;
+  @ViewChild('groupChatInfoPopup', {static: true}) private groupChatInfoPopup: GroupChatInfoPopupComponent;
+  @ViewChild('newGroupChatPopup', {static: true}) private newGroupChatPopup: NewGroupChatPopupComponent;
+  public chats: types.ChatData;
   private chatId: string;
   private messagesShift = 0;
   private userObj: { chatIdCurr: string; userId: string; token: string };
@@ -148,7 +138,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public clickOutsideMenuBlock(): void {
     this.menuBlockElement.classList.add('hidden');
-    if (!this.sidebarExpand) {
+    if (!this.sidebarExpand && this.groupChatInfoPopup.popupClosed) {
       this.pageMaskService.close();
     }
   }
@@ -190,6 +180,15 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  public get getChatName(): string {
+    if (this.chats.type === types.ChatType.PRIVATE_CHAT) {
+      const chat = this.user.chats.find(c => c.chatId === this.chatId);
+      return `Chat with ${chat.name}`;
+    } else if (this.chats.type === types.ChatType.GROUP_OR_EVENT_CHAT) {
+      return this.chats.chatName;
+    }
+  }
+
   public editMessage(message: types.Message): void {
     this.editMessageMode = true;
     const text: string = message.text.replace(/<br\/>/g, '\n');
@@ -208,12 +207,8 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.clickOutsideMenuBlock();
   }
 
-  public onEnterKey(): void {
-    if (this.control.valid && !this.editMessageMode) {
-      this.sendMessage();
-    } else if (this.control.valid && this.editMessageMode) {
-      this.completeEditing();
-    }
+  public openChatPopup(): void {
+    this.groupChatInfoPopup.open();
   }
 
   public outsideEmoClick(): void {
@@ -231,6 +226,10 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public openEmo(): void {
     this.openEmoList = !this.openEmoList;
+  }
+
+  public newGroupChat(): void {
+    this.newGroupChatPopup.open();
   }
 
   public chooseEmo(emo: string): void {
@@ -262,6 +261,15 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketIoService.socketEmit(SocketIO.events.message, message);
     this.inputMes = '';
     this.control.setValue('');
+    const userIsTypingObj: types.UserIsTyping = {
+      userId: this.user.username,
+      name: this.user.name,
+      users: this.chats.users,
+      chatId: this.chatId,
+      typing: false
+    };
+    this.socketIoService.socketEmit(SocketIO.events.user_is_typing, userIsTypingObj);
+    this.isUserTyping = false;
     setTimeout(() => {
       this.changeChatWindowHeigth();
       this.scrollDownMessageWindow();
@@ -288,7 +296,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private changeChatWindowHeigth(): void {
     const footerHeigth: number = this.footerElement.clientHeight;
-    this.messageBoxElement.style.maxHeight = `calc(100vh - ${footerHeigth}px - 120px)`;
+    this.messageBoxElement.style.maxHeight = `calc(100vh - ${footerHeigth}px - 140px)`;
   }
 
   private getChat(): void {
@@ -325,22 +333,30 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
         chatId: this.chatId,
         typing: false
       };
-      this.socketIoService.socketEmit(
-        SocketIO.events.user_is_typing,
-        userIsTypingObj
-      );
+      this.socketIoService.socketEmit(SocketIO.events.user_is_typing, userIsTypingObj);
     }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     this.inputMes = '';
+    this.newGroupChatPopup.onClose();
   }
 
   private init(): void {
+    this.getChat();
     this.showUserIsTyping = false;
     this.unsubscribe$ = new Subject<void>();
     this.user$ = this.store.pipe(select('user'));
     this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;
+      this.chats.users.forEach(u => {
+        if (u.username === this.user.username) {
+          u.avatar = this.user.avatar;
+        }
+        const userInChat = user.contacts.find(c => c.id === u.username);
+        if (userInChat) {
+          u.avatar = userInChat.avatar;
+        }
+      });
     });
     this.chatId = this.route.snapshot.params.chatId;
     this.subscribeNewMessagesInit();
@@ -352,7 +368,6 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       token: this.sessionStorageService.getValue('_token')
     };
     this.socketIoService.socketEmit(SocketIO.events.user_in_chat, this.userObj);
-    this.getChat();
     this.initDraftMessagesSubscription();
     this.subscribeUserIsTyping();
     const thisChat: types.Chats = this.user.chats.find(chat => chat.chatId === this.chatId);
@@ -361,9 +376,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
         userId: this.user.username,
         chatId: this.chatId
       });
-      this.store.dispatch(
-        new userAction.UserReadAllMessages({ unread: 0, chatId: this.chatId })
-      );
+      this.store.dispatch(new userAction.UserReadAllMessages({ unread: 0, chatId: this.chatId }));
     }
     this.transferService.dataObj$.pipe(takeUntil(this.unsubscribe$))
     .subscribe(res => {
@@ -416,11 +429,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
     this.control.valueChanges
-      .pipe(
-        debounceTime(2000),
-        distinctUntilChanged(),
-        takeUntil(this.unsubscribe$)
-      )
+      .pipe(debounceTime(2000), distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe(message => {
         message = message.replace(/\n\n\n/, '');
         const userIsTypingObj: types.UserIsTyping = {
@@ -430,10 +439,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
           chatId: this.chatId,
           typing: false
         };
-        this.socketIoService.socketEmit(
-          SocketIO.events.user_is_typing,
-          userIsTypingObj
-        );
+        this.socketIoService.socketEmit(SocketIO.events.user_is_typing, userIsTypingObj);
         this.isUserTyping = false;
         if (message && !this.editMessageMode) {
           this.sendDraftMessage();
@@ -445,10 +451,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
     this.control.valueChanges
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        filter(message => !this.isUserTyping)
-      )
+      .pipe(takeUntil(this.unsubscribe$), filter(message => !this.isUserTyping))
       .subscribe(message => {
         const userIsTypingObj: types.UserIsTyping = {
           userId: this.user.username,
@@ -458,29 +461,16 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
           typing: true
         };
         if (message) {
-          this.socketIoService.socketEmit(
-            SocketIO.events.user_is_typing,
-            userIsTypingObj
-          );
+          this.socketIoService.socketEmit(SocketIO.events.user_is_typing, userIsTypingObj);
           this.isUserTyping = true;
         }
       });
   }
 
-  private getMessages(
-    chatId: string,
-    n: number,
-    queryMessagesAmount: number,
-    messagesShift: number
-  ): void {
+  private getMessages(chatId: string, n: number, queryMessagesAmount: number, messagesShift: number): void {
     this.isLoadingMessages = true;
     this.data
-      .getPrivatChat(
-        chatId,
-        String(n),
-        String(queryMessagesAmount),
-        String(messagesShift)
-      )
+      .getPrivatChat(chatId, String(n), String(queryMessagesAmount), String(messagesShift))
       .subscribe((response: types.Message[]) => {
         this.isLoadingMessages = false;
         if (response && response.length < 20) {
@@ -567,10 +557,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   private subscribeNewMessagesInit(): void {
     this.socketIoService
       .on(SocketIO.events.new_message)
-      .pipe(
-        distinctUntilChanged(),
-        takeUntil(this.unsubscribe$)
-      )
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe(message => {
         this.arrayOfMessages.unshift(message);
         this.store.dispatch(new userAction.UpdateChatList(message));
@@ -582,12 +569,8 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private subscribeUserIsTyping(): void {
-    this.socketIoService
-      .on(SocketIO.events.user_is_typing)
-      .pipe(
-        distinctUntilChanged(),
-        takeUntil(this.unsubscribe$)
-      )
+    this.socketIoService.on(SocketIO.events.user_is_typing)
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe((obj: types.UserIsTyping) => {
         this.userNameIsTyping = obj.name;
         this.showUserIsTyping = obj.typing;

@@ -1,4 +1,8 @@
-<section class="chat-window-container">  
+<section class="chat-window-container">
+    <div class="chat-header">
+        <div class="chat-name">{{getChatName}}</div>
+        <div class="chat-info"><i class="material-icons" (click)="openChatPopup()">people</i></div>
+    </div>  
     <div class="row chat-wrapper">
         <div class="messages-container
         col-xs-12
@@ -29,19 +33,20 @@
                                                 [matMenuTriggerFor]="menu"
                                                 data-cy="open-menu">more_vert</span>
                                         <mat-menu #menu="matMenu">
-                                            <span class="material-icons edit-btn"
+                                            <div class="edit-btn"
                                                 (click)="editMessage(item)"
                                                 data-cy="edit-message">
-                                                edit
-                                            </span>
-                                            <span class="material-icons delete-btn"
+                                                <span class="material-icons">edit</span>
+                                                <span>Edit</span>
+                                            </div>
+                                            <div class="delete-btn"
                                                 (click)="deleteMessage(item)"
                                                 data-cy="delete-message">
-                                                delete
-                                            </span>
+                                                <span class="material-icons">delete</span> 
+                                                <span>Delete</span>
+                                            </div>
                                         </mat-menu>
                                     </div>
-                                    
                                 </div>
                             </li>
                         </ul>
@@ -85,7 +90,9 @@
                             <i class="material-icons">add</i>
                         </button>
                     </div>
-                    <app-chat-list flag='private' (chatIdEmit)="onChatIdEmit($event)"></app-chat-list>
+                    <app-chat-list flag='private'
+                    (chatIdEmit)="onChatIdEmit($event)"
+                    [chatId]="chatId"></app-chat-list>
                 </div>
             </div>
                 <div class="col-xs-12
@@ -100,10 +107,12 @@
                             <i class="material-icons">search</i>
                         </button>
                         <button class="m-btn confirm">
-                            <i class="material-icons">add</i>
+                            <i class="material-icons" (click)="newGroupChat()">add</i>
                         </button>
                     </div>
-                    <app-chat-list flag='group' (chatIdEmit)="onChatIdEmit($event)"></app-chat-list>
+                    <app-chat-list flag='group'
+                    (chatIdEmit)="onChatIdEmit($event)"
+                    [chatId]="chatId"></app-chat-list>
                         
                 </div>
             </div>
@@ -122,13 +131,12 @@
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 input-wrap">
             <text-field
             [control]="control"
-            (enterKey)="onEnterKey()"
             #messageBody
             name="messageBody"
             (keydown.enter)="writeMessage($event)"
             [text]="inputMes"
             [placeholder]="'Write a message'"
-            [floatLabel]="'never'"
+            [floatLabel]="'auto'"
             >
             </text-field>
         </div>
@@ -176,4 +184,12 @@
         </form>  
     </footer>
     
-</section>    
+</section>
+<app-group-chat-info-popup #groupChatInfoPopup
+                            [usersInChat]="chats.users"
+                            [admin]="chats.admin"
+                            [chatId]="chats._id"
+                            [chatName]="chats.chatName"
+                            >
+</app-group-chat-info-popup>
+<app-new-group-chat-popup #newGroupChatPopup></app-new-group-chat-popup>                                

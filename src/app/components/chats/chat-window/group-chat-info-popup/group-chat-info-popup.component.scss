@@ -1,0 +1,38 @@
+.add-users-container {
+    max-height: 80vh;
+    overflow: auto;
+}
+
+.contacts-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.contact {
+    margin: 5px 0;
+}
+
+.avatar {
+    margin: 0 10px;
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+  }
+}
+
+.delete-user {
+    cursor: pointer;
+}
+
+.add-users {
+    cursor: pointer;
+}
+
+.add-user {
+    cursor: pointer;
+}
+
+.delete-chat {
+    cursor: pointer;
+}

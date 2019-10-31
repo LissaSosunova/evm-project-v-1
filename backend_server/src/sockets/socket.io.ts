@@ -13,6 +13,7 @@ import { newEvent } from './events/new_event';
 import { newGroupChat } from './events/new_group_chat';
 import { userIsTyping } from './events/user_is_typing';
 import { userReadMessage } from './events/user_read_message';
+import { addUserToChat } from './events/add_user_to_chat';
 
 
 export function runWebsocketsIO(server): void {
@@ -112,6 +113,7 @@ export function runWebsocketsIO(server): void {
           });
 
           addUser(socket, onlineClients);
+          addUserToChat(socket, onlineClients);
           confirmUser(socket, onlineClients);
           deleteContact(socket, onlineClients);
           deleteGroupChat(socket, onlineClients);

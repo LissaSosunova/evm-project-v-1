@@ -114,6 +114,22 @@ export function userReducer(state: types.User = userInitState, action: any): typ
       updateState.events.push(newEvent);
       return updateState;
     }
+    case userAction.ActionTypes.DELETE_USER_FROM_CHAT: {
+      const deletedUser: {userToDelete: string, chatId: string} = action.payload;
+      updateState.chats.find((chat, index) => {
+        if (chat.chatId === deletedUser.chatId) {
+          updateState.chats.splice(index, 1);
+        }
+        return chat.chatId === deletedUser.chatId;
+      });
+      return updateState;
+    }
+    case userAction.ActionTypes.DELETE_GROUP_CHAT: {
+      const chatId: string = action.payload.chatId;
+      const chats = updateState.chats.filter(chat => chat.chatId !== chatId);
+      updateState.chats = chats;
+      return updateState;
+    }
     default:
       return state;
     }

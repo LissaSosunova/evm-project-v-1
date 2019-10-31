@@ -13,7 +13,9 @@ export enum ActionTypes {
   DELETE_REQUEST = 'delete_request',
   DELETE_CONTACT = 'delete_contact',
   ADD_CHAT = 'add_chat',
-  NEW_EVENT = 'new_event'
+  NEW_EVENT = 'new_event',
+  DELETE_USER_FROM_CHAT = 'delete_user_from_chat',
+  DELETE_GROUP_CHAT = 'delete_group_chat'
 }
 
 export class UpdateChatList implements Action {
@@ -81,4 +83,17 @@ export class NewEvent implements Action {
 
   constructor(public payload: types.EventDb) {}
 
+}
+
+export class DeleteUserFromChat implements Action {
+  public readonly type = ActionTypes.DELETE_USER_FROM_CHAT;
+
+  constructor(public payload: {userToDelete: string, chatId: string}) {}
+
+}
+
+export class DeleteGroupChat implements Action {
+  public readonly type = ActionTypes.DELETE_GROUP_CHAT;
+
+  constructor(public payload: {chatId: string}) {}
 }

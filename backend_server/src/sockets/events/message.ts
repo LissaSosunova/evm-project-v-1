@@ -5,7 +5,8 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
 
 export function message (socket: socketIo.Socket, onlineClients: OnlineClients, clientsInChat: ClientsInChat): void {
-    socket.on('message', (obj: Message) => {
+    socket.on('message', async (obj: Message) => {
+      try {
         obj.unread = obj.unread || [];
         if (clientsInChat[obj.chatID]) {
             // Находим пользователей, которые не в чате
@@ -23,9 +24,9 @@ export function message (socket: socketIo.Socket, onlineClients: OnlineClients, 
             query: {_id: obj.chatID},
             objNew: {$push: {messages: {$each: [obj], $position: 0}}}
         };
-        datareader(Chat, updateParams, MongoActions.UPDATE_ONE) // Сохраняем в базу данных сообщение, причём записываем его в начало массива
-        .then(async res => {
-             // Шлём сообщения всем, кто в чате
+        await datareader(Chat, updateParams, MongoActions.UPDATE_ONE);
+        // Сохраняем в базу данных сообщение, причём записываем его в начало массива
+         // Шлём сообщения всем, кто в чате
              const getSavedMess = {
                 query: {_id: obj.chatID},
                 elementMatch: {messages: {$slice: [0, 1]}}
@@ -58,6 +59,13 @@ export function message (socket: socketIo.Socket, onlineClients: OnlineClients, 
                 }
               });
             });
-        });
+      } catch (error) {
+        console.error('message', error);
+        if (onlineClients[obj.authorId]) {
+          Object.keys(onlineClients[obj.authorId]).forEach(token => {
+            onlineClients[obj.authorId][token].emit('error', {event: 'message', error});
+          });
+        }
+      }
     });
 }

@@ -67,6 +67,8 @@ import { MessageTextComponent } from './components/chats/chat-window/message-tex
 import { TextFieldComponent } from './shared/form-controls/text-field/text-field.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { BackLinkComponent } from './shared/components/back-link/back-link.component';
+import { NewGroupChatPopupComponent } from './components/chats/new-group-chat-popup/new-group-chat-popup.component';
+import { GroupChatInfoPopupComponent } from './components/chats/chat-window/group-chat-info-popup/group-chat-info-popup.component';
 
 
 @NgModule({
@@ -129,7 +131,9 @@ import { BackLinkComponent } from './shared/components/back-link/back-link.compo
     MessageTextComponent,
     TextFieldComponent,
     ProfileComponent,
-    BackLinkComponent
+    BackLinkComponent,
+    NewGroupChatPopupComponent,
+    GroupChatInfoPopupComponent
   ],
   imports: [
     BrowserModule,

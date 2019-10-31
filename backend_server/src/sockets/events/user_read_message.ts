@@ -11,7 +11,7 @@ export function userReadMessage(socket: socketIo.Socket, onlineClients: OnlineCl
           query: {'_id' : new ObjectId(obj.chatId)},
           queryField1: 'messages',
           queryField2: 'unread',
-          contidition: [obj.userId]
+          contidition: obj.userId
         };
         try {
           const result: {_id: string, query: Message[]}[] = await datareader(Chat, queryParams, MongoActions.ARRAY_FILTER);
@@ -20,7 +20,10 @@ export function userReadMessage(socket: socketIo.Socket, onlineClients: OnlineCl
           const unreadMes = result[0].query;
           unreadMes.forEach(mes => {
             mes.unread = mes.unread.filter(item => item !== obj.userId);
-            promises.push(datareader(Chat, {query: {'_id': new ObjectId(chatId), messages:  {$elemMatch:{_id: new ObjectId(mes._id)}}}, objNew: {$set: {'messages.$.unread': mes.unread}}}, MongoActions.UPDATE_ONE));
+            promises.push(datareader(Chat, {
+              query: {'_id': new ObjectId(chatId),
+              messages: {$elemMatch: {_id: new ObjectId(mes._id)}}},
+              objNew: {$set: {'messages.$.unread': mes.unread}}}, MongoActions.UPDATE_ONE));
           });
           await Promise.all(promises);
         } catch (error) {

@@ -51,14 +51,17 @@ mat-form-field ::ng-deep  {
     }
     .mat-form-field-infix {
         width: auto !important;
+        font-size: 0.9rem;
     }
     .mat-form-field-suffix {
         bottom: 11px;
         right: 30px;
     }
     .mat-form-field-label {
-        margin-top: 9px;
+        margin-top: 4px;
         margin-left: 10px;
+        font-size: 0.85rem;
+        padding-top: 5px;
     }
     .mat-form-field-wrapper {
         padding-bottom: 0 !important;
@@ -70,4 +73,3 @@ mat-form-field ::ng-deep  {
         width: 107% !important;
     }
 }
-

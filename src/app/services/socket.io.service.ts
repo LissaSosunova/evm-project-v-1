@@ -3,7 +3,7 @@ import * as io from 'socket.io-client';
 import { types } from '../types/types';
 import { Subject, Observable } from 'rxjs';
 import { SocketIO} from 'src/app/types/socket.io.types';
-import {getURI} from '../constants/backendURI';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +65,7 @@ export class SocketIoService {
   }
 
   private getURI(): string {
-    return getURI;
+    return environment.backendURI;
   }
 
   private async onSocketReconnect(): Promise<void> {

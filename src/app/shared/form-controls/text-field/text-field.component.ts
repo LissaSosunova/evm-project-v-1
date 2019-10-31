@@ -1,6 +1,6 @@
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import { OnInit, forwardRef, Component, NgZone, ViewChild, SimpleChanges, ElementRef, Output, EventEmitter, OnChanges, Input } from '@angular/core';
-import { InputAbstract, MakeProvider } from '../model/input-abstract';
+import { InputAbstract } from '../model/input-abstract';
 import {take} from 'rxjs/operators';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 

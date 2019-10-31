@@ -1,6 +1,7 @@
 import { constants } from './default-constants';
 
-const URIObj = { getLocalURI: () => {
+export const URIObj = {
+    getLocalURI: () => {
         return `${constants.localBackEnd.protocol}://${constants.localBackEnd.host}:${constants.localBackEnd.port}`; },
 
     getDeployedURI: () => {
@@ -8,5 +9,3 @@ const URIObj = { getLocalURI: () => {
     }
 
 };
-
-export const getURI = URIObj.getLocalURI();
