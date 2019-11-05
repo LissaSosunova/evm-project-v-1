@@ -23,7 +23,7 @@ const executeCommandPromiseAndWait = cmd =>
                 reject(err);
                 return;
             }
-            delay(5000).then(() => resolve(null));
+            delay(1000).then(() => resolve(null));
         })
     );
 
@@ -47,14 +47,20 @@ module.exports = (on, config) => {
   on('file:preprocessor', cucumber(options));
 
   on('task', {
-    createUser() {
-      return executeCommandPromiseAndWait(`npx lerna run create-user:json --stream`)
+    createUser(user) {
+      return executeCommandPromiseAndWait(`npx lerna run create-user --stream -- -- --credsUser ../../backend_server/admin_api/for_e2e/${user}/e2eUser.json`)
     },
   });
 
   on('task', {
     deleteUser(username) {
       return executeCommandPromiseAndWait(`npx lerna run delete-user --stream -- -- --username ${username}`)
+    }
+  });
+
+  on('task', {
+    deleteChat(usernames) {
+      return executeCommandPromiseAndWait(`npx lerna run delete-chat --stream -- -- --username1 ${usernames.username1} --username2 ${usernames.username2}`)
     }
   })
 }

@@ -11,4 +11,4 @@ Scenario Outline: I test sign-in and sign-out
 
 Examples:
   | username |
-  | bot6     |  
+  | user1    |  

@@ -9,7 +9,8 @@
                     tab-expert-class
                     border-right"
         [ngClass]="{'not-active-tab': currTab !== 'contacts',  'active': currTab === 'contacts'}"
-                    (click)="switcher('contacts')">
+                    (click)="switcher('contacts')"
+                    data-cy="contacts">
                     <span>
                       Contact list
                     </span>
@@ -21,7 +22,8 @@
                     tab-expert-class
                     border-right"
               [ngClass]="{'not-active-tab': currTab !== 'avaiting',  'active': currTab === 'avaiting'}"
-                    (click)="switcher('avaiting')">
+                    (click)="switcher('avaiting')"
+                    data-cy="avaiting">
                     <span>
                         Awaiting for confirmation
                     </span>
@@ -34,7 +36,8 @@
                     tab-expert-class
                     border-right"
               [ngClass]="{'not-active-tab': currTab !== 'requested',  'active': currTab === 'requested'}"
-                    (click)="switcher('requested')">
+                    (click)="switcher('requested')"
+                    data-cy="requested">
                     <span>
                         Requested
                     </span>
@@ -45,7 +48,8 @@
                     col-lg-3
                     tab-expert-class"
               [ngClass]="{'not-active-tab': currTab !== 'add',  'active': currTab === 'add'}"
-                    (click)="switcher('add')">
+                    (click)="switcher('add')"
+                    data-cy="add">
                     <span>
                         Add new contact
                     </span>
@@ -63,7 +67,7 @@
       </section>
       <section *ngIf="isContactsConfirmed">
           <ul class="contacts-ul">
-          <li *ngFor="let item of contactsConfirmed" class="direction-row">
+          <li *ngFor="let item of contactsConfirmed" class="direction-row" data-cy="contact-list">
             <div class="col-xs-8 small-screen"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
             <div class="col-xs-4 btn-align">
               <button class="m-btn confirm"
@@ -75,7 +79,8 @@
                       chatId: item.private_chat,
                       userId: item.id,
                       name: item.name,
-                      email: item.email})">
+                      email: item.email})"
+                      data-cy="new-chat">
                       <i class="material-icons">chat_bubble_outline</i>
                     </button>
               <button class="m-btn cancel"
@@ -94,14 +99,15 @@
         </section>
         <section *ngIf="isContactsAwaiting">
             <ul class="contacts-ul">
-                <li *ngFor="let item of contactsAwaiting" class="direction-row">
+                <li *ngFor="let item of contactsAwaiting" class="direction-row" data-cy="awaiting-contacts">
                   <div class="col-xs-8 small-screen"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
                   <div class="col-xs-4 btn-align">
-                    <button class="m-btn confirm" (click)="confNewUser(item.id)">
+                    <button class="m-btn confirm" (click)="confNewUser(item.id)" data-cy="confirm">
                       <i class="material-icons">check</i>
                     </button>
                     <button class="m-btn cancel"
-                            (click)="onConfirmActionPopupOpen('reject request', item.id)">
+                            (click)="onConfirmActionPopupOpen('reject request', item.id)"
+                            data-cy="cancel-btn">
                       <i class="material-icons">close</i>
                     </button>
                   </div>
@@ -116,11 +122,12 @@
         </section>
         <section *ngIf="iscontactsRequested">
             <ul class="contacts-ul">
-                <li *ngFor="let item of contactsRequested" class="direction-row">
+                <li *ngFor="let item of contactsRequested" class="direction-row" data-cy="requested-contacts">
                   <div class="col-xs-8 small-screen"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
                   <div class="col-xs-4 btn-align">
                     <button class="m-btn cancel"
-                            (click)="onConfirmActionPopupOpen('delete request', item.id)">
+                            (click)="onConfirmActionPopupOpen('delete request', item.id)"
+                            data-cy="cancel-btn">
                       <i class="material-icons">close</i>
                     </button>
                   </div>
@@ -134,16 +141,17 @@
         <form class ="search">
           <app-input-search [placeholder]="'Search contact'"
                             [control]="searchControl"
-                            (reset)="onReset($event)">
+                            (reset)="onReset($event)"
+                            data-cy="search">
           </app-input-search>
         </form>
       </div>
       <div class="contactList-user2">
         <ul class="contacts-ul">
-          <li *ngFor="let item of querySearch" class="direction-row">
+          <li *ngFor="let item of querySearch" class="direction-row" data-cy="searched-contacts">
             <div class="col-xs-8 small-screen"><img src="{{item.avatar.url}}">{{item.name}}</div>
             <div class="col-xs-4 btn-align">
-              <button class="m-btn cancel" (click)="addNewUser(item.id)">
+              <button class="m-btn cancel" (click)="addNewUser(item.id)" data-cy="addUser">
                 <i class="material-icons">check</i>
               </button>
             </div>

@@ -44,6 +44,7 @@
           <div class="g-form-popup__footer-close-btn" [ngStyle]="{'order': closeBtnOrder}">
             <button md-raised-button
                   class="m-btn cancel"
+                  data-cy="cancelPopupBtn"
                   *ngIf="conf.footer.isCloseBtn"
                   (click)="closePopup()"
                   [disabled]="conf.footer.isSubmitLoading"

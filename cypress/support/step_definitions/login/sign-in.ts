@@ -1,8 +1,8 @@
-import * as userCreds from '../../../../backend_server/admin_api/testUserCreds.json';
+import * as userCreds from '../../../../backend_server/admin_api/for_e2e/user1/e2eUser.json';
 
 given('I create user', () => {
     cy.visit('/');
-    cy.task('createUser');
+    cy.task('createUser', 'user1');
 });
 
 then('I sign-in', () => {
@@ -12,13 +12,4 @@ then('I sign-in', () => {
     cy.wait(2000);
     cy.get('button[type=submit]').click();
     cy.get('app-main').should('exist');
-});
-
-then ('I sign-out', () => {
-    cy.get('app-sidebar a[title=exit]').click();
-    cy.get('app-login-page').should('exist');
-});
-
-then('I delete user {string}', username => {
-    cy.task('deleteUser', username);
 });

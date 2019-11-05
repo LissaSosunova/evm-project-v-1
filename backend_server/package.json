@@ -7,6 +7,7 @@
         "start": "node ./index.js",
         "create-user": "node ./admin_api/create_user.js",
         "create-user:json": "npm run create-user -- --credsUser ./testUserCreds.json",
+        "delete-chat": "node ./admin_api/delete_chat.js",
         "delete-user": "node ./admin_api/delete_user.js"
     },
     "dependencies": {
