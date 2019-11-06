@@ -32,6 +32,7 @@ const colors = require('colors');
         process.exit();
      } catch(error) {
         console.error('delete user error'.red, error);
+        process.exit();
      }
 
  })()

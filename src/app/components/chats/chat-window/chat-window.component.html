@@ -6,7 +6,7 @@
                 col-md-8
                 col-lg-8">
             <app-section-spinner [loading]="isLoadingMessages" [diameter]="'100'" [position]="'absolute'"></app-section-spinner>
-            <div class="message-box" (scroll)="scrollChatWindow($event)" #messageBox >
+            <div class="message-box" (scroll)="scrollChatWindow($event)" #messageBox data-cy="message-window">
                 
                 <section [ngSwitch]="isMessages">
                     <span *ngSwitchCase="false">{{test}}</span>
@@ -26,14 +26,17 @@
                                     </div>
                                     <div *ngIf="item.authorId === user.username">
                                         <span class="material-icons menu-btn" 
-                                                [matMenuTriggerFor]="menu">more_vert</span>
+                                                [matMenuTriggerFor]="menu"
+                                                data-cy="open-menu">more_vert</span>
                                         <mat-menu #menu="matMenu">
                                             <span class="material-icons edit-btn"
-                                                (click)="editMessage(item)">
+                                                (click)="editMessage(item)"
+                                                data-cy="edit-message">
                                                 edit
                                             </span>
                                             <span class="material-icons delete-btn"
-                                                (click)="deleteMessage(item)">
+                                                (click)="deleteMessage(item)"
+                                                data-cy="delete-message">
                                                 delete
                                             </span>
                                         </mat-menu>
@@ -131,19 +134,22 @@
                     *ngIf="editMessageMode"
                     (click)="completeEditing()"
                     [disabled]="control.invalid"
-                    [ngClass]="{'disabled': control.invalid}">
+                    [ngClass]="{'disabled': control.invalid}"
+                    data-cy="complete-editing">
                 <i class="material-icons">check</i>
             </button>
             <button class="btn-submit-clear" 
                     *ngIf="editMessageMode"
-                    (click)="cancelEditing()">
+                    (click)="cancelEditing()"
+                    data-cy="cancel-editing">
                 <i class="material-icons">clear</i>
             </button>
             <button class="btn-submit-send"
-            (click)="sendMessage()"
-            [disabled]="control.invalid || editMessageMode"
-            *ngIf="isSendBtn"
-            [ngClass]="{'disabled': control.invalid || editMessageMode}">
+                    (click)="sendMessage()"
+                    [disabled]="control.invalid || editMessageMode"
+                    *ngIf="isSendBtn"
+                    [ngClass]="{'disabled': control.invalid || editMessageMode}"
+                    data-cy="send">
                 <i class="material-icons">send</i>
             </button>
             
