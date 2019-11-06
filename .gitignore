@@ -41,3 +41,5 @@ backend_server/credsEmail.js
 # System Files
 .DS_Store
 Thumbs.db
+
+/cypress/videos

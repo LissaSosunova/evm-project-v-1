@@ -1,11 +1,14 @@
 import * as user1 from '../../../backend_server/admin_api/for_e2e/user1/e2eUser.json';
 import * as user2 from '../../../backend_server/admin_api/for_e2e/user2/e2eUser.json';
+import * as user3 from '../../../backend_server/admin_api/for_e2e/user3/e2eUser.json';
 import {config} from '../../config';
-// import * as fs from 'fs';
-// import * as path from 'path';
 
 then('I see the {string}', component => {
     cy.get(component).should('exist');
+});
+
+then('I do not see the {string}', element => {
+    cy.get(element).should('not.exist');
 });
 
 given('I visit login page', () => {
@@ -32,8 +35,7 @@ then ('I see button {string} which can be clicked', button => {
 });
 
 given('I am already signed-in as {string}', username => {
-    // const userCreds = JSON.parse(fs.readFileSync(path.resolve(__dirname, `../../../backend_server/admin_api/for_e2e/${username}/e2eUser.json`), 'utf8'));
-    const userObj = {user1, user2};
+    const userObj = {user1, user2, user3};
     cy.task('createUser', username);
     cy.request('POST', `${config.backendUrl}/login`, {username: userObj[username].username, password: userObj[username].password})
     .then((response: Cypress.Response) => {
@@ -73,4 +75,24 @@ then('I see disabled button {string}', button => {
 then('I delete private chat between user {string} and {string}', (username1, username2) => {
     const usernames = {username1, username2};
     cy.task('deleteChat', usernames);
+});
+
+then('I delete event {string}', eventName => {
+    cy.task('deleteEvent', eventName);
+});
+
+then('I wait for {string} seconds', delay => {
+    cy.wait(+delay * 1000);
+});
+
+then('I type {string} in input {string}', (text, input) => {
+    cy.get(input).clear().type(text);
+});
+
+then('I click on document', () => {
+    document.body.click();
+});
+
+then('I see button {string} with content {string} which can be clicked', (button, content) => {
+    cy.get(button).contains(content).click();
 });

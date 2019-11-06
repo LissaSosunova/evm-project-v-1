@@ -8,6 +8,7 @@ Scenario Outline: Testing login page
     Then I see the "<rootComponent>"
     Then I see the "<sideBarComponent>"
     Then I see the "<loginPageComponent>"
+    Then I see disabled button "button[type=submit]"
 
 Examples:
     | rootComponent     | loginPageComponent    | sideBarComponent  |
@@ -25,6 +26,7 @@ Scenario Outline: Testing forgot password page
     Given I visit login page
     Then I see button "<forgotPasswordBtn>" which can be clicked
     Then I see the "<forgotPasswordComponent>"
+    Then I see disabled button "button[type=submit]"
 
 Examples:
     | forgotPasswordBtn           | forgotPasswordComponent   |

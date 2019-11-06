@@ -5,7 +5,7 @@ Background:
 
 Scenario Outline: I test sign-in and sign-out
     Given I create user
-    Then I sign-in
+    Then I sign-in as "user1"
     Then I sign-out
     Then I delete user "<username>"
 

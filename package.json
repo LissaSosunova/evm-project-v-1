@@ -11,7 +11,9 @@
     "e2e": "ng e2e",
     "postinstall": "ng build --aot --prod",
     "backend": "nodemon ./backend_server/index.js",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test-specific": "cypress run -s cypress/integration/chats/chats.feature"
   },
   "private": true,
   "dependencies": {

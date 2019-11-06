@@ -6,7 +6,7 @@
                 col-md-8
                 col-lg-8">
             <app-section-spinner [loading]="isLoadingMessages" [diameter]="'100'" [position]="'absolute'"></app-section-spinner>
-            <div class="message-box" (scroll)="scrollChatWindow($event)" #messageBox >
+            <div class="message-box" (scroll)="scrollChatWindow($event)" #messageBox data-cy="message-window">
                 
                 <section [ngSwitch]="isMessages">
                     <span *ngSwitchCase="false">{{test}}</span>

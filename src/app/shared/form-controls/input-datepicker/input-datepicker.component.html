@@ -18,6 +18,7 @@
           (focus)="openDatePicker($event)"
           [value]="localDateStr"
           [formControl]="control"
+          name="visible"
           >      
     <mat-datepicker-toggle matSuffix [for]="datepicker">
       <div matDatepickerToggleIcon class="material-icons" [ngClass]="{'disabled_icon': disabled}">date_range</div>

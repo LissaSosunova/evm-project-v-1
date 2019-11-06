@@ -94,6 +94,7 @@ export class InputDatepickerComponent implements ControlValueAccessor, OnInit, O
   private initFormControl(): void {
     this.control.valueChanges.pipe(takeUntil(this.unsubscribe$))
     .subscribe(value => {
+      console.log(value);
       this.dateChange.emit(value);
       this.localDateStr = this.datePipe.transform(value, this.format);
       if (this.onChange) {

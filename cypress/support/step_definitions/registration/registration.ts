@@ -5,3 +5,10 @@ then('I see {string} inputs', number => {
         expect(elementsLength).to.be.equal(+number);
     });
 });
+
+then('I fill registration form with data {string}', data => {
+    const dataPieces: string[] = data.split(';');
+    cy.get('.input-container input').each(($input, i) => {
+        cy.wrap($input).clear().type(dataPieces[i]);
+    });
+});

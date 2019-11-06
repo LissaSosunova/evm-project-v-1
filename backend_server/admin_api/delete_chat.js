@@ -16,11 +16,18 @@ const colors = require('colors');
         const params = {
             $and: [{'users.username': username1}, {'users.username': username2}]
         };
-        const response = await datareader(Chat, params, 'deleteOne');
-        console.info('Database response after deleting chat'.italic, response);
+        const response = await datareader(Chat, params, 'findOne');
+        if (response === null) {
+            console.error(`Chat between user ${username1} and ${username2} was not found in database`.red);
+            process.exit();
+            return
+        }
+        const deleteResponse = await datareader(Chat, params, 'deleteOne');
+        console.info('Database response after deleting chat'.italic, deleteResponse);
         console.info(`Private chat between users ${username1} and ${username2} succesfully deleted from database`.green.bold);
         process.exit();
     } catch(error) {
-        console.error('delete chat error'.red, error)
+        console.error('delete chat error'.red, error);
+        process.exit();
     }
 })()

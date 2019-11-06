@@ -8,7 +8,8 @@
         "create-user": "node ./admin_api/create_user.js",
         "create-user:json": "npm run create-user -- --credsUser ./testUserCreds.json",
         "delete-chat": "node ./admin_api/delete_chat.js",
-        "delete-user": "node ./admin_api/delete_user.js"
+        "delete-user": "node ./admin_api/delete_user.js",
+        "delete-event": "node ./admin_api/delete_event.js"
     },
     "dependencies": {
         "bcrypt": "^3.0.6",

@@ -54,13 +54,19 @@ module.exports = (on, config) => {
 
   on('task', {
     deleteUser(username) {
-      return executeCommandPromiseAndWait(`npx lerna run delete-user --stream -- -- --username ${username}`)
+      return executeCommandPromiseAndWait(`npx lerna run delete-user --stream -- -- --username "${username}"`)
     }
   });
 
   on('task', {
     deleteChat(usernames) {
-      return executeCommandPromiseAndWait(`npx lerna run delete-chat --stream -- -- --username1 ${usernames.username1} --username2 ${usernames.username2}`)
+      return executeCommandPromiseAndWait(`npx lerna run delete-chat --stream -- -- --username1 "${usernames.username1}" --username2 "${usernames.username2}"`)
+    }
+  });
+
+  on('task', {
+    deleteEvent(name) {
+      return executeCommandPromiseAndWait(`npx lerna run delete-event --stream -- -- --eventName "${name}"`)
     }
   })
 }
