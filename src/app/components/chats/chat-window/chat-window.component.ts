@@ -5,13 +5,14 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
-  HostListener
+  HostListener,
+  Output
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { types } from "src/app/types/types";
 import { TransferService } from "src/app/services/transfer.service";
 import { DataService } from "src/app/services/data.service";
-import { FormControl, Validators } from "@angular/forms";
+import { FormControl, Validators, NgForm } from "@angular/forms";
 import {
   debounceTime,
   distinctUntilChanged,
@@ -26,6 +27,7 @@ import { SessionStorageService } from "src/app/services/session.storage.service"
 import { select, Store } from "@ngrx/store";
 import * as userAction from "../../../store/actions";
 import { PageMaskService } from "src/app/services/page-mask.service";
+import { ChatEmotions } from 'src/app/constants/chat-emotions';
 
 @Component({
   selector: "app-chat-window",
@@ -41,7 +43,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public draftMessage: types.DraftMessageFromServer;
   public groupChats: Array<types.Chats> = [];
   public editMessageMode: boolean = false;
-  public inputMes: string;
+  @Output() inputMes: string;
   public isDraftMessageExist: boolean;
   public isDraftMessageSent: boolean = false;
   public isLoadingMessages: boolean;
@@ -55,7 +57,9 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public test: string;
   public user: types.User = {} as types.User;
   public userNameIsTyping: string;
-
+  public emotions = ChatEmotions;
+  public messageControl: FormControl;
+  public openEmoList: boolean = false;
   @ViewChild('messageBox', { static: true }) private messageBox: ElementRef;
   private messageBoxElement: HTMLDivElement;
   @ViewChild('footer', { static: true }) private footer: ElementRef;
@@ -209,6 +213,31 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sendMessage();
     } else if (this.control.valid && this.editMessageMode) {
       this.completeEditing();
+    }
+  }
+
+  public outsideEmoClick(): void {
+    this.openEmoList = false;
+  }
+
+  public writeMessage(e): void {
+    this.inputMes = e.target.value;
+    if (this.control.valid && !this.editMessageMode) {
+      this.sendMessage();
+    } else if (this.control.valid && this.editMessageMode) {
+      this.completeEditing();
+    }
+  }
+
+  public openEmo(): void {
+    this.openEmoList = !this.openEmoList;
+  }
+
+  public chooseEmo(emo: string): void {
+    if (this.inputMes) {
+      this.inputMes = this.inputMes + emo;
+    } else {
+      this.inputMes = emo;
     }
   }
 

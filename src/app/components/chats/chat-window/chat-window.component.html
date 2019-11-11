@@ -21,7 +21,7 @@
                                         <span class="edited-message"
                                             *ngIf="item.edited">Edited</span>
                                         <span class="text">
-                                            <app-message-text [textToParse]="item.text"></app-message-text>
+                                            <app-message-text [innerHTML]="item.text"></app-message-text>
                                         </span> 
                                     </div>
                                     <div *ngIf="item.authorId === user.username">
@@ -113,23 +113,26 @@
     </div>
     
 
-    <footer #footer>
+    <footer #footer class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row">
         <div class="editing-message" *ngIf="editMessageMode">
             Editing message
         </div>
         <div class="user-is-typing" *ngIf="showUserIsTyping"> {{userNameIsTyping}} is typing</div>  
         <form class="row">
-        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-8 input-wrap">
-            <app-multi-line-input
-            [formControl]="control"
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 input-wrap">
+            <text-field
+            [control]="control"
+            (enterKey)="onEnterKey()"
+            #messageBody
+            name="messageBody"
+            (keydown.enter)="writeMessage($event)"
+            [text]="inputMes"
             [placeholder]="'Write a message'"
-            [minHeight]="35"
-            [maxHeight]="250"
-            [currMes]="inputMes"
-            (enterKey)="onEnterKey()">
-            </app-multi-line-input>
+            [floatLabel]="'never'"
+            >
+            </text-field>
         </div>
-        <div class="col-sm-3 col-xs-4 buttons">
+        <div class="col-sm-2 col-xs-2 buttons">
             <button class="btn-submit-check" 
                     *ngIf="editMessageMode"
                     (click)="completeEditing()"
@@ -152,6 +155,22 @@
                     data-cy="send">
                 <i class="material-icons">send</i>
             </button>
+            <span appClickOutside (mClickOutside)="outsideEmoClick()">
+                <div class="smile-container"
+                    *ngIf="openEmoList"
+                    appClickOutside
+                    >
+                    <span *ngFor="let emo of emotions" [innerHTML]="emo"
+                    class="smile"
+                    (click)="chooseEmo(emo)"></span>
+                </div>
+                <button class="btn-submit-emo"
+                        (click)="openEmo()"
+                        data-cy="openEmo">
+                        <i class="material-icons">insert_emoticon</i>
+                </button>
+            </span>
+            
             
         </div>
         </form>  

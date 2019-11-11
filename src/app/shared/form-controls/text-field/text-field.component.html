@@ -1,0 +1,16 @@
+<mat-form-field>
+  <mat-label>{{label}}</mat-label>
+    <textarea
+    autofocus
+    matInput
+    #input
+    cdkTextareaAutosize
+    #autosize="cdkTextareaAutosize"
+    cdkAutosizeMinRows="1"
+    cdkAutosizeMaxRows="20"
+    [innerHtml]="text"
+    [formControl]="control"
+    [placeholder]="placeholder"
+    >
+</textarea>
+  </mat-form-field>
