@@ -58,6 +58,8 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public user: types.User = {} as types.User;
   public userNameIsTyping: string;
   public emotions = ChatEmotions;
+  public messageControl: FormControl;
+  public openEmoList: boolean = false;
   @ViewChild('messageBox', { static: true }) private messageBox: ElementRef;
   private messageBoxElement: HTMLDivElement;
   @ViewChild('footer', { static: true }) private footer: ElementRef;
@@ -76,8 +78,6 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   private editedMessage: types.Message;
   private sidebarExpand: boolean;
   private pattern: RegExp = /[^\s]/;
-  private openEmoList: boolean = false;
-  public messageControl: FormControl;
 
   constructor(
     private transferService: TransferService,
@@ -216,12 +216,11 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  public outsideEmoClick(): void {
+    this.openEmoList = false;
+  }
+
   public writeMessage(e): void {
-    console.log(e.inputType)
-    if(e.inputType = "deleteContentBackward") {
-      console.log('e', e)
-      // this.inputMes = e.target.value;
-    }
     this.inputMes = e.target.value;
     if (this.control.valid && !this.editMessageMode) {
       this.sendMessage();
@@ -230,13 +229,16 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  public openEmo() {
+  public openEmo(): void {
     this.openEmoList = !this.openEmoList;
   }
 
   public chooseEmo(emo: string): void {
-    this.inputMes = this.inputMes + `${emo}`;
-    this.openEmoList = !this.openEmoList;
+    if (this.inputMes) {
+      this.inputMes = this.inputMes + emo;
+    } else {
+      this.inputMes = emo;
+    }
   }
 
   public sendMessage(): void {

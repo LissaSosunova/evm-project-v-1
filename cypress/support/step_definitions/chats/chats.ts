@@ -58,5 +58,9 @@ then('I type message {string} in {string}', (message, input) => {
 });
 
 then('I see message {string} in {string}', (message, input) => {
-    cy.get(input).should('contain', message);
+    cy.get(input)
+    .invoke('val')
+    .then(draftMessage => {
+        cy.wrap(draftMessage).should('eq', message);
+    });
 });

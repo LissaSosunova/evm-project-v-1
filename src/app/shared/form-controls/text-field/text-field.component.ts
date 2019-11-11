@@ -19,9 +19,8 @@ export class TextFieldComponent extends InputAbstract implements OnInit, OnChang
   @Output() public reset: EventEmitter<void> = new EventEmitter<void>();
   public isValue: boolean = false;
   @Input() public maxLength?: number = 500; // default value
-  @Input() text: string;
+  @Input() public text: string;
   private inputElement: HTMLInputElement;
-
 
   @ViewChild('input', {static: true}) public input: ElementRef;
   @ViewChild('autosize', {static: false}) autosize: CdkTextareaAutosize;
@@ -39,6 +38,7 @@ export class TextFieldComponent extends InputAbstract implements OnInit, OnChang
     if (!changes.text.isFirstChange()) {
       setTimeout(() => {
         this.text = this.input.nativeElement.innerHTML;
+        this.control.setValue(this.text);
       });
     }
   }
@@ -46,8 +46,5 @@ export class TextFieldComponent extends InputAbstract implements OnInit, OnChang
     // Wait for changes to be applied, then trigger textarea resize.
     this._ngZone.onStable.pipe(take(1))
         .subscribe(() => this.autosize.resizeToFitContent(true));
-  }
-  writeMessage($event) {
-    this.text = this.input.nativeElement.innerHTML;
   }
 }

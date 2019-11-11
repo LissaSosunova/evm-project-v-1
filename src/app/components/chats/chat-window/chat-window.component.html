@@ -113,7 +113,7 @@
     </div>
     
 
-    <footer #footer class="col-lg-8 col-md-8 col-sm-8 col-xs-8 row">
+    <footer #footer class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row">
         <div class="editing-message" *ngIf="editMessageMode">
             Editing message
         </div>
@@ -121,12 +121,14 @@
         <form class="row">
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 input-wrap">
             <text-field
-            [formControl]="control"
+            [control]="control"
             (enterKey)="onEnterKey()"
             #messageBody
             name="messageBody"
             (keydown.enter)="writeMessage($event)"
             [text]="inputMes"
+            [placeholder]="'Write a message'"
+            [floatLabel]="'never'"
             >
             </text-field>
         </div>
@@ -153,17 +155,23 @@
                     data-cy="send">
                 <i class="material-icons">send</i>
             </button>
-            <button class="btn-submit-emo"
-            (click)="openEmo()">
-            <i class="material-icons">insert_emoticon</i>
-            </button>
-            <div class="smile-container"
-            [ngClass]="{'invisible': openEmoList === false}"
-                >
-                <span *ngFor="let emo of emotions" [innerHTML]="emo"
-                class="smile"
-                (click)="chooseEmo(emo)"></span>
-            </div>
+            <span appClickOutside (mClickOutside)="outsideEmoClick()">
+                <div class="smile-container"
+                    *ngIf="openEmoList"
+                    appClickOutside
+                    >
+                    <span *ngFor="let emo of emotions" [innerHTML]="emo"
+                    class="smile"
+                    (click)="chooseEmo(emo)"></span>
+                </div>
+                <button class="btn-submit-emo"
+                        (click)="openEmo()"
+                        data-cy="openEmo">
+                        <i class="material-icons">insert_emoticon</i>
+                </button>
+            </span>
+            
+            
         </div>
         </form>  
     </footer>

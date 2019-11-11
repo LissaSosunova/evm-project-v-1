@@ -1,4 +1,5 @@
 <mat-form-field>
+  <mat-label>{{label}}</mat-label>
     <textarea
     autofocus
     matInput
@@ -8,9 +9,8 @@
     cdkAutosizeMinRows="1"
     cdkAutosizeMaxRows="20"
     [innerHtml]="text"
-    (focus)="writeMessage($event)"
-    [(ngModel)]="text"
-    (changeInput)="onChangeInput($event)"
+    [formControl]="control"
+    [placeholder]="placeholder"
     >
 </textarea>
   </mat-form-field>

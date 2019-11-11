@@ -39,6 +39,11 @@ Scenario Outline: I create new chat
     Then I see the "<chatWindow>"
     Then I see the "<privateChatListComponent>"
     Then I see the "<groupChatListComponent>"
+    Then I see the "<openEmoBtn>"
+    Then I see button "<openEmoBtn>" which can be clicked
+    Then I see the ".smile-container"
+    Then I see button "<openEmoBtn>" which can be clicked
+    Then I do not see the ".smile-container"
     Then I see the "<multilineInput>"
     Then I see disabled button "<sendMessageBtn>"
     Then I send message "<message>" in chat using "<multilineInput>" and "<sendMessageBtn>"
@@ -46,8 +51,8 @@ Scenario Outline: I create new chat
     Then I sign-out
     
 Examples:
-    | avaiting           | name2        | confirmBtn        | contacts           | username1    | username2 | newChat            | chatWindow       | privateChatListComponent    | groupChatListComponent     | textFieldComponent     | sendMessageBtn   | message            |
-    | [data-cy=avaiting] | test user 2  | [data-cy=confirm] | [data-cy=contacts] | e2eUser1     | e2eUser2  | [data-cy=new-chat] | app-chat-window  | app-chat-list[flag=private] | app-chat-list[flag=group]  | text-field             | [data-cy=send]   | first test message |
+    | avaiting           | name2        | confirmBtn        | contacts           | username1    | username2 | newChat            | chatWindow       | privateChatListComponent    | groupChatListComponent      | sendMessageBtn   | message            | multilineInput        | openEmoBtn        |
+    | [data-cy=avaiting] | test user 2  | [data-cy=confirm] | [data-cy=contacts] | e2eUser1     | e2eUser2  | [data-cy=new-chat] | app-chat-window  | app-chat-list[flag=private] | app-chat-list[flag=group]   | [data-cy=send]   | first test message | text-field textarea   | [data-cy=openEmo] |
 
 Scenario Outline: I sign-in from another user
     Given I am already signed-in as "user2"
@@ -80,8 +85,8 @@ Scenario Outline: I sign-in from another user
     
 
 Examples:
-    | username1    | username2 | privateChatListComponent       | name1        | name2       | chatWindow       | privateChatListComponent    | groupChatListComponent     | textFieldComponent   | sendMessageBtn  | message            | anotherMessage | openMenu            | editBtn                 | deleteBtn                 | anotherEditedMessage  | completeEditingBtn         |
-    | e2eUser1     | e2eUser2  | app-chat-list[flag=private]    | test user 1  | test user 2 | app-chat-window  | app-chat-list[flag=private] | app-chat-list[flag=group]  | text-field           | [data-cy=send]  | first test message | second message | [data-cy=open-menu] | [data-cy=edit-message]  | [data-cy=delete-message]  | Second edited message | [data-cy=complete-editing] |
+    | username1    | username2 | privateChatListComponent       | name1        | name2       | chatWindow       | privateChatListComponent    | groupChatListComponent     |  sendMessageBtn  | message            | anotherMessage | openMenu            | editBtn                 | deleteBtn                 | anotherEditedMessage  | completeEditingBtn         | multilineInput      |
+    | e2eUser1     | e2eUser2  | app-chat-list[flag=private]    | test user 1  | test user 2 | app-chat-window  | app-chat-list[flag=private] | app-chat-list[flag=group]  |  [data-cy=send]  | first test message | second message | [data-cy=open-menu] | [data-cy=edit-message]  | [data-cy=delete-message]  | Second edited message | [data-cy=complete-editing] | text-field textarea |
 
 Scenario Outline: I test chat window scroll
     Given I visit chats page
@@ -94,25 +99,25 @@ Scenario Outline: I test chat window scroll
 
 
 Examples:
-    | textFieldComponent | sendMessageBtn | messageWindow            | privateChatListComponent    | name2         | chatWindow        |
-    | text-field         | [data-cy=send] | [data-cy=message-window] | app-chat-list[flag=private] | test user 2   | app-chat-window   |
+    | textFieldComponent | sendMessageBtn | messageWindow            | privateChatListComponent    | name2         | chatWindow        | multilineInput         |
+    | text-field         | [data-cy=send] | [data-cy=message-window] | app-chat-list[flag=private] | test user 2   | app-chat-window   | text-field textarea    |
 
 Scenario Outline: I test draft messages
     Given I visit chats page
     Then I see the "<privateChatListComponent>"
     Then I click on user "<name2>" in "private" chat list
     Then I see the "<chatWindow>"
-    Then I type message "<message>" in "<text-field>"
+    Then I type message "<message>" in "<textFieldComponent>"
     Then I wait for "2" seconds
     Then I reload page
-    Then I see message "<message>" in "<text-field>"
-    Then I type message "<anotherMessage>" in "<text-field>"
+    Then I see message "<message>" in "<textFieldComponent>"
+    Then I type message "<anotherMessage>" in "<textFieldComponent>"
     Then I see button "<sidebarBtn>" which can be clicked
     Then I visit chats page
     Then I see the "<privateChatListComponent>"
     Then I click on user "<name2>" in "private" chat list
     Then I see the "<chatWindow>"
-    Then I see message "<anotherMessage>" in "<text-field>"
+    Then I see message "<anotherMessage>" in "<textFieldComponent>"
     Then I sign-out
     Then I delete user "<username1>"
     Then I delete user "<username2>"
@@ -120,4 +125,4 @@ Scenario Outline: I test draft messages
 
 Examples:
     | username1 | username2 | privateChatListComponent      | name2         | chatWindow        | message                  | textFieldComponent     | anotherMessage  | sidebarBtn                                         |
-    | e2eUser1  | e2eUser2  | app-chat-list[flag=private]   | test user 2   | app-chat-window   | This is draft message    | text-field             | another message | app-sidebar aside nav li:first-child i:first-child |
+    | e2eUser1  | e2eUser2  | app-chat-list[flag=private]   | test user 2   | app-chat-window   | This is draft message    | text-field textarea    | another message | app-sidebar aside nav li:first-child i:first-child |
