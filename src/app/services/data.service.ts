@@ -88,6 +88,10 @@ export class DataService {
     return this.http.post<types.Server200Response>(`${URL_BACK}/change_password`, {password, tokenTime}, {headers});
   }
 
+  public setNewProfileData(params: any): Observable<any> {
+    return this.http.post(URL_BACK + '/profile', params, {headers: this.getHeaders()});
+  }
+
   private getHeaders(): HttpHeaders {
     const token = this.sessionStorageService.getValue('_token');
     const tokenKey = this.sessionStorageService.getValue('token_key');

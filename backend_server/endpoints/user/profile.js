@@ -28,19 +28,10 @@ router.post('/profile', function (req, res, next){
       ]
     };
     const editedData = req.body;
-    datareader(User, params, 'findOne')
-      .then(response =>{
-        if (editedData.phone && response.phone !== editedData.phone){
-          User.updateOne({"username" : response.username},
-            {
-              $set : { "phone" : editedData.phone }
-            }, { upsert: true },
-            function(err, result){
-            }
-          );
-          return response;
-        } return response;
-      })
+    const key = Object.keys(req.body);
+
+    if (key[0] === "name") {
+      datareader(User, params, 'findOne')
       .then(response =>{
         if (editedData.name && response.name !== editedData.name){
           User.updateOne({"username" : response.username},
@@ -71,29 +62,26 @@ router.post('/profile', function (req, res, next){
         }
       })
       .then(response =>{
-        if (editedData.avatar){
-          const avatar = new Avatar(editedData.avatar);
+        return res.json(response);
+      })
+    } else if (key[0] === "phone") {
+      datareader(User, params, 'findOne')
+      .then(response =>{
+        if (editedData.phone && response.phone !== editedData.phone){
           User.updateOne({"username" : response.username},
             {
-              $set : { "avatar" : avatar }
+              $set : { "phone" : editedData.phone }
             }, { upsert: true },
             function(err, result){
             }
           );
-          // update name in contacts arrs
-          // User.updateMany({"contacts.id": response.username},
-          //   {
-          //     $set : { "contacts.$.name" : editedData.name }
-          //   }, { upsert: true },
-          //   function(err, result){
-          //   }
-          // );
           return response;
-        }
+        } return response;
       })
       .then(response =>{
-        return res.sendStatus(200);
+        return res.json(response);
       })
+    }
   });
 
 module.exports = router;

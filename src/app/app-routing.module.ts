@@ -20,7 +20,7 @@ import { GetChatResolverService } from './resolvers/get-chat-resolver.service';
 import { EmailConfirmedComponent } from './components/email-confirmed/email-confirmed.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-
+import { ProfileComponent } from './components/profile/profile.component';
 const routes: Routes = [
   {
     path: '',
@@ -91,6 +91,10 @@ const routes: Routes = [
         path: 'new_event',
         component: NewEventComponent,
         canDeactivate: [NewEventGuard]
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
       }
     ]
   },
