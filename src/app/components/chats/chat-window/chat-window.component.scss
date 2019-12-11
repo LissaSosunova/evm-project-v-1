@@ -273,7 +273,7 @@ form {
     display: block;
     width: 66.7%;
 
-      /deep/ mat-spinner {
+      ::ng-deep mat-spinner {
       top: 0 !important;
       z-index: 5;
       left: 65% !important;
