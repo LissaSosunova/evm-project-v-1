@@ -29,7 +29,7 @@ router.post('/change_email', async (req, res, next) => {
       res.json({status: 200, message: 'Email sent'});
       
     } catch (err) {
-      return res.sendStatus(401)
+      return res.sendStatus(500)
     }
 
 });

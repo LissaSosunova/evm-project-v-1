@@ -58,7 +58,7 @@
   .g-form-popup__footer-submit-btn {
     // float: right;
     margin-left: 20px;
-    /deep/ .mat-raised-button {
+    ::ng-deep .mat-raised-button {
       height: 45px;
       line-height: 45px;
       min-width: 150px;

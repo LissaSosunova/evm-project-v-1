@@ -190,4 +190,8 @@ export class MainComponent implements OnInit, OnDestroy {
     });
   }
 
+  private editProfile(): void {
+    this.router.navigate(['main/profile']);
+  }
+
 }

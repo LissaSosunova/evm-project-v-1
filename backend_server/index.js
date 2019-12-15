@@ -21,6 +21,7 @@ const $getDraftMessage = require('./endpoints/chat/get_draft_message');
 const $confirmEmail = require('./endpoints/registration/confirm_email');
 const $uploadAvatar = require('./endpoints/user/upload_avatar');
 const $deleteAvatar = require('./endpoints/user/delete_avatar');
+const $editProfile = require('./endpoints/user/profile');
 const $forgotPassword = require('./endpoints/registration/forgot_password');
 const $resetPassword = require('./endpoints/registration/reset_password');
 const $changePassword = require('./endpoints/registration/change_password');
@@ -40,7 +41,7 @@ app.use(function(req, res, next) {
 });
 
 app.route('/profile')
-  .post($postUser);
+  .post($editProfile);
 
 app.route('/event/:id/')
   .get($event);

@@ -65,6 +65,7 @@ import { NewMessageToastComponent } from './shared/toasts/components/new-message
 import { CounterComponent } from './shared/components/counter/counter.component';
 import { MessageTextComponent } from './components/chats/chat-window/message-text/message-text.component';
 import { TextFieldComponent } from './shared/form-controls/text-field/text-field.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 
 @NgModule({
@@ -125,7 +126,8 @@ import { TextFieldComponent } from './shared/form-controls/text-field/text-field
     NewMessageToastComponent,
     CounterComponent,
     MessageTextComponent,
-    TextFieldComponent
+    TextFieldComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

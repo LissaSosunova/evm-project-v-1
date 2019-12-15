@@ -1,0 +1,56 @@
+@import '../../../scss/variables';
+
+.main-block {
+  border: 1px solid map-get($bg-color , 'dark' );
+  padding: 20px 10px 20px 10px;
+  div {
+    padding: 20px 0px 20px 10px;
+  }
+}
+.avatar {
+  height: 80px;
+  align-self: center;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: 10px;
+}
+[type="file"] {
+  display: none;
+}
+.editable {
+  font-size: 0.6rem;
+  color: map-get($font-color , 'dark-gray' );
+}
+.upload-avatar {
+  font-size: 2.6rem;
+  color: map-get($bg-color , 'dark' );
+  margin-left: 2%;
+  &:hover {
+    cursor: pointer;
+    color: map-get($bg-color , 'darker' );
+  }
+}
+.name-field {
+  font-size: 0.8rem;
+  color: map-get($font-color , 'dark-gray' );
+}
+.btn-confirm {
+  font-size: 1.2rem;
+  color: map-get($bg-color , 'dark' );
+  margin-left: 2%;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.no-padd {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.username {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.name-field, .editable {
+  padding-right: 10px;
+}
