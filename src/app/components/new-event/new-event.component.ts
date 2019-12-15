@@ -12,6 +12,7 @@ import { DataService } from '../../services/data.service';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { SocketIO } from 'src/app/types/socket.io.types';
 import { select, Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-event',
@@ -50,7 +51,8 @@ export class NewEventComponent implements OnInit, OnDestroy {
               private dateTransformService: DateTransformService,
               private socketIOService: SocketIoService,
               private dataService: DataService,
-              private store: Store<types.User>) { }
+              private store: Store<types.User>,
+              private router: Router) { }
 
   ngOnInit() {
     this.user$ = this.store.pipe(select('user'));
@@ -147,6 +149,9 @@ export class NewEventComponent implements OnInit, OnDestroy {
       this.user.events.push(this.eventToDb);
       this.transferService.dataSet({name: 'userData', data: this.user});
       this.eventToDb._id = response.eventId;
+      setTimeout(() => {
+        this.router.navigate(['/main/events']);
+      }, 2000);
     },
     err => {
       this.toastService.openToastFail('Server error');
