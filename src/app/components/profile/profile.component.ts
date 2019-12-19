@@ -13,9 +13,9 @@ import * as userAction from '../../store/actions';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  private editedName: boolean = false;
-  private editedMail: boolean = false;
-  private editedPhone: boolean = false;
+  public editedName: boolean = false;
+  public editedMail: boolean = false;
+  public editedPhone: boolean = false;
   public user: types.User = {} as types.User;
   public avatar: string;
   @ViewChild('uploadFile', {static: true}) public uploadFile: ElementRef;
@@ -44,28 +44,28 @@ export class ProfileComponent implements OnInit {
       contact.avatar = this.avatarService.parseAvatar(contact.avatar);
     });
   }
-  private saveNewName(e): void {
+  public saveNewName(e): void {
     this.editedName = true;
   }
-  private saveNewPhone(e): void {
+  public saveNewPhone(e): void {
     this.editedPhone = true;
   }
-  private saveName(val: string): void {
+  public saveName(val: string): void {
     this.data.setNewProfileData({name: val}).subscribe((resp) => {
       this.toastService.openToastSuccess('Your name was chanched successful');
       this.editedName = false;
     });
   }
-  private savePhone(val: string): void {   
+  public savePhone(val: string): void {   
     this.data.setNewProfileData({phone: val}).subscribe((resp) => {
       this.toastService.openToastSuccess('Your phone number was chanched successful');
       this.editedPhone = false;
     });
   }
-  private saveNewMail(e): void {
+  public saveNewMail(e): void {
     this.editedMail = true;
   }
-  private saveMail(val: string): void {
+  public saveMail(val: string): void {
     const params = {username: this.user.username, newEmail: val};
     this.data.changeEmail(params).subscribe((res) => {
       this.toastService.openToastSuccess('Your e-mail was chanched. Check your e-mail and confirm');

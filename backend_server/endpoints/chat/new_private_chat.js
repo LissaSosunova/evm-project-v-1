@@ -57,8 +57,14 @@ router.post('/new_private_chat/', async function (req, res, next) {
         chatItem1.chatId = chat.id;
         chatItem1.type = chat.type;
         //Create chat for second User
+        const authParams = {
+          $or: [
+            {username: auth.username},
+            {email: auth.username}
+          ]
+        };
         const chatItem2 = {};
-        const response2 = await datareader(User, {username: auth.username}, 'findOne');
+        const response2 = await datareader(User, authParams, 'findOne');
         chatItem2.id = response2.username;
         chatItem2.name = response2.name;
         chatItem2.users = req.body.users;
@@ -103,8 +109,14 @@ router.post('/new_private_chat/', async function (req, res, next) {
         })
       } else {
         // Add exist chat ID to contacts.$.private_chat (both users)
+        const authParams = {
+          $or: [
+            {username: auth.username},
+            {email: auth.username}
+          ]
+        };
         const response1 = await datareader(User, {username: req.body.users[1].username}, 'findOne');
-        const response2 = await datareader(User, {username: auth.username}, 'findOne');
+        const response2 = await datareader(User, authParams, 'findOne');
         const updateUser1Params = {
           query: {"username" : response1.username, "contacts.id" : response2.username},
           objNew: {$set : { "contacts.$.private_chat" : findChat._id }}
@@ -162,7 +174,7 @@ router.post('/new_private_chat/', async function (req, res, next) {
         return res.json(chatItem2);
       }
     } catch (err) {
-      console.log('err 500');
+      console.error('/new_private_chat', err);
       res.sendStatus(500);
     }
   });

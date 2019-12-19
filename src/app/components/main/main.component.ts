@@ -88,6 +88,10 @@ export class MainComponent implements OnInit, OnDestroy {
     });
   }
 
+  public editProfile(): void {
+    this.router.navigate(['main/profile']);
+  }
+
   public uploadAvatar(event): void {
     const files = this.uploadFile.nativeElement.files;
     const formData: FormData = new FormData();
@@ -188,10 +192,6 @@ export class MainComponent implements OnInit, OnDestroy {
       this.store.dispatch(new userAction.NewEvent(event));
       this.toastService.openToastSuccess(`You are invited to new event!`);
     });
-  }
-
-  private editProfile(): void {
-    this.router.navigate(['main/profile']);
   }
 
 }
