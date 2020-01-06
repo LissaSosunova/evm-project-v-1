@@ -23,6 +23,9 @@ export module SocketIO {
         reject_request = 'reject_request',
         delete_request = 'delete_request',
         new_event = 'new_event',
-        new_event_confirm = 'new_event_confirm'
+        new_event_confirm = 'new_event_confirm',
+        new_group_chat = 'new_group_chat',
+        delete_group_chat = 'delete_group_chat',
+        delete_user_from_group_chat = 'delete_user_from_group_chat'
     }
 }

@@ -35,7 +35,7 @@ export class TextFieldComponent extends InputAbstract implements OnInit, OnChang
 
   }
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.text.isFirstChange()) {
+    if (changes.text && !changes.text.isFirstChange()) {
       setTimeout(() => {
         this.text = this.input.nativeElement.innerHTML;
         this.control.setValue(this.text);

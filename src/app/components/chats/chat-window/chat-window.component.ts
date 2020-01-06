@@ -262,7 +262,11 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketIoService.socketEmit(SocketIO.events.message, message);
     this.inputMes = '';
     this.control.setValue('');
-    this.scrollDownMessageWindow();
+    setTimeout(() => {
+      this.changeChatWindowHeigth();
+      this.scrollDownMessageWindow();
+      this.inputMes = this.inputMes.replace(/\n/g, '');
+    });
   }
 
   public showChatLists(): void {
@@ -328,9 +332,11 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.inputMes = '';
   }
 
   private init(): void {
+    this.showUserIsTyping = false;
     this.unsubscribe$ = new Subject<void>();
     this.user$ = this.store.pipe(select('user'));
     this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
@@ -349,7 +355,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getChat();
     this.initDraftMessagesSubscription();
     this.subscribeUserIsTyping();
-    const thisChat = this.user.chats.find(chat => chat.chatId === this.chatId);
+    const thisChat: types.Chats = this.user.chats.find(chat => chat.chatId === this.chatId);
     if (thisChat && thisChat.unreadMes > 0) {
       this.socketIoService.socketEmit(SocketIO.events.user_read_message, {
         userId: this.user.username,
@@ -389,20 +395,22 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
     this.isDraftMessageExist = !!draftMessageItem;
-
     if (this.isDraftMessageExist) {
       this.control = new FormControl(
         draftMessageItem.text,
         [Validators.required, Validators.pattern(this.pattern)]
       );
       this.isDraftMessageSent = true;
+      this.inputMes = draftMessageItem.text;
     } else {
       this.control = new FormControl('', [Validators.required, Validators.pattern(this.pattern)]);
+      this.inputMes = '';
     }
 
     this.control.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.unsubscribe$), distinctUntilChanged())
       .subscribe(message => {
+        this.scrollDownMessageWindow();
         this.inputMes = message;
         this.changeChatWindowHeigth();
       });

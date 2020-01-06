@@ -23,7 +23,6 @@ import { TransferService } from 'src/app/services/transfer.service';
 
 export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-
   private createNewChatParams: types.CreateNewChat;
   public actionName: types.ContactAction;
   public chatId: string;

@@ -1,3 +1,6 @@
+<div class="back-link">
+  <app-back-link></app-back-link>
+</div>
 <div class="col-xs-12 center-xs row">
   <div class="col-xs-8 row middle-xs main-block">
     <div class="col-xs-3 end-xs middle-xs">
@@ -86,7 +89,7 @@
           </i>
         </div>
           <div class="col-xs-10 name-field">
-              (you will have to confirm ypur e-mail)
+              (you will have to confirm your e-mail)
           </div>
     </div>
     
@@ -114,6 +117,60 @@
             (click)="savePhone(user.phone)">
               check
           </i>
+      </div>
+      <div class="change-password">
+        <form name="passwordForm"
+        #passwordForm="ngForm"
+        >
+        <div class="row middle-xs">
+            <div class="col-xs-3 end-xs name-field">
+              <span class="name-field">
+                  Old password
+              </span>
+              <br>
+              <label class="editable">
+                editable
+              </label>
+            </div>
+            <div class="col-xs-4 start-xs no-padd">
+                <app-input-password
+                name="oldPassword"
+                [placeholder]="'Old password'"
+                [(ngModel)]="passwords.oldPassword"
+                [required]="true"
+                #oldPassword="ngModel"
+                >
+                </app-input-password>
+            </div>
+          </div>
+          <div class="row middle-xs">
+            <div class="col-xs-3 end-xs name-field">
+              <span class="name-field">
+                  New password
+              </span>
+              <br>
+              <label class="editable">
+                editable
+              </label>
+            </div>
+            <div class="col-xs-4 start-xs no-padd">
+                <app-input-password
+                name="newPassword"
+                [placeholder]="'New password'"
+                [(ngModel)]="passwords.newPassword"
+                [required]="true"
+                #newPassword="ngModel"
+                >
+                </app-input-password>
+            </div>
+            <div class="col-xs-5 start-xs no-padd">
+              <i *ngIf="passwordForm.valid" class="material-icons btn-confirm"
+                (click)="changePassword(passwords)">
+                  check
+              </i>
+          </div>
+          </div>  
+        </form>
       </div>
   </div>
 </div>

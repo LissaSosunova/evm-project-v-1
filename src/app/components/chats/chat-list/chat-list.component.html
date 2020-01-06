@@ -3,7 +3,8 @@
             <ul>
             <li *ngFor="let item of privateChats">
                     <div class="row on-click-one-chat"
-                    (click)= "goToChat(item.chatId)">
+                    (click)= "goToChat(item.chatId)"
+                    [ngClass]="{'current-chat': chatId === item.chatId}">
                             <div class="col-sm-1">
                                     <img src="{{item.avatar.url}}">
                             </div>
@@ -22,6 +23,7 @@
                         </div>
             </li>
             </ul>
+            
     </section>
     <section *ngIf="flag === 'group'">
         <ul>

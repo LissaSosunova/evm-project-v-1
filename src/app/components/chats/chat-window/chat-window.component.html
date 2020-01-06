@@ -155,7 +155,7 @@
                     data-cy="send">
                 <i class="material-icons">send</i>
             </button>
-            <span appClickOutside (mClickOutside)="outsideEmoClick()">
+            <div appClickOutside (mClickOutside)="outsideEmoClick()" class="smile-wrapper">
                 <div class="smile-container"
                     *ngIf="openEmoList"
                     appClickOutside
@@ -169,7 +169,7 @@
                         data-cy="openEmo">
                         <i class="material-icons">insert_emoticon</i>
                 </button>
-            </span>
+            </div>
             
             
         </div>

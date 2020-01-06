@@ -3,6 +3,8 @@
 .main-block {
   border: 1px solid map-get($bg-color , 'dark' );
   padding: 20px 10px 20px 10px;
+  height: calc(87vh - 30px);
+  overflow: scroll;
   div {
     padding: 20px 0px 20px 10px;
   }
@@ -53,4 +55,16 @@
 
 .name-field, .editable {
   padding-right: 10px;
+}
+
+.delete-avatar {
+  cursor: pointer;
+}
+
+.change-password {
+  width: 100%;
+}
+
+[name=passwordForm] div.row {
+  width: 100%;
 }

@@ -19,7 +19,7 @@ export module types {
   export interface ChatData {
     _id: string;
     email: string[];
-    users: string[];
+    users: CreateNewChatUser[];
     messages: Message[];
     type: ChatType;
   }
@@ -161,6 +161,7 @@ export module types {
   }
 
   export interface DraftMessage {
+    _id?: string;
     chatID: string;
     authorId: string;
     text: string;
@@ -193,7 +194,7 @@ export module types {
     chatID: string;
     authorId: string;
     text: string;
-    users?: string[];
+    users?: CreateNewChatUser[];
     edited: boolean;
     unread?: string[];
     date: number; // timeStamp (to UTC)
@@ -278,11 +279,11 @@ export interface Server200Response {
 }
 
 export interface PrivateChat {
+  _id: string;
   draftMessages: DraftMessage[];
   messages: Message[];
   type: number;
   users: UsersInChat[];
-  _id: string;
 }
 
 export interface UsersInChat {

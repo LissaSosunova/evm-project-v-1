@@ -54,10 +54,6 @@ export class DataService {
     return this.http.post<types.Server200Response>(URL_BACK + '/user/', params);
   }
 
-  public saveEvent(event: types.EventDb): Observable<any> {
-    return this.http.post(URL_BACK + '/new_event/', event, {headers: this.getHeaders()});
-  }
-
   public sendDraftMessage(query: types.DraftMessage): Observable<types.Server200Response> {
     return this.http.post<types.Server200Response>(URL_BACK + '/set_draft_message', query, {headers: this.getHeaders()});
   }
