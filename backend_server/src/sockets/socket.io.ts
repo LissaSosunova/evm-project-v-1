@@ -19,10 +19,10 @@ export function runWebsocketsIO(server): void {
     const onlineClients: OnlineClients = {};
     const clientsInChat: ClientsInChat = {};
     const io: socketIo.Server = socketIo.listen(server);
-    console.info('Socket IO is running');
+    console.log('Socket IO is running');
 
     io.on('connection', socket => {
-        console.info('new connection');
+        console.log('new connection');
 
         socket.on('user', (obj: UserActionsSocket) => {
             if (!onlineClients[obj.userId]) {
@@ -31,8 +31,8 @@ export function runWebsocketsIO(server): void {
               (socket as any).userId = obj.userId;
               (socket as any).token = obj.token;
               onlineClients[obj.userId][obj.token] = socket;
-              socket.emit("all_online_users", Object.keys(onlineClients));
-              socket.broadcast.emit("user", {userId: obj.userId});
+              socket.emit('all_online_users', Object.keys(onlineClients));
+              socket.broadcast.emit('user', {userId: obj.userId});
         });
 
         socket.on('user_left', (obj: UserActionsSocket) => {
@@ -41,9 +41,14 @@ export function runWebsocketsIO(server): void {
                 if (Object.keys(onlineClients[obj.userId]).length === 0) {
                   delete onlineClients[obj.userId];
                 }
-                socket.broadcast.emit("user_left", {userId: obj.userId});
-             } catch (err) {
-               console.error('user_left', err);
+                socket.broadcast.emit('user_left', {userId: obj.userId});
+             } catch (error) {
+               console.error('user_left', error);
+               if (onlineClients[obj.userId]) {
+                Object.keys(onlineClients[obj.userId]).forEach(token => {
+                  onlineClients[obj.userId][token].emit('error', {event: 'user_left', error});
+                });
+              }
              }
         });
 
@@ -52,7 +57,7 @@ export function runWebsocketsIO(server): void {
                 clientsInChat[obj.chatIdCurr] = {};
             }
             if (!clientsInChat[obj.chatIdCurr][obj.userId]) {
-                clientsInChat[obj.chatIdCurr][obj.userId] = {}
+                clientsInChat[obj.chatIdCurr][obj.userId] = {};
             }
             (socket as any).userId = obj.userId;
             (socket as any).token = obj.token;
@@ -67,15 +72,20 @@ export function runWebsocketsIO(server): void {
                   delete clientsInChat[obj.chatIdCurr][obj.userId];
               }
               if (Object.keys(clientsInChat[obj.chatIdCurr]).length === 0) {
-                  delete clientsInChat[obj.chatIdCurr]
+                  delete clientsInChat[obj.chatIdCurr];
               }
-            } catch (err) {
-              console.error('user_left_chat', err);
+            } catch (error) {
+              console.error('user_left_chat', error);
+              if (onlineClients[obj.userId]) {
+                Object.keys(onlineClients[obj.userId]).forEach(token => {
+                  onlineClients[obj.userId][token].emit('error', {event: 'user_left_chat', error});
+                });
+              }
             }
         });
 
         socket.on('disconnect', obj => {
-            console.info(`User ${(socket as any).userId} is offline`);
+            console.log(`User ${(socket as any).userId} is offline`);
             try {
               if (onlineClients[(socket as any).userId] && onlineClients[(socket as any).userId][(socket as any).token]) {
                 delete onlineClients[(socket as any).userId][(socket as any).token];
@@ -86,13 +96,18 @@ export function runWebsocketsIO(server): void {
               if ((socket as any).chatIdCurr && clientsInChat[(socket as any).chatIdCurr]) {
                 delete clientsInChat[(socket as any).chatIdCurr][(socket as any).userId][(socket as any).token];
               }
-              if (clientsInChat[(socket as any).chatIdCurr] && 
+              if (clientsInChat[(socket as any).chatIdCurr] &&
                 clientsInChat[(socket as any).chatIdCurr][(socket as any).userId] &&
                 Object.keys(clientsInChat[(socket as any).chatIdCurr][(socket as any).userId]).length === 0) {
                   delete clientsInChat[(socket as any).chatIdCurr][(socket as any).userId];
               }
-            } catch(err) {
-              console.error('disconnect', err);
+            } catch (error) {
+              console.error('disconnect', error);
+              if (onlineClients[obj.userId]) {
+                Object.keys(onlineClients[obj.userId]).forEach(token => {
+                  onlineClients[obj.userId][token].emit('error', {event: 'disconnect', error});
+                });
+              }
             }
           });
 
@@ -108,6 +123,6 @@ export function runWebsocketsIO(server): void {
           newEvent(socket, onlineClients);
           newGroupChat(socket, onlineClients);
           userIsTyping(socket, clientsInChat);
-          userReadMessage(socket);
-    })
+          userReadMessage(socket, onlineClients);
+    });
 }

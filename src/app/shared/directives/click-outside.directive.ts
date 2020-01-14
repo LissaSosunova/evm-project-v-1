@@ -24,7 +24,7 @@ export class ClickOutsideDirective implements OnInit, OnDestroy {
       delay(1),
       tap(() => {
         this.listening = true;
-      }),).subscribe((event: MouseEvent) => {
+      }), ).subscribe((event: MouseEvent) => {
         this.onGlobalClick(event);
       });
   }

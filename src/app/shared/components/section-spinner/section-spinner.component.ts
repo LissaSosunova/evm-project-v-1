@@ -8,8 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class SectionSpinnerComponent implements OnInit {
 
   @Input() public loading: boolean;
-  @Input() public position: string = 'fixed';
-  @Input() public width: string = '50px';
+  @Input() public position = 'fixed';
+  @Input() public width = '50px';
   @Input() public diameter: string;
 
   constructor() { }

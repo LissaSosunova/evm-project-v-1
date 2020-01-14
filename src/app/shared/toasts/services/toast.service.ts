@@ -20,7 +20,7 @@ export class ToastService {
   // default config
   private horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   private verticalPosition: MatSnackBarVerticalPosition = 'top';
-  private duration: number = 3000;
+  private duration = 3000;
 
   constructor(private snackBar: MatSnackBar,
               private transferService: TransferService) { }

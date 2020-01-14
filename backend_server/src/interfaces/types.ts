@@ -1,4 +1,4 @@
-import { ModelUpdateOptions } from "mongoose";
+import { ModelUpdateOptions } from 'mongoose';
 import * as socketIo from 'socket.io';
 
 export interface LoginResponse {
@@ -40,19 +40,19 @@ export interface UserActionsSocket {
 }
 
 export interface OnlineClients {
-    [userId: string]: TokenObj
+    [userId: string]: TokenObj;
 }
 
 interface TokenObj {
-    [token: string]: socketIo.Socket
+    [token: string]: socketIo.Socket;
 }
 
 export interface ClientsInChat {
-    [chatId: string]: UserIdObj
+    [chatId: string]: UserIdObj;
 }
 
 interface UserIdObj {
-    [userId: string]: TokenObj
+    [userId: string]: TokenObj;
 }
 
 export interface Server200Response {
@@ -69,21 +69,22 @@ export interface DeleteContactSocketIo {
     userId: string;
     deleteContactId: string;
     chatIdToDelete: string;
-    deleteChat: boolean
+    deleteChat: boolean;
 }
 
 export interface DeleteUserFromChatSocketIO {
     chatId: string;
     userToDelete: string;
+    admin: string;
 }
 
 export interface DeleteGroupChat {
     chatId: string;
     admin: string;
-    users: userItem[];
+    users: UserItem[];
 }
 
-interface userItem {
+interface UserItem {
     username: string;
     name: string;
     email: string;
@@ -92,7 +93,7 @@ interface userItem {
 export interface NewGroupChat {
     chatName: string;
     admin: string;
-    users: userItem[];
+    users: UserItem[];
 }
 
 export interface DeleteMessageSocketIO {
@@ -120,7 +121,7 @@ export interface FoundContactObj {
     username: string;
     email: string;
     name: string;
-    avatar: Avatar; 
+    avatar: Avatar;
 }
 
 export interface UserIsTyping {
@@ -128,7 +129,7 @@ export interface UserIsTyping {
     name: string;
     users: string[];
     chatId: string;
-    typing: boolean
+    typing: boolean;
 }
 
 export interface ChangeEmailReq {
@@ -163,7 +164,7 @@ export interface DeleteContactObj {
 
 export interface EditProfile {
     name: string;
-    phone: string
+    phone: string;
 }
 
 export interface PendingRegUser {
@@ -172,8 +173,6 @@ export interface PendingRegUser {
     email: string;
     password: string;
 }
-
-// remove
 
 export interface Avatar {
     url?: string;
@@ -216,10 +215,10 @@ export interface EventDb {
     status: boolean;
     date_type: string;
     date: EventDateDb;
-    place: eventPlace;
-    members: eventMembers;
+    place: EventPlace;
+    members: EventMembers;
     additional: string;
-    notification?: eventNotification;
+    notification?: EventNotification;
     authorId: string;
 }
 
@@ -248,19 +247,19 @@ export interface EventDateDb {
     endDate?: number;
 }
 
-export interface eventPlace {
-    location: string
+export interface EventPlace {
+    location: string;
 }
 
-export interface eventMembers {
+export interface EventMembers {
     invited: string[];
 }
 
-export interface eventNotification {
+export interface EventNotification {
     type: string;
     message: string;
     id: string;
-    status: boolean
+    status: boolean;
 }
 
 export interface CreateNewChatUser {
@@ -336,9 +335,9 @@ export interface EventDb {
     status: boolean;
     date_type: string;
     date: EventDateDb;
-    place: eventPlace;
-    members: eventMembers;
+    place: EventPlace;
+    members: EventMembers;
     additional: string;
-    notification?: eventNotification;
+    notification?: EventNotification;
     authorId: string;
 }

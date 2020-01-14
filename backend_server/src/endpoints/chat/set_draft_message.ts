@@ -38,7 +38,6 @@ export class SetDraftMessage {
             };
             try {
               const findDraftMes: ChatDb = await datareader(Chat, queryParams, MongoActions.FIND_ONE);
-              console.log('findDraftMes', findDraftMes);
               if (findDraftMes == null) {
                 await datareader(Chat, updateParams, MongoActions.UPDATE_ONE);
               } else {

@@ -12,22 +12,31 @@ export function deleteGroupChat(socket: socketIo.Socket, onlineClients: OnlineCl
         const findChatParams = {
             _id: new ObjectId(obj.chatId),
         };
-        const chatToDelete = await datareader(Chat, findChatParams, MongoActions.FIND_ONE);
+        try {
+            const chatToDelete = await datareader(Chat, findChatParams, MongoActions.FIND_ONE);
         if (chatToDelete.admin !== obj.admin) {
-            return
+            return;
         }
         await datareader(Chat, findChatParams, MongoActions.DELETE_ONE);
         obj.users.forEach(async user => {
             const params = {
                 query: user.username,
                 objNew:  {$pull: {chats: {chatId: obj.chatId}}}
-            }
+            };
             await datareader(User, params, MongoActions.UPDATE_ONE);
-            if(onlineClients[user.username]) {
+            if (onlineClients[user.username]) {
                 Object.keys(onlineClients[user.username]).forEach(token => {
                     onlineClients[user.username][token].emit('delete_group_chat', {chatId: obj.chatId});
                 });
             }
         });
+        } catch (error) {
+           console.error('delete_group_chat', error);
+          if (onlineClients[obj.admin]) {
+            Object.keys(onlineClients[obj.admin]).forEach(token => {
+              onlineClients[obj.admin][token].emit('error', {event: 'delete_group_chat', error});
+            });
+          }
+        }
      });
 }

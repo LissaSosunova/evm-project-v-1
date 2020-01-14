@@ -8,7 +8,7 @@ import { ContactData } from '../../modules/contactData';
 export function addUser(socket: socketIo.Socket, onlineClients: OnlineClients): void {
     socket.on('add_user', async (obj: AddUserScoketIo) => {
         if (obj.queryUserId === obj.userId) {
-          return
+          return;
         }
         let exsistCont = false;
         const queryParamDb = {
@@ -18,10 +18,10 @@ export function addUser(socket: socketIo.Socket, onlineClients: OnlineClients): 
         try {
           const result: UserDataObj = await datareader(User, queryParamDb, MongoActions.FIND_ONE);
           exsistCont = result.contacts.some(item => {
-            return item.id === obj.queryUserId 
+            return item.id === obj.queryUserId;
          });
           if (exsistCont) {
-            return
+            return;
           }
           const findRes: UserDataObj = await datareader(User, {username: obj.queryUserId}, MongoActions.FIND_ONE);
           findRes.private_chat = '0';
@@ -32,7 +32,7 @@ export function addUser(socket: socketIo.Socket, onlineClients: OnlineClients): 
             objNew:  {$push: {contacts: contact}}
           };
           const updateRes = await datareader(User, updateParams, MongoActions.UPDATE_ONE);
-          //добавить найденому другу тоже со статусом ожидания подтверждения с его стороны
+          // добавить найденому другу тоже со статусом ожидания подтверждения с его стороны
           const params2 = {
             $or: [
               {username: contact.id},
@@ -52,13 +52,18 @@ export function addUser(socket: socketIo.Socket, onlineClients: OnlineClients): 
               onlineClients[obj.queryUserId][token].emit('add_user_request', result2);
             });
           }
-          if(onlineClients[obj.userId]) {
+          if (onlineClients[obj.userId]) {
             Object.keys(onlineClients[obj.userId]).forEach(token => {
               onlineClients[obj.userId][token].emit('add_user', contact);
             });
           }
-        } catch(error) {
+        } catch (error) {
           console.error ('add_user', error);
+          if (onlineClients[obj.userId]) {
+            Object.keys(onlineClients[obj.userId]).forEach(token => {
+              onlineClients[obj.userId][token].emit('error', {event: 'add_user', error});
+            });
+          }
         }
 
       });

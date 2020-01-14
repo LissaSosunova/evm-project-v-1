@@ -20,9 +20,9 @@ export class InputDatepickerComponent implements ControlValueAccessor, OnInit, O
    * @see https://material.angular.io/components/form-field/overview#floating-label
    */
   @Input() public floatLabel?: 'never' | 'always' | 'auto' = 'never';
-  @Input() public errorText?: string = 'Date is required';
+  @Input() public errorText = 'Date is required';
   // date pipe format
-  @Input() public format?: string = 'EEE, MMMM d yyyy';
+  @Input() public format = 'EEE, MMMM d yyyy';
   // for form validation when FormControl is not passed
   @Input() public required?: boolean;
   // for disabling datepicker when FormControl is not passed

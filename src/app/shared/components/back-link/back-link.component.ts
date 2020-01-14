@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class BackLinkComponent implements OnInit, OnDestroy {
 
-  @Input() public text: string = 'Back';
+  @Input() public text = 'Back';
   private prevRoute: string;
   private unsubscribe$: Subject<void> = new Subject<void>();
 

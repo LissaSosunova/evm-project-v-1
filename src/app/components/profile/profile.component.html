@@ -59,10 +59,11 @@
         </app-input-text>
     </div>
     <div class="col-xs-5 start-xs no-padd">
-        <i *ngIf="editedName == true" class="material-icons btn-confirm"
+        <i *ngIf="editedName" class="material-icons btn-confirm"
           (click)="saveName(user.name)">
             check
         </i>
+        <app-section-spinner [diameter]="'20'" [loading]="showSpinner" [position]="'absolute'"></app-section-spinner>
     </div>
     <div class="col-xs-3 end-xs">
         <span class="name-field">
@@ -83,10 +84,11 @@
     </div>
     <div class="col-xs-5 start-xs no-padd row">
         <div class="col-xs-2 start-xs">
-            <i *ngIf="editedMail == true" class="material-icons btn-confirm"
+            <i *ngIf="editedMail" class="material-icons btn-confirm"
             (click)="saveMail(user.email)">
               check
           </i>
+          <app-section-spinner [diameter]="'20'" [loading]="showSpinner" [position]="'absolute'"></app-section-spinner>
         </div>
           <div class="col-xs-10 name-field">
               (you will have to confirm your e-mail)
@@ -113,10 +115,11 @@
           </app-input-text>
       </div>
       <div class="col-xs-5 start-xs no-padd">
-          <i *ngIf="editedPhone == true" class="material-icons btn-confirm"
+          <i *ngIf="editedPhone" class="material-icons btn-confirm"
             (click)="savePhone(user.phone)">
               check
           </i>
+          <app-section-spinner [diameter]="'20'" [loading]="showSpinner" [position]="'absolute'"></app-section-spinner>
       </div>
       <div class="change-password">
         <form name="passwordForm"
@@ -168,6 +171,7 @@
                 (click)="changePassword(passwords)">
                   check
               </i>
+              <app-section-spinner [diameter]="'20'" [loading]="showSpinner" [position]="'absolute'"></app-section-spinner>
           </div>
           </div>  
         </form>

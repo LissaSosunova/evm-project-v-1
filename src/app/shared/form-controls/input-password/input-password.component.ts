@@ -12,13 +12,13 @@ import { Subscription } from 'rxjs';
 export class InputPasswordComponent extends InputAbstract implements OnInit {
 
 // max text length for limiting text entering in HTML
-@Input() public maxLength?: number = 524288; // default value
+@Input() public maxLength = 524288; // default value
 // min text length
 @Input() public minLength?: number;
 // for toggling input type
-public hide: boolean = true;
+public hide = true;
 
-public showMaxInputMessageError: boolean = false;
+public showMaxInputMessageError = false;
 public maxLengthLimit: number;
 
 constructor() {

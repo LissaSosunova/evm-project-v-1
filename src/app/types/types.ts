@@ -146,14 +146,14 @@ export module types {
   }
 
   export interface eventPlace {
-    location: string
+    location: string;
   }
 
   export interface eventNotification {
     type: string;
     message: string;
     id: string;
-    status: boolean
+    status: boolean;
   }
 
   export interface eventMembers {
@@ -298,6 +298,11 @@ export interface LoginServerResponse {
   access_token?: string;
   token_key?: string;
   message?: string;
+}
+
+export interface SocketError {
+  event: string;
+  error: any;
 }
 
 export interface UploadAvatarResponse {

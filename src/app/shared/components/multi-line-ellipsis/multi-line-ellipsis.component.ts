@@ -12,7 +12,7 @@ export class MultiLineEllipsisComponent implements OnInit, OnDestroy, AfterViewI
 
   public previewText: string;
   public maxIterNumber: number;
-  public showTooltip: boolean = true;
+  public showTooltip = true;
   public coords: ClientRect;
   public ellipsisWrap: HTMLDivElement;
   public prevText: HTMLDivElement;

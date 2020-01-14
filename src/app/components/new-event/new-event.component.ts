@@ -19,7 +19,7 @@ import { select, Store } from '@ngrx/store';
   styleUrls: ['./new-event.component.scss']
 })
 export class NewEventComponent implements OnInit, OnDestroy {
-  public openConfirmPopup: boolean = false;
+  public openConfirmPopup = false;
   public user: types.User;
   public event: types.EventUI;
   public eventToDb: types.EventDb;

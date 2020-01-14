@@ -17,8 +17,8 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 })
 export class TextFieldComponent extends InputAbstract implements OnInit, OnChanges, ControlValueAccessor {
   @Output() public reset: EventEmitter<void> = new EventEmitter<void>();
-  public isValue: boolean = false;
-  @Input() public maxLength?: number = 500; // default value
+  public isValue = false;
+  @Input() public maxLength = 500; // default value
   @Input() public text: string;
   private inputElement: HTMLInputElement;
 

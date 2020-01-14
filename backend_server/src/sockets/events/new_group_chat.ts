@@ -13,25 +13,34 @@ export function newGroupChat(socket: socketIo.Socket, onlineClients: OnlineClien
         chat.type = 2;
         chat.chatName = obj.chatName;
         chat.admin = obj.admin;
-        await datareader(chat, null, MongoActions.SAVE);
-        obj.users.forEach(async user => {
-            const chatToSave = {
-                name: obj.chatName,
-                users: obj.users,
-                chatId: chat._id,
-                // avatar: '', добавить аватарку чата по умолчанию!!!
-                type: 2
-            };
-            const updateParams = {
-                query: user.username,
-                objNew:  {$push: {chats: chatToSave}}
-            };
-            await datareader(User, updateParams, MongoActions.UPDATE_ONE);
-            if(onlineClients[user.username]) {
-                Object.keys(onlineClients[user.username]).forEach(token => {
-                    onlineClients[user.username][token].emit('new_group_chat', chatToSave);
+        try {
+            await datareader(chat, null, MongoActions.SAVE);
+            obj.users.forEach(async user => {
+                const chatToSave = {
+                    name: obj.chatName,
+                    users: obj.users,
+                    chatId: chat._id,
+                    // avatar: '', добавить аватарку чата по умолчанию!!!
+                    type: 2
+                };
+                const updateParams = {
+                    query: user.username,
+                    objNew:  {$push: {chats: chatToSave}}
+                };
+                await datareader(User, updateParams, MongoActions.UPDATE_ONE);
+                if (onlineClients[user.username]) {
+                    Object.keys(onlineClients[user.username]).forEach(token => {
+                        onlineClients[user.username][token].emit('new_group_chat', chatToSave);
+                    });
+                }
+            });
+        } catch (error) {
+            console.error('new_group_chat', error);
+            if (onlineClients[obj.admin]) {
+                Object.keys(onlineClients[obj.admin]).forEach(token => {
+                  onlineClients[obj.admin][token].emit('error', {event: 'new_group_chat', error});
                 });
-            }
-        });
+              }
+        }
     });
 }

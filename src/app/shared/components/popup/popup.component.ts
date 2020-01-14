@@ -25,9 +25,9 @@ export class PopupComponent implements OnInit, DoCheck {
       @Output() public onSubmit = new EventEmitter<void>();
 
       // button order
-      public closeBtnOrder: number = 1;
-      public removeBtnOrder: number = 2;
-      public submitBtnOrder: number = 3;
+      public closeBtnOrder = 1;
+      public removeBtnOrder = 2;
+      public submitBtnOrder = 3;
       public conf: types.FormPopupConfig;
 
       public generatedId = this.popupService.generateId('form');
@@ -112,9 +112,12 @@ export class PopupComponent implements OnInit, DoCheck {
                   }
               }
               if (this.config.footer.btnOrder) {
-                this.closeBtnOrder = this.config.footer.btnOrder.indexOf('close') >= 0 ? this.config.footer.btnOrder.indexOf('close') + 1 : 3;
-                this.removeBtnOrder = this.config.footer.btnOrder.indexOf('remove') >= 0 ? this.config.footer.btnOrder.indexOf('remove') + 1 : 2;
-                this.submitBtnOrder = this.config.footer.btnOrder.indexOf('submit') >= 0 ? this.config.footer.btnOrder.indexOf('submit') + 1 : 1;
+                this.closeBtnOrder = this.config.footer.btnOrder.indexOf('close') >= 0 ?
+                this.config.footer.btnOrder.indexOf('close') + 1 : 3;
+                this.removeBtnOrder = this.config.footer.btnOrder.indexOf('remove') >= 0 ?
+                this.config.footer.btnOrder.indexOf('remove') + 1 : 2;
+                this.submitBtnOrder = this.config.footer.btnOrder.indexOf('submit') >= 0 ?
+                this.config.footer.btnOrder.indexOf('submit') + 1 : 1;
               }
           }
       }

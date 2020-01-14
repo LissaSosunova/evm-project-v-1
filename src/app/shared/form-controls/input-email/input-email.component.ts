@@ -12,8 +12,8 @@ import { Validators, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors
 
 export class InputEmailComponent extends InputAbstract implements OnInit, Validator {
 
-  @Input() public invalidEmailError?: string = 'Invalid email';
-  @Input() public emailValidator?: boolean = true;
+  @Input() public invalidEmailError = 'Invalid email';
+  @Input() public emailValidator = true;
 
   constructor() {
     super();

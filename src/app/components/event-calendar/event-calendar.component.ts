@@ -23,7 +23,7 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
   constructor(private store: Store<types.User>) {}
 
   ngOnInit() {
-    let init: boolean = true;
+    let init = true;
     this.user$ = this.store.pipe(select('user'));
     this.user$.pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
     .subscribe(user => {

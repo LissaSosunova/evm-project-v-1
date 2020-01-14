@@ -12,7 +12,7 @@ export class InputSearchComponent extends InputAbstract implements OnInit, OnCha
 
   @Output() public reset: EventEmitter<void> = new EventEmitter<void>();
 
-  public isValue: boolean = false;
+  public isValue = false;
 
   @ViewChild('searchInput', {static: true}) private input: ElementRef;
 
