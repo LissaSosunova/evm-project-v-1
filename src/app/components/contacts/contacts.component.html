@@ -147,9 +147,10 @@
         </form>
       </div>
       <div class="contactList-user2">
+        <app-section-spinner [diameter]="'20'" [loading]="showSpinner" [position]="'absolute'"></app-section-spinner>
         <ul class="contacts-ul">
           <li *ngFor="let item of querySearch" class="direction-row" data-cy="searched-contacts">
-            <div class="col-xs-8 small-screen"><img src="{{item.avatar.url}}">{{item.name}}</div>
+            <div class="col-xs-8 small-screen"><img src="{{item?.avatar?.url}}">{{item.name}}</div>
             <div class="col-xs-4 btn-align">
               <button class="m-btn cancel" (click)="addNewUser(item.id)" data-cy="addUser">
                 <i class="material-icons">check</i>

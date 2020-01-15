@@ -113,7 +113,7 @@ router.post('/upload_avatar', upload.single('image'), async function (req, res, 
 				fs.unlinkSync(path.join(__dirname,`../../uploads/${req.headers.userid}/avatars/${file}`));
 			});
 			fs.rmdirSync(path.join(__dirname,`../../uploads/${req.headers.userid}/avatars/`));
-			fs.rmdirSync(path.join(__dirname,`../../uploads/${req.headers.userid}`));
+			// fs.rmdirSync(path.join(__dirname,`../../uploads/${req.headers.userid}`));
 		});
 		res.json(savedAvatar[0].avatar);
 	} catch(err) {

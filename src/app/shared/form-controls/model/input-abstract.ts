@@ -10,9 +10,9 @@ export abstract class InputAbstract implements ControlValueAccessor, OnDestroy {
    */
   @Input() public floatLabel?: 'never' | 'always' | 'auto' = 'auto';
   // for disabling input when FormControl is not passed
-  @Input() public disabled?: boolean = false;
+  @Input() public disabled = false;
   // for form validation when FormControl is not passed
-  @Input() public required?: boolean = false;
+  @Input() public required = false;
   // input value, if form contol is not used
   @Input() public value?: string;
   /**
@@ -23,13 +23,13 @@ export abstract class InputAbstract implements ControlValueAccessor, OnDestroy {
 
   @Input() public control?: FormControl;
 
-  @Input() public placeholder?: string = '';
+  @Input() public placeholder = '';
   // for placeholder asterisk, will be hidden if true
-  @Input() public noAsterisk?: boolean = false;
+  @Input() public noAsterisk = false;
 
-  @Input() public requiredFieldError: string = 'Required field';
+  @Input() public requiredFieldError = 'Required field';
 
-  @Input() public debounceTime?: number = 500;
+  @Input() public debounceTime = 500;
 
   @Output() public valueChange: EventEmitter<string | number> = new EventEmitter<string | number>();
 

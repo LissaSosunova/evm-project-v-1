@@ -288,10 +288,27 @@ form {
   flex-wrap: nowrap
 }
 
+.smile-wrapper {
+  display: inline-block;
+}
+
 @media only screen and (max-width: 768px) {
 
   div.row {
     height: 90%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  div.smile-container {
+    width: 220px;
+    right: 0;
+  }
+}
+
+@media only screen and (max-width: 1015px) {
+  .btn-submit-emo {
+    margin-left: 0;
   }
 }
 
@@ -301,7 +318,7 @@ form {
   }
 
   .buttons {
-    padding: 10px 0px 10px 0px;
+    padding: 10px 0px 10px 12px;
     position: relative;
   }
 
@@ -367,6 +384,9 @@ form {
   background-color: map-get($bg-color, 'light-olive');
   padding: 20px;
   border: 1px solid map-get($bg-color, 'dark');
+  z-index: 5;
+  overflow: auto;
+  max-height: calc(90vh - 80px);
 }
 .invisible {
   display: none;

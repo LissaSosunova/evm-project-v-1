@@ -60,3 +60,8 @@ ul {
   background-color: map-get($bg-color, 'gray-light');
   color:  map-get($bg-color, 'green');
 }
+
+.current-chat {
+  box-shadow: 0 1px 8px rgba(28, 32, 1, 0.2);
+  border-radius: 30px;
+}

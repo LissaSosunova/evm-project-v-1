@@ -33,13 +33,17 @@ export class DataService {
     return this.http.post<types.SearchContact[]>(URL_BACK + '/find_user/', query, {headers: this.getHeaders()});
   }
 
-  public getPrivatChat(params: string, queryNum: string, queryMessagesAmount: string, messagesShift: string): Observable<types.PrivateChat | types.Message[]> {
+  public getPrivatChat(params: string,
+    queryNum: string,
+    queryMessagesAmount: string,
+    messagesShift: string): Observable<types.PrivateChat | types.Message[]> {
     const query = {
       queryNum,
       queryMessagesAmount,
       messagesShift
     };
-    return this.http.get<types.PrivateChat | types.Message[]>(`${URL_BACK}/private_chat/${params}`, {headers : this.getHeaders(),  params: query});
+    return this.http.get<types.PrivateChat | types.Message[]>(`${URL_BACK}/private_chat/${params}`,
+    {headers : this.getHeaders(),  params: query});
   }
 
   public getUser(): Observable<types.User> {
@@ -52,10 +56,6 @@ export class DataService {
 
   public setReg(params: types.Registration): Observable<types.Server200Response> {
     return this.http.post<types.Server200Response>(URL_BACK + '/user/', params);
-  }
-
-  public saveEvent(event: types.EventDb): Observable<any> {
-    return this.http.post(URL_BACK + '/new_event/', event, {headers: this.getHeaders()});
   }
 
   public sendDraftMessage(query: types.DraftMessage): Observable<types.Server200Response> {
@@ -72,7 +72,8 @@ export class DataService {
 
   public getDraftMessage(userId: string, chatId: string): Observable<types.DraftMessageFromServer> {
     const query = {authorId: userId};
-    return this.http.get<types.DraftMessageFromServer>(`${URL_BACK}/get_draft_message/${chatId}`, {headers: this.getHeaders(), params: query});
+    return this.http.get<types.DraftMessageFromServer>(`${URL_BACK}/get_draft_message/${chatId}`,
+    {headers: this.getHeaders(), params: query});
   }
 
   public uploadAvatar(obj: FormData, userId: string): Observable<types.UploadAvatarResponse> {

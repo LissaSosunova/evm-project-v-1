@@ -6,6 +6,12 @@ const db = require('./db');
 //   link: { type: String }
 // });
 
+const userItem = db.Schema({
+  username: {type: String},
+  name: {type: String},
+  email: {type: String}
+});
+
 const contact = db.Schema({
   id: { type: String },
   name: { type: String },
@@ -24,8 +30,9 @@ const chat = db.Schema({
   name: { type: String },
   avatar: { type: Object },
   chatId: { type: String },
-  unreadMes: {type: Number},
-  lastMessage: {type: Object },
+  users: [userItem],
+  // unreadMes: {type: Number},
+  // lastMessage: {type: Object },
   type: { type: Number}
 });
 

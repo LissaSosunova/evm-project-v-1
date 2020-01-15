@@ -20,7 +20,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
   public username: string;
   public password: string;
   public isFormValid: boolean;
-  public isPendingResponse: boolean = false;
+  public isPendingResponse = false;
   @ViewChild('loginForm', {static: true}) public loginForm: NgForm;
 
   constructor(private route: ActivatedRoute,

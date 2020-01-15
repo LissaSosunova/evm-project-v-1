@@ -21,7 +21,7 @@ export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
   public password: string;
   public username: string;
   public nameOfUser: string;
-  public isPendingResponse: boolean = false;
+  public isPendingResponse = false;
   @ViewChild('registrationForm', {static: true}) public registrationForm: NgForm;
 
   constructor(private route: ActivatedRoute,

@@ -13,7 +13,7 @@ export class ResetPasswordComponent implements OnInit {
 
   public password: string;
   public confPassword: string;
-  public isPendingResponse: boolean = false;
+  public isPendingResponse = false;
   private token: string;
   private tokenTime: string;
   @ViewChild('resetPasswordForm', {static: true}) private resetPasswordForm: NgForm;

@@ -15,15 +15,15 @@ export class CheckboxDropdownComponent implements OnInit, OnChanges {
   @Input() public hideArrow: boolean;
 
   // show search input above all options
-  @Input() public isSearchable: boolean = true;
-  
+  @Input() public isSearchable = true;
   // ids of checked options
   @Input() public checked: string[];
-  @Input() public disabled: boolean = false;
+  @Input() public disabled = false;
 
-  @Output() public onSelect: EventEmitter<CheckboxDropdownOption<{avatar: string}>[]> = new EventEmitter<CheckboxDropdownOption<{avatar: string}>[]>();
+  @Output() public onSelect: EventEmitter<CheckboxDropdownOption<{avatar: string}>[]> =
+  new EventEmitter<CheckboxDropdownOption<{avatar: string}>[]>();
   @Output() public clickedOutside: EventEmitter<any> = new EventEmitter<any>();
-  public isPanelShown: boolean = false;
+  public isPanelShown = false;
   public filterQuery: string;
 
   constructor() { }

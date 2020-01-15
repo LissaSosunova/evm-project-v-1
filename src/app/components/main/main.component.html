@@ -1,8 +1,5 @@
 <div class="header">
   <span class="header-user-container">{{user.name}}
-    <i class="material-icons delete-avatar" 
-      (click)="deleteAvatar()"
-      *ngIf="user.avatar.owner !== 'default'">clear</i>
 
       <img src="{{user.avatar.url}}" class="avatar" (click)="editProfile()">
   </span>

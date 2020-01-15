@@ -17,13 +17,13 @@ export class MultiLineInputComponent implements OnInit, OnChanges, ControlValueA
   public onChange: Function;
   public onTouched: Function;
   @Input() text: string;
-  public showPlaceholder: boolean = true;
+  public showPlaceholder = true;
   public currText: string;
   @Input() public placeholder: string; // optional
   @Input() public currMes: string;
   @ViewChild('input', {static: true}) public input: ElementRef;
   private inputElement: HTMLInputElement;
-  private isInputFocused: boolean = false;
+  private isInputFocused = false;
   @Input() private minHeight: string; // optional
   @Input() private maxHeight: string; // optional
   @Output() public enterKey: EventEmitter<void> = new EventEmitter<void>();

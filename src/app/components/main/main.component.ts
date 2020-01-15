@@ -64,10 +64,11 @@ export class MainComponent implements OnInit, OnDestroy {
     this.rejectRequestSubscribe();
     this.deleteContactSubscribe();
     this.subscribeNewEvents();
+    this.subscribeSocketErrors();
     this.user$ = this.store.pipe(select('user'));
     this.user$.subscribe(user => {
       this.user = user;
-      let allUnredMessagesAmount: number = 0;
+      let allUnredMessagesAmount = 0;
       this.user.chats.forEach(chatItem => {
         allUnredMessagesAmount = allUnredMessagesAmount + chatItem.unreadMes;
       });
@@ -88,6 +89,10 @@ export class MainComponent implements OnInit, OnDestroy {
     });
   }
 
+  public editProfile(): void {
+    this.router.navigate(['main/profile']);
+  }
+
   public uploadAvatar(event): void {
     const files = this.uploadFile.nativeElement.files;
     const formData: FormData = new FormData();
@@ -102,7 +107,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   private addUserRequestSubscribe(): void {
-    let contactsAwaiting: number = 0;
+    let contactsAwaiting = 0;
     this.user.contacts.forEach(contact => {
       if (contact.status === 2) {
         contactsAwaiting++;
@@ -190,8 +195,12 @@ export class MainComponent implements OnInit, OnDestroy {
     });
   }
 
-  private editProfile(): void {
-    this.router.navigate(['main/profile']);
+  private subscribeSocketErrors(): void {
+    this.socketIoService.on(SocketIO.events.error)
+    .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((error: types.SocketError) => {
+      console.error(error);
+    });
   }
 
 }

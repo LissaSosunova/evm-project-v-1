@@ -10,7 +10,7 @@ import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 export class ForgotPasswordComponent implements OnInit {
 
   public email: string;
-  public isPendingResponse: boolean = false;
+  public isPendingResponse = false;
 
   constructor(private dataService: DataService,
               private toastService: ToastService) { }

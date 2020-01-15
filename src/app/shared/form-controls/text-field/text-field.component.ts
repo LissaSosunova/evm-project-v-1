@@ -17,8 +17,8 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 })
 export class TextFieldComponent extends InputAbstract implements OnInit, OnChanges, ControlValueAccessor {
   @Output() public reset: EventEmitter<void> = new EventEmitter<void>();
-  public isValue: boolean = false;
-  @Input() public maxLength?: number = 500; // default value
+  public isValue = false;
+  @Input() public maxLength = 500; // default value
   @Input() public text: string;
   private inputElement: HTMLInputElement;
 
@@ -35,7 +35,7 @@ export class TextFieldComponent extends InputAbstract implements OnInit, OnChang
 
   }
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.text.isFirstChange()) {
+    if (changes.text && !changes.text.isFirstChange()) {
       setTimeout(() => {
         this.text = this.input.nativeElement.innerHTML;
         this.control.setValue(this.text);

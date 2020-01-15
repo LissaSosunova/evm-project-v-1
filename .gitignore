@@ -9,6 +9,8 @@
 /node_modules
 backend_server/node_modules
 backend_server/package-lock.json
+backend_server_on_js/node_modules
+backend_server_on_js/package-lock.json
 package-lock.json
 # IDEs and editors
 /.idea
@@ -35,8 +37,9 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
-backend_server/uploads
-backend_server/credsEmail.js
+backend_server/src/uploads
+backend_server/src/credsEmail.ts
+backend_server/package-lock.json
 
 # System Files
 .DS_Store

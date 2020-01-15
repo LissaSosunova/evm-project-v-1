@@ -7,7 +7,7 @@ export class PageMaskService {
 
   constructor() { }
 
-  public isOpened: boolean = false;
+  public isOpened = false;
   private bodyElem: HTMLBodyElement = document.querySelector('body') as HTMLBodyElement;
 
   public open(): void {

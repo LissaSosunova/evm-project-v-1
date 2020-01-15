@@ -7,32 +7,32 @@ import {
   AfterViewInit,
   HostListener,
   Output
-} from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { types } from "src/app/types/types";
-import { TransferService } from "src/app/services/transfer.service";
-import { DataService } from "src/app/services/data.service";
-import { FormControl, Validators, NgForm } from "@angular/forms";
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { types } from 'src/app/types/types';
+import { TransferService } from 'src/app/services/transfer.service';
+import { DataService } from 'src/app/services/data.service';
+import { FormControl, Validators, NgForm } from '@angular/forms';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
   takeUntil
-} from "rxjs/operators";
-import { DateTransformService } from "src/app/services/date-transform.service";
-import { Observable, Subject } from "rxjs";
-import { SocketIoService } from "src/app/services/socket.io.service";
-import { SocketIO } from "src/app/types/socket.io.types";
-import { SessionStorageService } from "src/app/services/session.storage.service";
-import { select, Store } from "@ngrx/store";
-import * as userAction from "../../../store/actions";
-import { PageMaskService } from "src/app/services/page-mask.service";
+} from 'rxjs/operators';
+import { DateTransformService } from 'src/app/services/date-transform.service';
+import { Observable, Subject } from 'rxjs';
+import { SocketIoService } from 'src/app/services/socket.io.service';
+import { SocketIO } from 'src/app/types/socket.io.types';
+import { SessionStorageService } from 'src/app/services/session.storage.service';
+import { select, Store } from '@ngrx/store';
+import * as userAction from '../../../store/actions';
+import { PageMaskService } from 'src/app/services/page-mask.service';
 import { ChatEmotions } from 'src/app/constants/chat-emotions';
 
 @Component({
-  selector: "app-chat-window",
-  templateUrl: "./chat-window.component.html",
-  styleUrls: ["./chat-window.component.scss"]
+  selector: 'app-chat-window',
+  templateUrl: './chat-window.component.html',
+  styleUrls: ['./chat-window.component.scss']
 })
 export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public arrayOfMessages: Array<types.Message> = [];
@@ -42,24 +42,24 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public deletedChats: Array<types.Chats> = [];
   public draftMessage: types.DraftMessageFromServer;
   public groupChats: Array<types.Chats> = [];
-  public editMessageMode: boolean = false;
+  public editMessageMode = false;
   @Output() inputMes: string;
   public isDraftMessageExist: boolean;
-  public isDraftMessageSent: boolean = false;
+  public isDraftMessageSent = false;
   public isLoadingMessages: boolean;
-  public isMessages: boolean = false;
-  public isSendBtn: boolean = true;
-  public moreMessages: boolean = false;
+  public isMessages = false;
+  public isSendBtn = true;
+  public moreMessages = false;
   public portionMessagesNumber: number;
   public privateChats: Array<types.Chats> = [];
-  public showArrowDown: boolean = false;
+  public showArrowDown = false;
   public showUserIsTyping: boolean;
   public test: string;
   public user: types.User = {} as types.User;
   public userNameIsTyping: string;
   public emotions = ChatEmotions;
   public messageControl: FormControl;
-  public openEmoList: boolean = false;
+  public openEmoList = false;
   @ViewChild('messageBox', { static: true }) private messageBox: ElementRef;
   private messageBoxElement: HTMLDivElement;
   @ViewChild('footer', { static: true }) private footer: ElementRef;
@@ -70,9 +70,9 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   private menuBlockElement: HTMLDivElement;
   private chats: types.ChatData;
   private chatId: string;
-  private messagesShift: number = 0;
+  private messagesShift = 0;
   private userObj: { chatIdCurr: string; userId: string; token: string };
-  private isUserTyping: boolean = false;
+  private isUserTyping = false;
   private unsubscribe$: Subject<void> = new Subject<void>();
   private user$: Observable<types.User>;
   private editedMessage: types.Message;
@@ -92,7 +92,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    let notFirstInit: boolean = false;
+    let notFirstInit = false;
     this.route.params.subscribe(param => {
       if (notFirstInit) {
         this.destroy();
@@ -262,7 +262,11 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketIoService.socketEmit(SocketIO.events.message, message);
     this.inputMes = '';
     this.control.setValue('');
-    this.scrollDownMessageWindow();
+    setTimeout(() => {
+      this.changeChatWindowHeigth();
+      this.scrollDownMessageWindow();
+      this.inputMes = this.inputMes.replace(/\n/g, '');
+    });
   }
 
   public showChatLists(): void {
@@ -328,9 +332,11 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.inputMes = '';
   }
 
   private init(): void {
+    this.showUserIsTyping = false;
     this.unsubscribe$ = new Subject<void>();
     this.user$ = this.store.pipe(select('user'));
     this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
@@ -349,7 +355,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getChat();
     this.initDraftMessagesSubscription();
     this.subscribeUserIsTyping();
-    const thisChat = this.user.chats.find(chat => chat.chatId === this.chatId);
+    const thisChat: types.Chats = this.user.chats.find(chat => chat.chatId === this.chatId);
     if (thisChat && thisChat.unreadMes > 0) {
       this.socketIoService.socketEmit(SocketIO.events.user_read_message, {
         userId: this.user.username,
@@ -389,20 +395,22 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
     this.isDraftMessageExist = !!draftMessageItem;
-
     if (this.isDraftMessageExist) {
       this.control = new FormControl(
         draftMessageItem.text,
         [Validators.required, Validators.pattern(this.pattern)]
       );
       this.isDraftMessageSent = true;
+      this.inputMes = draftMessageItem.text;
     } else {
       this.control = new FormControl('', [Validators.required, Validators.pattern(this.pattern)]);
+      this.inputMes = '';
     }
 
     this.control.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.unsubscribe$), distinctUntilChanged())
       .subscribe(message => {
+        this.scrollDownMessageWindow();
         this.inputMes = message;
         this.changeChatWindowHeigth();
       });

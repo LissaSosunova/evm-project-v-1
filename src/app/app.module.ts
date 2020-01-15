@@ -66,6 +66,7 @@ import { CounterComponent } from './shared/components/counter/counter.component'
 import { MessageTextComponent } from './components/chats/chat-window/message-text/message-text.component';
 import { TextFieldComponent } from './shared/form-controls/text-field/text-field.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { BackLinkComponent } from './shared/components/back-link/back-link.component';
 
 
 @NgModule({
@@ -127,7 +128,8 @@ import { ProfileComponent } from './components/profile/profile.component';
     CounterComponent,
     MessageTextComponent,
     TextFieldComponent,
-    ProfileComponent
+    ProfileComponent,
+    BackLinkComponent
   ],
   imports: [
     BrowserModule,

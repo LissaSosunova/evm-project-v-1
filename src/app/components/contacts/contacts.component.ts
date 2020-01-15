@@ -23,7 +23,6 @@ import { TransferService } from 'src/app/services/transfer.service';
 
 export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-
   private createNewChatParams: types.CreateNewChat;
   public actionName: types.ContactAction;
   public chatId: string;
@@ -42,8 +41,9 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   public searchControl: FormControl;
   public user: types.User = {} as types.User;
   public user$: Observable<types.User>;
-  public nothingFound: boolean = false;
+  public nothingFound = false;
   public selectedContact: types.Contact;
+  public showSpinner = false;
 
   @ViewChild('userPopup', {static: true}) private userPopup: UserInfoPopupComponent;
   @ViewChild('popupDetails', {static: true}) private confirmAction: PopupDetailsComponent;
@@ -164,11 +164,13 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public setSearch(query: string): void {
+    this.showSpinner = true;
     this.query = {
       query: query
     };
     this.data.findUser(this.query).subscribe(
       (data: types.SearchContact[]) => {
+        this.showSpinner = false;
         this.querySearch = data.filter(contact => contact.id !== this.user.username);
         if (this.querySearch && this.querySearch.length === 0) {
           this.nothingFound = true;
@@ -178,6 +180,8 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
             contact.avatar = this.avatarService.parseAvatar(contact.avatar);
           });
         }
+      }, error => {
+        this.showSpinner = false;
       }
     );
   }

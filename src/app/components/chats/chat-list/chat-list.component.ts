@@ -2,9 +2,9 @@ import {
   ActivatedRoute,
   Router
       } from '@angular/router';
-import { 
+import {
   Component,
-  EventEmitter, 
+  EventEmitter,
   Input,
   OnInit,
   OnDestroy,
@@ -32,7 +32,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
   public chatId: string;
   public deletedChats: Array<types.Chats>;
   public groupChats: Array<types.Chats>;
-  public privateChats:Array<types.Chats>;
+  public privateChats: Array<types.Chats>;
   public user: types.User = {} as types.User;
   public user$: Observable<types.User>;
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -69,12 +69,13 @@ export class ChatListComponent implements OnInit, OnDestroy {
     this.user.chats.forEach(item => {
       (item.type === types.ChatType.PRIVATE_CHAT) ? this.privateChats.push(item) :
       (item.type === types.ChatType.GROUP_OR_EVENT_CHAT) ? this.groupChats.push(item) :
-      (item.type === types.ChatType.BLOCKED_CHAT) ? this.blockedChats.push(item):
+      (item.type === types.ChatType.BLOCKED_CHAT) ? this.blockedChats.push(item) :
       this.deletedChats.push(item);
     });
   }
 
   private init(): void {
+    this.chatId = this.route.snapshot.params.chatId;
     this.user$ = this.store.select('user');
     this.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(user => {
       this.user = user;

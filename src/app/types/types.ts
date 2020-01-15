@@ -19,7 +19,7 @@ export module types {
   export interface ChatData {
     _id: string;
     email: string[];
-    users: string[];
+    users: CreateNewChatUser[];
     messages: Message[];
     type: ChatType;
   }
@@ -146,14 +146,14 @@ export module types {
   }
 
   export interface eventPlace {
-    location: string
+    location: string;
   }
 
   export interface eventNotification {
     type: string;
     message: string;
     id: string;
-    status: boolean
+    status: boolean;
   }
 
   export interface eventMembers {
@@ -161,6 +161,7 @@ export module types {
   }
 
   export interface DraftMessage {
+    _id?: string;
     chatID: string;
     authorId: string;
     text: string;
@@ -193,7 +194,7 @@ export module types {
     chatID: string;
     authorId: string;
     text: string;
-    users?: string[];
+    users?: CreateNewChatUser[];
     edited: boolean;
     unread?: string[];
     date: number; // timeStamp (to UTC)
@@ -278,11 +279,11 @@ export interface Server200Response {
 }
 
 export interface PrivateChat {
+  _id: string;
   draftMessages: DraftMessage[];
   messages: Message[];
   type: number;
   users: UsersInChat[];
-  _id: string;
 }
 
 export interface UsersInChat {
@@ -297,6 +298,11 @@ export interface LoginServerResponse {
   access_token?: string;
   token_key?: string;
   message?: string;
+}
+
+export interface SocketError {
+  event: string;
+  error: any;
 }
 
 export interface UploadAvatarResponse {

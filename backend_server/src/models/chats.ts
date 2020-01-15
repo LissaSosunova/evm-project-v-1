@@ -1,7 +1,7 @@
-const db = require('./db');
+import * as db from './db';
+import {model, Model} from "mongoose";
 
-
-const messageItem = db.Schema({
+const messageItem = new db.default.Schema({
     chatID: {type: String},
     authorId: {type: String},
     text: {type: String},
@@ -10,25 +10,27 @@ const messageItem = db.Schema({
     date: {type: Number} // timestamp
 });
 
-const draftMessageItem = db.Schema({
+const draftMessageItem = new db.default.Schema({
     chatID: {type: String},
     authorId: {type: String},
     text: {type: String},
     date: {type: Number}
 });
 
-const userItem = db.Schema({
+const userItem = new db.default.Schema({
     username:{type: String},
     name:{type: String},
     email:{type: String}
 });
 
 //Chat types: 1 - private chat, 2 - group chat | event chat, 3 - blocked chat, 4 - deleted chat
-const chat = db.Schema({
+const chat = new db.default.Schema({
     users:[userItem],
     draftMessages: [draftMessageItem],
     messages: [messageItem],
-    type: {type: Number}
+    type: {type: Number},
+    chatName: {type: String}, // for group chats
+    admin: {type: String} // for group chats
 });
 
-module.exports = db.model('Chat', chat);
+export const Chat: Model<any> = model('Chat', chat);

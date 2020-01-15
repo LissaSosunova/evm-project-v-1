@@ -13,11 +13,11 @@ import { debounceTime } from 'rxjs/operators';
 export class InputNumberComponent extends InputAbstract implements OnInit {
 
 // max text length for limiting text entering in HTML
-@Input() public maxLength?: number = 524288; // default value
+@Input() public maxLength = 524288; // default value
 // min text length
 @Input() public minLength?: number;
 
-public showMaxInputMessageError: boolean = false;
+public showMaxInputMessageError = false;
 public maxLengthLimit: number;
 
 constructor() {
