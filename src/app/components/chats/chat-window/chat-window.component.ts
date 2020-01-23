@@ -59,7 +59,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('groupChatInfoPopup', {static: true}) private groupChatInfoPopup: GroupChatInfoPopupComponent;
   @ViewChild('newGroupChatPopup', {static: true}) private newGroupChatPopup: NewGroupChatPopupComponent;
   public chats: types.ChatData;
-  private chatId: string;
+  public chatId: string;
   private messagesShift = 0;
   private userObj: { chatIdCurr: string; userId: string; token: string };
   private isUserTyping = false;
