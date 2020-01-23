@@ -56,10 +56,10 @@ export class ProfileComponent implements OnInit {
       this.toastService.openToastFail('Server error');
     });
   }
-  public saveNewName(): void {
+  public saveNewName(event): void {
     this.editedName = true;
   }
-  public saveNewPhone(): void {
+  public saveNewPhone(event): void {
     this.editedPhone = true;
   }
   public saveName(val: string): void {
@@ -81,7 +81,7 @@ export class ProfileComponent implements OnInit {
       this.toastService.openToastFail('Server error');
     });
   }
-  public saveNewMail(): void {
+  public saveNewMail(event): void {
     this.editedMail = true;
   }
   public saveMail(val: string): void {
@@ -100,7 +100,7 @@ export class ProfileComponent implements OnInit {
       this.toastService.openToastFail('Server error');
     });
   }
-  public uploadAvatar(): void {
+  public uploadAvatar(event): void {
     const files = this.uploadFile.nativeElement.files;
     const formData: FormData = new FormData();
     formData.append('image', files[0]);
