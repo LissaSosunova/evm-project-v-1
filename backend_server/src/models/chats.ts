@@ -1,5 +1,5 @@
 import * as db from './db';
-import {model, Model} from "mongoose";
+import {model, Model} from 'mongoose';
 
 const messageItem = new db.default.Schema({
     chatID: {type: String},
@@ -18,14 +18,16 @@ const draftMessageItem = new db.default.Schema({
 });
 
 const userItem = new db.default.Schema({
-    username:{type: String},
-    name:{type: String},
-    email:{type: String}
+    username: {type: String},
+    name: {type: String},
+    email: {type: String},
+    avatar: {type: Object},
+    deleted: {type: Boolean}
 });
 
-//Chat types: 1 - private chat, 2 - group chat | event chat, 3 - blocked chat, 4 - deleted chat
+// Chat types: 1 - private chat, 2 - group chat | event chat, 3 - blocked chat, 4 - deleted chat
 const chat = new db.default.Schema({
-    users:[userItem],
+    users: [userItem],
     draftMessages: [draftMessageItem],
     messages: [messageItem],
     type: {type: Number},

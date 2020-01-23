@@ -111,6 +111,8 @@ ul {
 
 .messages-container {
   max-height: calc(100vh - #{$footer-height} - #{$header-height} - 50px);
+  padding-left: 0;
+  padding-top: 10px;
 }
 
 .message-box{
@@ -156,12 +158,19 @@ ul {
   cursor: pointer;
   color:  map-get($bg-color, 'dark');
   margin: 0 5px;
+  display: flex;
+  align-items: center;
+  &:hover {
+    background-color:  map-get($bg-color, 'gray');
+  }
+  span {
+    margin: 5px 10px;
+  }
 }
 .menu-btn {
   cursor: pointer;
   color:  map-get($bg-color, 'dark');
   border-radius: 50%;
-  padding: 5px;
 }
 .menu-btn:hover {
   background-color:  map-get($bg-color, 'gray');
@@ -288,6 +297,15 @@ form {
   flex-wrap: nowrap
 }
 
+.chat-header {
+  display: flex;
+  margin-top: -30px;
+}
+
+.chat-info {
+  cursor: pointer;
+}
+
 .smile-wrapper {
   display: inline-block;
 }
@@ -330,10 +348,6 @@ form {
     margin-right: 1px;
   }
   
-  .messages-container {
-    padding-left: 0;
-  }
-
   .input-wrap {
     padding-left: 0;
   }

@@ -75,9 +75,20 @@ export function datareader(collection: Model<any>, params: DbQuery | any, action
               }
             });
           } else if (action === MongoActions.ARRAY_FILTER) {
-            const query = params.queryField1;
-            const condition = params.contidition;
-            collection.aggregate([{$match: params.query}, {$project: {query: {$filter: {input: `$${params.queryField1}`, as: 'item', cond: {$eq: [`$$item.${params.queryField2}`, params.contidition]}}}}}], (e, d) => {
+            collection.aggregate([
+              {$match: params.query},
+              {$project:
+                {query:
+                  {$filter:
+                    {input: `$${params.queryField1}`,
+                    as: 'item',
+                    cond: {
+                     $in: [ params.contidition, `$$item.${params.queryField2}`]
+                    }
+                    }
+                  }
+                }
+              }], (e, d) => {
               if (e) {
                 reject (e);
               } else {

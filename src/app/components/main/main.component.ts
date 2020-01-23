@@ -40,6 +40,10 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user = this.route.snapshot.data.userData;
+    if (!this.user) {
+      this.toastService.openToastFail(`Unable to get user data. You will be redirected on login page`, {duration: 4500});
+      this.router.navigate(['/login']);
+    }
     this.user.avatar = this.avatarService.parseAvatar(this.user.avatar);
     this.user.contacts.forEach(contact => {
       contact.avatar = this.avatarService.parseAvatar(contact.avatar);
@@ -65,6 +69,10 @@ export class MainComponent implements OnInit, OnDestroy {
     this.deleteContactSubscribe();
     this.subscribeNewEvents();
     this.subscribeSocketErrors();
+    this.subscribeNewGroupChat();
+    this.subscribeDeleteUserFromChat();
+    this.subscribeAddUserToGroupChat();
+    this.subscribeDeleteGroupChat();
     this.user$ = this.store.pipe(select('user'));
     this.user$.subscribe(user => {
       this.user = user;
@@ -175,6 +183,14 @@ export class MainComponent implements OnInit, OnDestroy {
     });
   }
 
+  private subscribeDeleteGroupChat(): void {
+    this.socketIoService.on(SocketIO.events.delete_group_chat)
+    .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: {chatId: string}) => {
+      this.store.dispatch(new userAction.DeleteGroupChat(response));
+    });
+  }
+
    private subscribeDeleteMessagesInit(): void {
     this.socketIoService.on(SocketIO.events.delete_message_out_of_chat)
       .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
@@ -184,6 +200,39 @@ export class MainComponent implements OnInit, OnDestroy {
           this.store.dispatch(new userAction.DeleteMessageUpdate(message));
         }
       });
+  }
+
+  private subscribeDeleteUserFromChat(): void {
+    this.socketIoService.on(SocketIO.events.delete_user_from_group_chat)
+    .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: {chatId: string, userToDelete: string}) => {
+      this.store.dispatch(new userAction.DeleteUserFromChat(response));
+      this.toastService.openToastWarning('Your were removed from chat');
+    });
+  }
+
+  private subscribeNewGroupChat(): void {
+    this.socketIoService.on(SocketIO.events.new_group_chat)
+    .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: types.Chats) => {
+      this.store.dispatch(new userAction.AddChat(response));
+      this.toastService.openToastSuccess('You were added to a new group chat');
+    });
+    this.socketIoService.on(SocketIO.events.new_group_chat_response)
+    .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: types.Chats) => {
+      this.store.dispatch(new userAction.AddChat(response));
+      this.router.navigate([`/main/chat-window/${response.chatId}`]);
+    });
+  }
+
+  private subscribeAddUserToGroupChat(): void {
+    this.socketIoService.on(SocketIO.events.add_user_to_chat)
+    .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: types.Chats) => {
+      this.store.dispatch(new userAction.AddChat(response));
+      this.toastService.openToastSuccess('You were added to a new group chat');
+    });
   }
 
   private subscribeNewEvents(): void {

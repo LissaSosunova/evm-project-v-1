@@ -46,7 +46,7 @@ export class GetUser {
                     query: {'_id' : new ObjectId(chat.chatId)},
                     queryField1: 'messages',
                     queryField2: 'unread',
-                    contidition: [user.username]
+                    contidition:  user.username
                   };
                   const queryParamsForLastMes = {
                     query: {'_id' : new ObjectId(chat.chatId)},

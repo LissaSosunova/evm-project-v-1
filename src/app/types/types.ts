@@ -1,5 +1,3 @@
-import { constants } from '../constants/default-constants';
-
 export module types {
 
   export interface Contact {
@@ -18,10 +16,11 @@ export module types {
 
   export interface ChatData {
     _id: string;
-    email: string[];
     users: CreateNewChatUser[];
     messages: Message[];
     type: ChatType;
+    chatName?: string;
+    admin?: string;
   }
 
   export interface Chats {
@@ -106,10 +105,10 @@ export module types {
     status: boolean;
     date_type: string;
     date: EventDateDb;
-    place: eventPlace;
-    members: eventMembers;
+    place: EventPlace;
+    members: EventMembers;
     additional: string;
-    notification?: eventNotification;
+    notification?: EventNotification;
     authorId: string;
   }
 
@@ -122,11 +121,11 @@ export module types {
     name: string;
     status: boolean;
     dateType: dateTypeEvent;
-    date: eventDate;
-    place: eventPlace;
-    members: eventMembers;
+    date: EventDate;
+    place: EventPlace;
+    members: EventMembers;
     additional: string;
-    notification?: eventNotification;
+    notification?: EventNotification;
   }
 
   export enum dateTypeEvent {
@@ -136,7 +135,7 @@ export module types {
     DIAPASON_OF_DATES_WITH_TIME = 'diapason of dates with time'
   }
 
-  export interface eventDate {
+  export interface EventDate {
     startDate: Date;
     startHours?: number;
     startMinutes?: number;
@@ -145,18 +144,18 @@ export module types {
     endMinutes?: number;
   }
 
-  export interface eventPlace {
+  export interface EventPlace {
     location: string;
   }
 
-  export interface eventNotification {
+  export interface EventNotification {
     type: string;
     message: string;
     id: string;
     status: boolean;
   }
 
-  export interface eventMembers {
+  export interface EventMembers {
     invited: string[];
   }
 
@@ -243,17 +242,42 @@ export interface SocketMessage {
   payload: any;
 }
 
+export interface DeleteUserFromChatSocketIO {
+  chatId: string;
+  userToDelete: string;
+  admin: string;
+}
+
+export interface AddUserToChatSocketIO {
+  chatId: string;
+  username: string;
+  admin: string;
+  user: CreateNewChatUser;
+  chatName: string;
+  avatar: Avatar;
+}
+
 export interface CreateNewChat {
   users: CreateNewChatUser[];
 }
 
 export interface CreateNewChatUser {
+  _id?: string;
   username: string;
   name: string;
   email: string;
+  selected?: boolean;
+  avatar?: Avatar;
+  deleted?: boolean;
 }
 
-export interface arrayOfUsersForMessage {
+export interface DeleteGroupChat {
+  chatId: string;
+  admin: string;
+  users: CreateNewChatUser[];
+}
+
+export interface ArrayOfUsersForMessage {
   username: string;
   name: string;
   email: string;
@@ -308,6 +332,12 @@ export interface SocketError {
 export interface UploadAvatarResponse {
   avatar: AvatarObject;
   owner: string;
+}
+
+export interface NewGroupChat {
+  chatName: string;
+  admin: string;
+  users: CreateNewChatUser[];
 }
 
 export type StepState = 'login' | 'registration' | 'about' | 'main';

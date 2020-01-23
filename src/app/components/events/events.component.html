@@ -1,7 +1,67 @@
-<ng-container *ngIf="user$ | async as user">
-  <ul class="event-list">
-    <li *ngFor="let event of user.events">
-      {{event.name}}
-    </li>
-  </ul>
-</ng-container>
+<div class="content-rows">
+  <div class="block-with-btns col-xs-12 col-sm-12 col-md-12 col-lg-8">
+    <div class="col-xs-6
+              icon-left block-with-animation">
+      <div id="icon-event">
+        <i class="material-icons">add_box</i>
+      </div>
+      <div class="url-list-container-left">
+        <ul>
+          <li>
+            <a routerLink="/main/new_event">Create new event</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-xs-6
+              icon-right block-with-animation">
+      <div id="icon-chat">
+        <i class="material-icons">list</i>
+      </div>
+      <div class="url-list-container-right">
+        <ul>
+          <li>
+            <span (click)="openList('currEventsList')">Current events</span>
+          </li>
+          <li>
+            <span (click)="openList('draftEventsList')">Draft events</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div>
+  </div>
+</div>
+<div class="col-xs-12 row" >
+    <ng-container *ngIf="user$ | async as user">
+      <!-- Current events -->
+        <section *ngIf="openCurrEventsList === true">
+          <div [ngSwitch]="user.events.length !==0">
+            <span *ngSwitchCase="false">
+              You don't have current events
+            </span>
+              <ul class="event-list" *ngSwitchCase="true">
+                  Current events
+                  <li *ngFor="let event of user.events">
+                    {{event.name}}
+                  </li>
+                </ul>
+          </div>
+        </section>
+          <!-- Draft events -->
+      <section *ngIf="openDraftEventsList === true">
+        <div [ngSwitch]="user.events.length !==0">
+          <span *ngSwitchCase="false">
+            You don't have drafts of events
+          </span>
+            <ul class="event-list" *ngSwitchCase="true">
+                Draft events
+                <li *ngFor="let event of user.events">
+                  {{event.name}}
+                </li>
+              </ul>
+        </div>
+      </section>
+    </ng-container>
+  </div>

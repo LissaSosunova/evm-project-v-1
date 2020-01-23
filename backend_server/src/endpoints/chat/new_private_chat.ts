@@ -29,7 +29,7 @@ export class NewPrivateChat {
             const reqArr: NewPrivateChatReq = req.body;
             // Params for search in Chat DB (exist chat): req.body.users[0] - id autorisated user, а req.body.users[1] - id of second user
             const findChatParams = {
-              $and: [{'users.username': reqArr.users[0].username}, {'users.username': reqArr.users[1].username}]
+              $and: [{'users.username': reqArr.users[0].username}, {'users.username': reqArr.users[1].username}, {type: 1}]
             };
             // Params for search users in User DB
             const params = {

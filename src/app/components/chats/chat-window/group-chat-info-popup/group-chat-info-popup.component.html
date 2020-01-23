@@ -1,0 +1,44 @@
+<app-popup *ngIf="popup.isOpened"
+            [config]="popupConfig"
+            (onClose)="onClose()"
+            >
+    <section>
+            <div class="chat-name">
+                
+            </div>
+                <ul class="contacts-list">
+                  <li *ngFor="let contact of usersInChat" class="contact">
+                    <ng-container *ngIf="!contact.deleted">
+                      <span class="avatar"><img src={{contact?.avatar?.url}}></span>   
+                      <span>{{contact.name}}</span>
+                      <span class="material-icons delete-user" *ngIf="user.username !== contact.username
+                                                    && user.username === admin"
+                                                    (click)="deleteUserFromChat(contact.username)">delete</span>
+                    </ng-container>
+                  </li>
+                </ul>
+            <section class="add-users-container" *ngIf="user.username === admin">
+              <span>Add users...</span>
+              <span class="material-icons add-users" (click)="addUsersToChat()">how_to_reg</span>
+              <ng-container *ngIf="showUsersOutOfChat">
+                <ul class="contacts-list">
+                  <li *ngFor="let contact of usersOutOfChat" class="contact">
+                      <span class="avatar"><img src={{contact?.avatar?.url}}></span>   
+                      <span>{{contact.name}}</span>
+                      <span class="material-icons add-user"
+                            *ngIf="user.username !== contact.username"
+                            (click)="addUserToChat(contact)">
+                            add
+                      </span>
+                  </li>
+                </ul>
+              </ng-container>
+            </section>
+            <section class="delete-chat-container" *ngIf="user.username === admin">
+              <span>Delete chat...</span>
+              <span class="material-icons delete-chat" (click)="deleteChat()">delete</span>
+            </section>    
+       
+    </section>        
+</app-popup>
+

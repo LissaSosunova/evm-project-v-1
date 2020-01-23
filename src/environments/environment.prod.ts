@@ -1,3 +1,6 @@
+import { URIObj } from 'src/app/constants/backendURI';
+
 export const environment = {
-  production: true
+  production: true,
+  backendURI: URIObj.getDeployedURI()
 };

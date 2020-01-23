@@ -1,0 +1,30 @@
+<app-popup *ngIf="popup.isOpened"
+            [config]="popupConfig"
+            (onClose)="onClose()"
+            (onSubmit)="onSubmit()"
+            [submitDisabled]="submitDisabled">
+    <section>
+        <form name="newGroupChatForm"
+              #newGroupChatForm="ngForm">
+            <div class="input-container">
+                <app-input-text [placeholder]="'Chat name'"
+                                name="chatName"
+                                [(ngModel)]="newChatModel.chatName"
+                                [required]="true"
+                                >
+                </app-input-text>
+              </div>
+                <ul class="contacts-list">
+                  <li *ngFor="let contact of contacts" class="contact">
+                    <mat-checkbox [(ngModel)]="contact.selected"
+                    name="checkBox"
+                     (ngModelChange)="select(contact, $event)"></mat-checkbox
+                        >
+                    <span class="avatar"><img src={{contact.avatar.url}}></span>   
+                    <span>{{contact.name}}</span>
+                  </li>
+                </ul>
+        </form>
+    </section>        
+</app-popup>
+

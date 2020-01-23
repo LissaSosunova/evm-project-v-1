@@ -15,20 +15,27 @@ export function newGroupChat(socket: socketIo.Socket, onlineClients: OnlineClien
         chat.admin = obj.admin;
         try {
             await datareader(chat, null, MongoActions.SAVE);
+
+            const chatToSave = {
+                name: obj.chatName,
+                users: obj.users,
+                chatId: chat._id,
+                avatar: '',  // добавить аватарку чата по умолчанию!!!
+                type: 2
+            };
+
+            if (onlineClients[obj.admin]) {
+                Object.keys(onlineClients[obj.admin]).forEach(token => {
+                    onlineClients[obj.admin][token].emit('new_group_chat_response', chatToSave);
+                });
+            }
             obj.users.forEach(async user => {
-                const chatToSave = {
-                    name: obj.chatName,
-                    users: obj.users,
-                    chatId: chat._id,
-                    // avatar: '', добавить аватарку чата по умолчанию!!!
-                    type: 2
-                };
                 const updateParams = {
-                    query: user.username,
+                    query: {username: user.username},
                     objNew:  {$push: {chats: chatToSave}}
                 };
                 await datareader(User, updateParams, MongoActions.UPDATE_ONE);
-                if (onlineClients[user.username]) {
+                if (onlineClients[user.username] && user.username !== obj.admin) {
                     Object.keys(onlineClients[user.username]).forEach(token => {
                         onlineClients[user.username][token].emit('new_group_chat', chatToSave);
                     });

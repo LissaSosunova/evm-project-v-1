@@ -84,7 +84,7 @@ export interface DeleteGroupChat {
     users: UserItem[];
 }
 
-interface UserItem {
+export interface UserItem {
     username: string;
     name: string;
     email: string;
@@ -94,6 +94,14 @@ export interface NewGroupChat {
     chatName: string;
     admin: string;
     users: UserItem[];
+}
+
+export interface AddUserToChat {
+    chatId: string;
+    admin: string;
+    username: string;
+    user: UserItem;
+    chatName: string;
 }
 
 export interface DeleteMessageSocketIO {
@@ -223,10 +231,10 @@ export interface EventDb {
 }
 
 export interface Chats {
-    _id: string;
-    avatar: Avatar;
+    _id?: string;
+    avatar: Avatar | string;
     chatId: string;
-    id: string;
+    id?: string;
     name: string;
     users: CreateNewChatUser[];
     type: number;

@@ -27,9 +27,9 @@ import * as userAction from '../../../store/actions';
 export class ChatListComponent implements OnInit, OnDestroy {
   @Input() public flag: string;
   @Input() public size: string;
+  @Input() public chatId: string;
   @Output() public chatIdEmit: EventEmitter<string> = new EventEmitter<string>();
   public blockedChats: Array<types.Chats> = [];
-  public chatId: string;
   public deletedChats: Array<types.Chats>;
   public groupChats: Array<types.Chats>;
   public privateChats: Array<types.Chats>;
@@ -55,7 +55,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
   }
 
 
-  public goToChat(chatId): void {
+  public goToChat(chatId: string): void {
     this.chatId = chatId;
     this.chatIdEmit.emit(chatId);
     this.router.navigate([`/main/chat-window/`, chatId], {relativeTo: this.route.parent});

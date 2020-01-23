@@ -6,14 +6,18 @@
                     (click)= "goToChat(item.chatId)"
                     [ngClass]="{'current-chat': chatId === item.chatId}">
                             <div class="col-sm-1">
-                                    <img src="{{item.avatar.url}}">
+                                    <img src="{{item.avatar?.url}}">
                             </div>
                             <div class="col-sm-8">
                                     <span class="chat-name">{{item.name}}</span>
                             </div>
                             <div class="col-sm-2"  *ngIf="size === 'normal'">
-                                    <br>
-                                    <span class="chat-time">01.01.2019</span>
+                                <span *ngIf="item.lastMessage">
+                                        <br>
+                                        <span class="chat-time">{{item.lastMessage.date | date: 'dd.MM.yy'}}</span>
+                                        <br>
+                                        <span class="chat-time">{{item.lastMessage.date | date: 'HH:mm:ss'}}</span>
+                                </span>
                             </div>
                             <div class="col-sm-1" *ngIf="item.unreadMes > 0">
                               <div matBadge="{{item.unreadMes}}"
@@ -29,17 +33,26 @@
         <ul>
             <li *ngFor="let item of groupChats">
                         <div class="row on-click-one-chat"
-                        (click)= "goToChat(item._id)">
+                        (click)= "goToChat(item.chatId)"
+                        [ngClass]="{'current-chat': chatId === item.chatId}">
                                 <div class="col-sm-1">
-                                        <img src="{{item.avatar.url}}">
+                                        <img src="{{item.avatar?.url}}">
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                         <span class="chat-name">{{item.name}}</span>
                                 </div>
                                 <div class="col-sm-2" *ngIf="size === 'normal'">
-                                        <br>
-                                        <span class="chat-time">01.01.2019</span>
-                                </div>   
+                                        <span *ngIf="item.lastMessage">
+                                                <br>
+                                                <span class="chat-time">{{item.lastMessage.date | date: 'dd.MM.yy'}}</span>
+                                                <br>
+                                                <span class="chat-time">{{item.lastMessage.date | date: 'HH:mm:ss'}}</span>
+                                        </span>
+                                </div> 
+                                <div class="col-sm-1" *ngIf="item.unreadMes > 0">
+                                        <div matBadge="{{item.unreadMes}}">
+                                        </div>
+                                </div>  
                         </div>
             </li>
         </ul>

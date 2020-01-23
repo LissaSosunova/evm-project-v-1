@@ -30,7 +30,7 @@
                   <i class="material-icons">search</i>
                 </button>
                 <button class="m-btn confirm">
-                    <i class="material-icons">add</i>
+                    <i class="material-icons" (click)="newGroupChat()">add</i>
                   </button>
           </div>
           <app-chat-list flag='group' size='normal'></app-chat-list>
@@ -39,3 +39,4 @@
     </div>
   </div>
 </section>
+<app-new-group-chat-popup #newGroupChatPopup></app-new-group-chat-popup>

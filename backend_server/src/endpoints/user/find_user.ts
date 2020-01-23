@@ -38,7 +38,8 @@ export class FindUser {
             };
             try {
               const userDb: {_id: string, contacts: Contact[]}[] = await datareader(User, params, MongoActions.FIND_ELEMENT_MATCH);
-              const result: {_id: string, username: string, email: string, name: string, avatar: Avatar}[] = await datareader(User, queryParam, MongoActions.FIND_ELEMENT_MATCH);
+              const result: {_id: string, username: string, email: string, name: string, avatar: Avatar}[] =
+              await datareader(User, queryParam, MongoActions.FIND_ELEMENT_MATCH);
               // убираем из результата поиска те контакты, которые уже есть в списке друзей у пользователья, который шлёт запрос
               const userArr = result.filter(user => {
                 return userDb[0].contacts.every(c => c.id !== user.username);
