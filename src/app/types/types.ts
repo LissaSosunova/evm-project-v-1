@@ -24,7 +24,7 @@ export module types {
   }
 
   export interface Chats {
-    _id: string;
+    _id?: string;
     avatar: Avatar;
     chatId: string;
     id: string;

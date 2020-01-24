@@ -1,4 +1,4 @@
-import { EventDateDb, EventNotification, EventDb } from "../interfaces/types";
+import { EventDateDb, EventNotification, EventDb } from '../interfaces/types';
 
 export class EventData {
     public id: string;
@@ -6,7 +6,7 @@ export class EventData {
     public status: boolean;
     public date: EventDateDb;
     public date_type: string;
-    public notification: EventNotification
+    public notification: EventNotification;
 
     constructor(event: EventDb) {
       this.id = event._id;

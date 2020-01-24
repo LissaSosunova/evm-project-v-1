@@ -1,6 +1,6 @@
 import { UserDataObj, Contact, EventDb, Chats, Avatar, Notifications } from '../interfaces/types';
 
-export class UserData implements UserDataObj {
+export class UserData {
     public username: string;
     public email: string;
     public name: string;

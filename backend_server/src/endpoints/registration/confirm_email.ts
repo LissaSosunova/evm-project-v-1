@@ -38,13 +38,13 @@ export class ConfirmEmail {
                     user.events = [];
                     user.notifications = [];
                     user.chats = [];
-                    await datareader(user, null, MongoActions.SAVE);
+                    await datareader(user as any, null, MongoActions.SAVE);
                     await datareader(ConfUser, auth, MongoActions.DELETE_ONE);
                     res.redirect(`${config.frontendDomain}/email-confirmed`);
                 }
             } catch (error) {
                 console.error('/confirm_email', error);
-                res.status(500).json({error});
+                res.status(500).json({error, status: 500});
             }
         });
     }

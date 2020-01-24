@@ -1,4 +1,4 @@
-import { Avatar, FoundContactObj } from "../interfaces/types";
+import { Avatar, FoundContactObj } from '../interfaces/types';
 
 export class FindContact {
     public id: string;

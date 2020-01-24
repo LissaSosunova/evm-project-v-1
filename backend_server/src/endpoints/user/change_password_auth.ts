@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
-import { Server200Response, ChangePasswordAuthObj } from '../../interfaces/types';
+import { Server200Response, ChangePasswordAuthObj, Auth } from '../../interfaces/types';
 
 export class ChangePasswordAuth {
 
@@ -17,7 +17,7 @@ export class ChangePasswordAuth {
     private init(): void {
         this.router = this.express.Router();
         this.router.post('/change_password_auth', async (req, res, next) => {
-            let auth;
+            let auth: Auth;
             const reqObj: ChangePasswordAuthObj = req.body;
             if (!req.headers['authorization']) {
                 return res.sendStatus(401);
@@ -56,7 +56,7 @@ export class ChangePasswordAuth {
                 });
             } catch (error) {
                 console.error('/change_password_auth', error);
-                res.status(500).json(error);
+                res.status(500).json({error, status: 500});
             }
         });
     }

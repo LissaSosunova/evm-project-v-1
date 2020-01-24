@@ -1,4 +1,4 @@
-import { ModelUpdateOptions } from 'mongoose';
+import { ModelUpdateOptions, Document } from 'mongoose';
 import * as socketIo from 'socket.io';
 
 export interface LoginResponse {
@@ -175,11 +175,12 @@ export interface EditProfile {
     phone: string;
 }
 
-export interface PendingRegUser {
+export interface PendingRegUser extends Document {
     username: string;
     name: string;
     email: string;
     password: string;
+    expireAt: {any: any};
 }
 
 export interface Avatar {
@@ -193,7 +194,7 @@ export interface AvatarObject {
     image: string;
 }
 
-export interface UserDataObj {
+export interface UserDataObj extends Document {
     username: string;
     email: string;
     name: string;
@@ -202,9 +203,10 @@ export interface UserDataObj {
     events: EventDb [];
     chats: Chats[];
     avatar: Avatar;
+    password?: string;
     notifications: Notifications [];
-    private_chat?: string;
-    status?: ChatType;
+    private_chat?: string; // TO DO
+    status?: ChatType;  // TO DO
 }
 
 export interface Contact {
@@ -217,8 +219,8 @@ export interface Contact {
     status: number;
 }
 
-export interface EventDb {
-    _id?: string;
+export interface EventDb extends Document {
+    _id: string;
     name: string;
     status: boolean;
     date_type: string;
@@ -290,18 +292,19 @@ export interface Message {
 
 export interface ChatDataObj {
     _id: string;
-    email: string[];
-    users: string[];
+    users: UsersInChatDb[];
     messages: Message[];
     type: ChatType;
 }
 
-export interface ChatDb {
-    _id?: string;
+export interface ChatDb extends Document {
+    _id: string;
     users: UsersInChatDb[];
     messages: Message[];
     draftMessages: DraftMessageDb[];
     type: ChatType;
+    chatName?: string;
+    admin?: string;
 }
 
 export interface UsersInChatDb {
@@ -337,15 +340,21 @@ export interface EventNotification {
     status: boolean;
 }
 
-export interface EventDb {
-    _id?: string;
-    name: string;
-    status: boolean;
-    date_type: string;
-    date: EventDateDb;
-    place: EventPlace;
-    members: EventMembers;
-    additional: string;
-    notification?: EventNotification;
-    authorId: string;
+
+export interface Config {
+    secretkeyForEmail: string;
+    secretkeyForPasswordReset: string;
+    filesDomain: string;
+    confirmEmail: boolean;
+    backendDomain: string;
+    frontendDomain: string;
+    expireResetPasswordLink: number;
+    expireChangeEmailLink: number;
+    mongodb: string;
+    backendPort: number;
+    frontendPort: number;
+}
+
+export interface Auth {
+    username: string;
 }

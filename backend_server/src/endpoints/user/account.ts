@@ -36,7 +36,7 @@ export class Account {
                 res.json(user);
               } catch (error) {
                 console.error('/account', error);
-                res.status(500).json({error});
+                res.status(500).json({error, status: 500});
               }
           });
     }

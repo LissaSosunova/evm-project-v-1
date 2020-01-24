@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
-import { DraftMessageDb, Server200Response, ChatDb } from '../../interfaces/types';
+import { DraftMessageDb, Server200Response, ChatDb, Auth } from '../../interfaces/types';
 
 export class SetDraftMessage {
     public router: Router;
@@ -18,7 +18,7 @@ export class SetDraftMessage {
             if (!req.headers['authorization']) {
               return res.sendStatus(401);
             }
-            let auth;
+            let auth: Auth;
             try {
               auth = jwt.decode(req.headers['authorization'], req.headers['token_key'] as string);
             } catch (err) {
@@ -47,7 +47,7 @@ export class SetDraftMessage {
               res.json({status: 200, message: 'message saved'} as Server200Response);
             } catch (error) {
               console.error('/set_draft_message', error);
-              res.status(500).json({error});
+              res.status(500).json({error, status: 500});
             }
           });
     }

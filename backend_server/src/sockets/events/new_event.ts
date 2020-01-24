@@ -5,6 +5,7 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 import { Event } from '../../models/event';
 import { EventData} from '../../modules/eventData';
 import { User } from '../../models/user';
+import { Model } from 'mongoose';
 
 export function newEvent(socket: socketIo.Socket, onlineClients: OnlineClients): void {
     socket.on('new_event', async (obj: EventDb) => {
@@ -18,7 +19,7 @@ export function newEvent(socket: socketIo.Socket, onlineClients: OnlineClients):
         event.additional = obj.additional;
         event.notification = { type: 'event', message: 'You are invited to new event', id: '', status: true};
         try {
-          await datareader(event, null, MongoActions.SAVE);
+          await datareader(event as any, null, MongoActions.SAVE);
           const createdEvent: EventData = new EventData(event);
           const response: UserDataObj = await datareader(User, {username:  obj.authorId}, MongoActions.FIND_ONE);
           const updateParams = {

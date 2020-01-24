@@ -83,14 +83,14 @@ export class PostUser {
                     res.json(err);
                   } else {
                     confUser.password = hash;
-                    await datareader(confUser, null, MongoActions.SAVE);
+                    await datareader(confUser as any, null, MongoActions.SAVE);
                     res.json({status: 200, message: 'Email sent'} as Server200Response);
                   }
                 });
             }
             } catch (error) {
               console.error('/user', error);
-              res.status(500).json({error});
+              res.status(500).json({error, status: 500});
             }
           });
     }

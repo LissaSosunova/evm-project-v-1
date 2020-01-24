@@ -14,7 +14,7 @@ export function newGroupChat(socket: socketIo.Socket, onlineClients: OnlineClien
         chat.chatName = obj.chatName;
         chat.admin = obj.admin;
         try {
-            await datareader(chat, null, MongoActions.SAVE);
+            await datareader(chat as any, null, MongoActions.SAVE);
 
             const chatToSave = {
                 name: obj.chatName,

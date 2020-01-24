@@ -64,7 +64,7 @@ export class ConfirmChangeEmail {
                     }
                 } catch (error) {
                     console.error('confirm_change_email', error);
-                    res.status(500).json({error});
+                    res.status(500).json({error, status: 500});
                 }
             }
         });

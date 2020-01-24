@@ -5,7 +5,7 @@ import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
 import { User } from '../../models/user';
-import { DeleteChatObj, DbQuery } from '../../interfaces/types';
+import { DeleteChatObj, DbQuery, Auth } from '../../interfaces/types';
 
 export class RenewChat {
     public router: Router;
@@ -16,7 +16,7 @@ export class RenewChat {
     private init(): void {
         this.router = this.express.Router();
         this.router.post('/renew_chat', async (req, res, next) => {
-            let auth;
+            let auth: Auth;
             let chatId: {_id: string}[];
             if (!req.headers['authorization']) {
               return res.sendStatus(401);
@@ -45,7 +45,7 @@ export class RenewChat {
               res.json(response);
             } catch (error) {
               console.error('/renew_chat', error);
-              res.status(500).json({error});
+              res.status(500).json({error, status: 500});
             }
           });
     }

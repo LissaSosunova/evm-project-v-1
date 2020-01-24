@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
-import { Avatar } from '../../interfaces/types';
+import { Avatar, Auth } from '../../interfaces/types';
 
 export class DeleteAvatar {
 
@@ -15,7 +15,7 @@ export class DeleteAvatar {
     private init(): void {
         this.router = this.express.Router();
         this.router.post('/delete_avatar', async (req, res, next) => {
-            let auth;
+            let auth: Auth;
               if (!req.headers['authorization']) {
               return res.sendStatus(401);
             }
@@ -58,7 +58,7 @@ export class DeleteAvatar {
                 res.json(avatarObjToSave);
             } catch (error) {
                 console.error('/delete_avatar', error);
-                res.status(500).json({error});
+                res.status(500).json({error, status: 500});
             }
         });
     }

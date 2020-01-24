@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
 import { TransferService } from 'src/app/services/transfer.service';
@@ -16,6 +16,7 @@ import { PageMaskService } from 'src/app/services/page-mask.service';
 import { ChatEmotions } from 'src/app/constants/chat-emotions';
 import { GroupChatInfoPopupComponent } from './group-chat-info-popup/group-chat-info-popup.component';
 import { NewGroupChatPopupComponent } from '../new-group-chat-popup/new-group-chat-popup.component';
+import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -31,7 +32,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public draftMessage: types.DraftMessageFromServer;
   public groupChats: Array<types.Chats> = [];
   public editMessageMode = false;
-  @Output() inputMes: string;
+  public inputMes: string;
   public isDraftMessageExist: boolean;
   public isDraftMessageSent = false;
   public isLoadingMessages: boolean;
@@ -69,10 +70,10 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   private sidebarExpand: boolean;
   private pattern: RegExp = /[^\s]/;
 
-  constructor(
-    private transferService: TransferService,
+  constructor(private transferService: TransferService,
     private route: ActivatedRoute,
     private router: Router,
+    private toastService: ToastService,
     private data: DataService,
     private dateTransformService: DateTransformService,
     private socketIoService: SocketIoService,
@@ -116,12 +117,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       this.showArrowDown = false;
     }
     if (this.portionMessagesNumber && scrolled === 0 && this.moreMessages) {
-      this.getMessages(
-        this.chatId,
-        this.portionMessagesNumber,
-        types.Defaults.QUERY_MESSAGES_AMOUNT,
-        this.messagesShift
-      );
+      this.getMessages(this.chatId, this.portionMessagesNumber, types.Defaults.QUERY_MESSAGES_AMOUNT, this.messagesShift);
     }
   }
 
@@ -174,10 +170,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       chatId: message.chatID,
       unread: message.unread
     };
-    this.socketIoService.socketEmit(
-      SocketIO.events.delete_message,
-      deleteMessageObj
-    );
+    this.socketIoService.socketEmit(SocketIO.events.delete_message, deleteMessageObj);
   }
 
   public get getChatName(): string {
@@ -218,7 +211,9 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public writeMessage(e): void {
     this.inputMes = e.target.value;
     if (this.control.valid && !this.editMessageMode) {
-      this.sendMessage();
+      setTimeout(() => {
+        this.sendMessage();
+      });
     } else if (this.control.valid && this.editMessageMode) {
       this.completeEditing();
     }
@@ -301,6 +296,11 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private getChat(): void {
     this.chats = this.route.snapshot.data.chatMessages;
+    if (!this.chats) {
+      this.toastService.openToastFail('Unable to get messages');
+      this.router.navigate(['/main/chats']);
+      this.store.dispatch(new userAction.DeleteGroupChat({chatId: this.chatId}));
+    }
     this.arrayOfMessages = this.chats.messages;
     this.arrayOfUsers = this.chats.users;
     if (this.arrayOfMessages && this.arrayOfMessages.length <= 0) {
@@ -315,10 +315,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private destroy(): void {
-    this.socketIoService.socketEmit(
-      SocketIO.events.user_left_chat,
-      this.userObj
-    );
+    this.socketIoService.socketEmit(SocketIO.events.user_left_chat, this.userObj);
     if (this.inputMes && !this.editMessageMode) {
       this.sendDraftMessage();
     } else if (this.isDraftMessageSent && this.inputMes === '') {
@@ -342,6 +339,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private init(): void {
+    this.chatId = this.route.snapshot.params.chatId;
     this.getChat();
     this.showUserIsTyping = false;
     this.unsubscribe$ = new Subject<void>();
@@ -358,7 +356,6 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     });
-    this.chatId = this.route.snapshot.params.chatId;
     this.subscribeNewMessagesInit();
     this.subscribeDeleteMessagesInit();
     this.subscribeEditMessagesInit();
@@ -398,6 +395,9 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private initDraftMessagesSubscription(): void {
     this.draftMessage = this.route.snapshot.data.draftMessage;
+    if (!this.draftMessage) {
+      this.toastService.openToastFail('Unable to get data from server');
+    }
     setTimeout(() => {
       this.changeChatWindowHeigth();
     });
@@ -420,16 +420,14 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       this.inputMes = '';
     }
 
-    this.control.valueChanges
-      .pipe(takeUntil(this.unsubscribe$), distinctUntilChanged())
+    this.control.valueChanges.pipe(takeUntil(this.unsubscribe$), distinctUntilChanged())
       .subscribe(message => {
         this.scrollDownMessageWindow();
         this.inputMes = message;
         this.changeChatWindowHeigth();
       });
 
-    this.control.valueChanges
-      .pipe(debounceTime(2000), distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    this.control.valueChanges.pipe(debounceTime(2000), distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe(message => {
         message = message.replace(/\n\n\n/, '');
         const userIsTypingObj: types.UserIsTyping = {
@@ -450,8 +448,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
 
-    this.control.valueChanges
-      .pipe(takeUntil(this.unsubscribe$), filter(message => !this.isUserTyping))
+    this.control.valueChanges.pipe(takeUntil(this.unsubscribe$), filter(message => !this.isUserTyping))
       .subscribe(message => {
         const userIsTypingObj: types.UserIsTyping = {
           userId: this.user.username,
@@ -469,8 +466,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private getMessages(chatId: string, n: number, queryMessagesAmount: number, messagesShift: number): void {
     this.isLoadingMessages = true;
-    this.data
-      .getPrivatChat(chatId, String(n), String(queryMessagesAmount), String(messagesShift))
+    this.data.getPrivatChat(chatId, String(n), String(queryMessagesAmount), String(messagesShift))
       .subscribe((response: types.Message[]) => {
         this.isLoadingMessages = false;
         if (response && response.length < 20) {
@@ -502,10 +498,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   private scrollDownMessageWindow(): void {
     const chatWindowsSrollHeight: number = this.messageBoxElement.scrollHeight;
     const chatWindowsClientHeight: number = this.messageBoxElement.clientHeight;
-    this.messageBoxElement.scrollTo(
-      0,
-      chatWindowsSrollHeight - chatWindowsClientHeight
-    );
+    this.messageBoxElement.scrollTo(0, chatWindowsSrollHeight - chatWindowsClientHeight);
   }
 
   private sendDraftMessage(): void {
@@ -522,27 +515,17 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private subscribeDeleteMessagesInit(): void {
-    this.socketIoService
-      .on(SocketIO.events.delete_message)
-      .pipe(
-        distinctUntilChanged(),
-        takeUntil(this.unsubscribe$)
-      )
+    this.socketIoService.on(SocketIO.events.delete_message)
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe((message: types.DeleteMessage) => {
-        const messageIndex: number = this.arrayOfMessages.findIndex(
-          item => item._id === message.messageId
-        );
+        const messageIndex: number = this.arrayOfMessages.findIndex(item => item._id === message.messageId);
         this.arrayOfMessages.splice(messageIndex, 1);
       });
   }
 
   private subscribeEditMessagesInit(): void {
-    this.socketIoService
-      .on(SocketIO.events.edit_message)
-      .pipe(
-        distinctUntilChanged(),
-        takeUntil(this.unsubscribe$)
-      )
+    this.socketIoService.on(SocketIO.events.edit_message)
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe((message: types.EditMessage) => {
         this.arrayOfMessages.find(item => {
           if (item._id === message.messageId) {
@@ -555,8 +538,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private subscribeNewMessagesInit(): void {
-    this.socketIoService
-      .on(SocketIO.events.new_message)
+    this.socketIoService.on(SocketIO.events.new_message)
       .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
       .subscribe(message => {
         this.arrayOfMessages.unshift(message);

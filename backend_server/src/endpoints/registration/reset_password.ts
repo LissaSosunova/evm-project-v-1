@@ -32,7 +32,7 @@ export class ResetPassword {
                     }
                 } catch (error) {
                     console.error('/reset_password', error);
-                    res.status(500).json({error});
+                    res.status(500).json({error, status: 500});
                 }
             }
         });

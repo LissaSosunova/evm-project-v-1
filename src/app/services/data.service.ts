@@ -89,8 +89,12 @@ export class DataService {
     return this.http.post<types.Server200Response>(`${URL_BACK}/change_password`, {password, tokenTime}, {headers});
   }
 
-  public setNewProfileData(params: any): Observable<any> {
-    return this.http.post(URL_BACK + '/profile', params, {headers: this.getHeaders()});
+  public setNewProfileData(params: any): Observable<types.User> {
+    return this.http.post<types.User>(URL_BACK + '/profile', params, {headers: this.getHeaders()});
+  }
+
+  public account(): Observable<types.User> {
+    return this.http.get<types.User>(`${URL_BACK}/account`, {headers: this.getHeaders()});
   }
 
   private getHeaders(): HttpHeaders {

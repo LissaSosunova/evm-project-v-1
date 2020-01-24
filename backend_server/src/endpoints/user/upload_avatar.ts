@@ -7,7 +7,7 @@ import * as path from 'path';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
-import { Avatar } from '../../interfaces/types';
+import { Avatar, Auth } from '../../interfaces/types';
 
 export class UploadAvatar {
 
@@ -50,7 +50,7 @@ export class UploadAvatar {
     private init(): void {
         this.router = this.express.Router();
         this.router.post('/upload_avatar', this.upload.single('image'), async (req, res, next) => {
-            let auth;
+            let auth: Auth;
               if (!req.headers['authorization']) {
               return res.sendStatus(401);
             }
@@ -113,7 +113,7 @@ export class UploadAvatar {
                 res.json(savedAvatar[0].avatar);
             } catch (error) {
                 console.error('/upload_avatar', error);
-                res.status(500).json({error});
+                res.status(500).json({error, status: 500});
             }
         });
     }

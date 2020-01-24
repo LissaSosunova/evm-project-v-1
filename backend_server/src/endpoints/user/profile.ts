@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
-import { EditProfile, UserDataObj } from '../../interfaces/types';
+import { EditProfile, UserDataObj, Auth } from '../../interfaces/types';
 
 export class Profile {
 
@@ -16,7 +16,7 @@ export class Profile {
     private init(): void {
         this.router = this.express.Router();
         this.router.post('/profile', (req, res, next) => {
-            let auth;
+            let auth: Auth;
             if (!req.headers['authorization']) {
               return res.sendStatus(401);
             }
@@ -80,6 +80,7 @@ export class Profile {
                 } return response;
               })
               .then((response: UserDataObj) => {
+                // Зачем нам возвращать тут документ с User?
                 return res.json(response);
               });
             }

@@ -4,6 +4,7 @@ import { types } from '../types/types';
 import { Subject, Observable } from 'rxjs';
 import { SocketIO} from 'src/app/types/socket.io.types';
 import { environment } from 'src/environments/environment';
+import { SessionStorageService } from './session.storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class SocketIoService {
   private currentTrackedMessages = {};
   private socketMessageBus: Subject<types.SocketMessage> = new Subject<types.SocketMessage>();
 
-  constructor() { }
+  constructor(private sessionStorageService: SessionStorageService) { }
 
   public on(msgName: SocketIO.events): Observable<any> {
     this.addToTrackedMessages(msgName);
@@ -45,15 +46,15 @@ export class SocketIoService {
     }
   }
 
-  public socketConnect(): void {
+  public socketConnect(username: string): void {
     if (this.socketInstance) {
       this.socketInstance.off('reconnect');
       this.socketInstance.off('connect');
       this.socketInstance.close();
     }
     this.socketInstance = io(this.getURI(), { reconnection: true });
-    this.socketInstance.on('reconnect', this.onSocketReconnect.bind(this));
-    this.socketInstance.on('connect', this.onSocketReconnect.bind(this));
+    this.socketInstance.on('reconnect', this.onSocketReconnect.bind(this, username));
+    this.socketInstance.on('connect', this.onSocketReconnect.bind(this, username));
   }
 
   public socketEmitCallback(event: SocketIO.events, data: any, cbFunction: Function): void {
@@ -68,7 +69,13 @@ export class SocketIoService {
     return environment.backendURI;
   }
 
-  private async onSocketReconnect(): Promise<void> {
+  private async onSocketReconnect(username: string): Promise<void> {
+    const token = this.sessionStorageService.getValue('_token');
+    const dataObj = {
+      userId: username,
+      token: token
+    };
+    this.socketEmit(SocketIO.events.user, dataObj);
     if (this.socketInstance) {
       Object.keys(this.currentTrackedMessages).forEach((msgName: SocketIO.events) => {
           if (this.currentTrackedMessages[msgName] > 0) {

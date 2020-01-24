@@ -6,7 +6,7 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
 import { User } from '../../models/user';
 import { ChatData } from '../../modules/chatData';
-import { ChatDb, UserDataObj, NewPrivateChatReq, Chats, CreateNewChatUser } from '../../interfaces/types';
+import { ChatDb, UserDataObj, NewPrivateChatReq, Chats, CreateNewChatUser, Auth } from '../../interfaces/types';
 
 export class NewPrivateChat {
     public router: Router;
@@ -17,7 +17,7 @@ export class NewPrivateChat {
     private init(): void {
         this.router = this.express.Router();
         this.router.post('/new_private_chat/', async (req, res, next) => {
-            let auth;
+            let auth: Auth;
             if (!req.headers['authorization']) {
               return res.sendStatus(401);
             }
@@ -181,7 +181,7 @@ export class NewPrivateChat {
               }
             } catch (error) {
               console.error('/new_private_chat', error);
-              res.status(500).json({error});
+              res.status(500).json({error, status: 500});
             }
         });
     }

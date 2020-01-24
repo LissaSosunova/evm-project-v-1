@@ -7,7 +7,7 @@ import { User } from '../../models/user';
 import { ObjectId } from 'mongodb';
 import { UserData } from '../../modules/userData';
 import { Chat } from '../../models/chats';
-import { UserDataObj, Chats, ChatDb, Message } from '../../interfaces/types';
+import { UserDataObj, Chats, ChatDb, Message, Auth } from '../../interfaces/types';
 
 export class GetUser {
 
@@ -19,7 +19,7 @@ export class GetUser {
     private init(): void {
         this.router = this.express.Router();
         this.router.get('/user', async (req, res, next) => {
-            let auth;
+            let auth: Auth;
               if (!req.headers['authorization']) {
               return res.sendStatus(401);
             }
@@ -82,7 +82,7 @@ export class GetUser {
               res.json(user);
             } catch (error) {
               console.error('/user', error);
-              res.status(500).json({error});
+              res.status(500).json({error, status: 500});
             }
           });
     }

@@ -6,7 +6,7 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
 import * as url from 'url';
 import * as queryString from 'querystring';
-import { DraftMessageFromServer } from '../../interfaces/types';
+import { DraftMessageFromServer, Auth } from '../../interfaces/types';
 
 export class GetDraftMessage {
     public router: Router;
@@ -19,7 +19,7 @@ export class GetDraftMessage {
             if (!req.headers['authorization']) {
                 return res.sendStatus(401);
               }
-              let auth;
+              let auth: Auth;
               try {
                 auth = jwt.decode(req.headers['authorization'], req.headers['token_key'] as string);
               } catch (err) {
@@ -37,7 +37,7 @@ export class GetDraftMessage {
                 res.json(result[0]);
               } catch (error) {
                 console.error('/get_draft_message/:id', error);
-                res.status(500).json({error});
+                res.status(500).json({error, status: 500});
               }
         });
     }
