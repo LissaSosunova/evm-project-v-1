@@ -22,6 +22,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
+            "aot": true,
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -131,5 +132,8 @@
       }
     }
   },
-  "defaultProject": "evm-proj"
+  "defaultProject": "evm-proj",
+  "cli": {
+    "analytics": false
+  }
 }

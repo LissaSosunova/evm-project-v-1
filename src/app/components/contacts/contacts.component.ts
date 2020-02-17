@@ -133,14 +133,15 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
       ]
     };
 
-    if (this.private_chat &&
-      this.private_chat !== '0') {
+    if (this.private_chat && this.private_chat !== '0') {
         this.router.navigate(['/main/chat-window', this.private_chat]);
     } else {
-      this.data.createNewPrivateChat(this.createNewChatParams).subscribe(
-        (resp: types.Chats) => {
+      this.data.createNewPrivateChat(this.createNewChatParams).subscribe((resp: types.Chats) => {
           resp.avatar = this.avatarService.parseAvatar(resp.avatar);
-          this.store.dispatch(new userAction.AddChat(resp));
+          const ifChatExist = this.user.chats.some(chat => chat.chatId === resp.chatId);
+          if (!ifChatExist) {
+            this.store.dispatch(new userAction.AddChat(resp));
+          }
           this.private_chat = resp.chatId;
           this.router.navigate(['/main/chat-window', this.private_chat]);
         }

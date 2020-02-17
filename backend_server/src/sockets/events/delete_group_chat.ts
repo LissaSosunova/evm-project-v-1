@@ -1,6 +1,6 @@
 import { User } from '../../models/user';
 import { datareader } from '../../modules/datareader';
-import { OnlineClients, DeleteGroupChat } from '../../interfaces/types';
+import { OnlineClients, DeleteGroupChat, DbQuery } from '../../interfaces/types';
 import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
@@ -19,7 +19,7 @@ export function deleteGroupChat(socket: socketIo.Socket, onlineClients: OnlineCl
             return;
         }
         obj.users.forEach(async user => {
-            const params = {
+            const params: DbQuery = {
                 query: {username: user.username},
                 objNew:  {$pull: {chats: {chatId: obj.chatId}}}
             };

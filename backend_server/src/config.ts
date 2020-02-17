@@ -1,5 +1,7 @@
-const backendPort: number = 5006;
-const frontendPort: number = 3000;
+import { Config } from './interfaces/types';
+
+const backendPort = 5006;
+const frontendPort = 3000;
 
 const config = {
     backendLocal: `http://localhost:${String(backendPort)}`,
@@ -12,18 +14,36 @@ const config = {
     mongodbCloud: 'mongodb://uxoye5lnr17n5cgako0t:iee2XxqCffkfiovwx9TC@b8uw1ghe0wwsdmo-mongodb.services.clever-cloud.com:27017/b8uw1ghe0wwsdmo'
 };
 
-const settings = {
-    secretkeyForEmail: 'fghhrweyop76326mb09358j',
-    secretkeyForPasswordReset: 'bvb47refh90bnqer09',
-    filesDomain: config.filesDomainLocal,
-    confirmEmail: true,
-    backendDomain: config.backendLocal,
-    frontendDomain: config.frontendDomainLocal,
-    expireResetPasswordLink: 600000,
-    expireChangeEmailLink: 600000,
-    mongodb: config.mongodbLocal,
-    backendPort,
-    frontendPort
-};
+let settings: Config;
+
+if (process.env.NODE_ENV === 'production') {
+    settings = {
+        secretkeyForEmail: 'fghhrweyop76326mb09358j',
+        secretkeyForPasswordReset: 'bvb47refh90bnqer09',
+        filesDomain: config.filesDomainDeploy,
+        confirmEmail: true,
+        backendDomain: config.backendDeploy,
+        frontendDomain: config.frontEndDomailDeploy,
+        expireResetPasswordLink: 600000,
+        expireChangeEmailLink: 600000,
+        mongodb: config.mongodbCloud,
+        backendPort,
+        frontendPort
+    };
+} else {// for development, local settings
+    settings = {
+        secretkeyForEmail: 'fghhrweyop76326mb09358j',
+        secretkeyForPasswordReset: 'bvb47refh90bnqer09',
+        filesDomain: config.filesDomainLocal,
+        confirmEmail: true,
+        backendDomain: config.backendLocal,
+        frontendDomain: config.frontendDomainLocal,
+        expireResetPasswordLink: 600000,
+        expireChangeEmailLink: 600000,
+        mongodb: config.mongodbLocal,
+        backendPort,
+        frontendPort
+    };
+}
 
 export {settings};

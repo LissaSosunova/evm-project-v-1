@@ -1,5 +1,6 @@
 import * as db from './db';
-import {model, Model} from 'mongoose';
+import {model, Model, Schema, Document } from 'mongoose';
+import { ChatDb } from '../interfaces/types';
 
 const messageItem = new db.default.Schema({
     chatID: {type: String},
@@ -26,7 +27,7 @@ const userItem = new db.default.Schema({
 });
 
 // Chat types: 1 - private chat, 2 - group chat | event chat, 3 - blocked chat, 4 - deleted chat
-const chat = new db.default.Schema({
+const chat: Schema<ChatDb> = new db.default.Schema({
     users: [userItem],
     draftMessages: [draftMessageItem],
     messages: [messageItem],
@@ -35,4 +36,4 @@ const chat = new db.default.Schema({
     admin: {type: String} // for group chats
 });
 
-export const Chat: Model<any> = model('Chat', chat);
+export const Chat: Model<ChatDb> = model('Chat', chat);

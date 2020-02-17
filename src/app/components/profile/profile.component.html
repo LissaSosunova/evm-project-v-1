@@ -63,7 +63,7 @@
           (click)="saveName(user.name)">
             check
         </i>
-        <app-section-spinner [diameter]="'20'" [loading]="showSpinner" [position]="'absolute'"></app-section-spinner>
+        <app-section-spinner [diameter]="'20'" [loading]="showSpinnerForName" [position]="'absolute'"></app-section-spinner>
     </div>
     <div class="col-xs-3 end-xs">
         <span class="name-field">
@@ -88,7 +88,7 @@
             (click)="saveMail(user.email)">
               check
           </i>
-          <app-section-spinner [diameter]="'20'" [loading]="showSpinner" [position]="'absolute'"></app-section-spinner>
+          <app-section-spinner [diameter]="'20'" [loading]="showSpinnerForEmail" [position]="'absolute'"></app-section-spinner>
         </div>
           <div class="col-xs-10 name-field">
               (you will have to confirm your e-mail)
@@ -119,7 +119,7 @@
             (click)="savePhone(user.phone)">
               check
           </i>
-          <app-section-spinner [diameter]="'20'" [loading]="showSpinner" [position]="'absolute'"></app-section-spinner>
+          <app-section-spinner [diameter]="'20'" [loading]="showSpinnerPhone" [position]="'absolute'"></app-section-spinner>
       </div>
       <div class="change-password">
         <form name="passwordForm"
@@ -171,7 +171,7 @@
                 (click)="changePassword(passwords)">
                   check
               </i>
-              <app-section-spinner [diameter]="'20'" [loading]="showSpinner" [position]="'absolute'"></app-section-spinner>
+              <app-section-spinner [diameter]="'20'" [loading]="showSpinnerPassword" [position]="'absolute'"></app-section-spinner>
           </div>
           </div>  
         </form>

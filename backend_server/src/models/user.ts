@@ -1,5 +1,5 @@
 import * as db from './db';
-import {model, Model} from 'mongoose';
+import {model, Model, Schema} from 'mongoose';
 import { UserDataObj } from '../interfaces/types';
 
 const userItem = new db.default.Schema({
@@ -48,7 +48,7 @@ const userItem = new db.default.Schema({
     status: { type: Boolean}
   });
 
-  const user = new db.default.Schema({
+  const user: Schema<UserDataObj> = new db.default.Schema({
       username: {type: String, required: true},
       email: {type: String, required: true},
       password: {type: String, required: true, select: false},
@@ -61,4 +61,4 @@ const userItem = new db.default.Schema({
       notifications: [ notification ]
   });
 
-export const User: Model<any> = model('User', user);
+export const User: Model<UserDataObj> = model('User', user);

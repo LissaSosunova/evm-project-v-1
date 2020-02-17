@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
-import { Server200Response, UserDataObj } from '../../interfaces/types';
+import { Server200Response, UserDataObj, Auth } from '../../interfaces/types';
 
 export class ChangeStatus {
     public router: Router;
@@ -15,7 +15,7 @@ export class ChangeStatus {
     private init(): void {
         this.router = this.express.Router();
         this.router.post('/change_status', (req, res, next) => {
-            let auth;
+            let auth: Auth;
             if (!req.headers['authorization']) {
               return res.sendStatus(401);
             }

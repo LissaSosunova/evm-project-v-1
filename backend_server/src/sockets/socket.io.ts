@@ -15,7 +15,6 @@ import { userIsTyping } from './events/user_is_typing';
 import { userReadMessage } from './events/user_read_message';
 import { addUserToChat } from './events/add_user_to_chat';
 
-
 export function runWebsocketsIO(server): void {
     const onlineClients: OnlineClients = {};
     const clientsInChat: ClientsInChat = {};
@@ -26,6 +25,9 @@ export function runWebsocketsIO(server): void {
         console.log('new connection');
 
         socket.on('user', (obj: UserActionsSocket) => {
+          if (!obj) {
+            return;
+          }
             if (!onlineClients[obj.userId]) {
                 onlineClients[obj.userId] = {};
               }
@@ -37,6 +39,9 @@ export function runWebsocketsIO(server): void {
         });
 
         socket.on('user_left', (obj: UserActionsSocket) => {
+          if (!obj) {
+            return;
+          }
              try {
                 delete onlineClients[obj.userId][obj.token];
                 if (Object.keys(onlineClients[obj.userId]).length === 0) {
@@ -45,7 +50,7 @@ export function runWebsocketsIO(server): void {
                 socket.broadcast.emit('user_left', {userId: obj.userId});
              } catch (error) {
                console.error('user_left', error);
-               if (onlineClients[obj.userId]) {
+               if (obj && onlineClients[obj.userId]) {
                 Object.keys(onlineClients[obj.userId]).forEach(token => {
                   onlineClients[obj.userId][token].emit('error', {event: 'user_left', error});
                 });
@@ -54,8 +59,12 @@ export function runWebsocketsIO(server): void {
         });
 
         socket.on('user_in_chat', (obj: UserActionsSocket) => {
+          if (!obj) {
+            return;
+          }
+          try {
             if (!clientsInChat[obj.chatIdCurr]) {
-                clientsInChat[obj.chatIdCurr] = {};
+              clientsInChat[obj.chatIdCurr] = {};
             }
             if (!clientsInChat[obj.chatIdCurr][obj.userId]) {
                 clientsInChat[obj.chatIdCurr][obj.userId] = {};
@@ -64,11 +73,25 @@ export function runWebsocketsIO(server): void {
             (socket as any).token = obj.token;
             (socket as any).chatIdCurr = obj.chatIdCurr;
             clientsInChat[obj.chatIdCurr][obj.userId][obj.token] = socket;
+          } catch (error) {
+            console.error('user_in_chat', error);
+            if (obj && onlineClients[obj.userId]) {
+              Object.keys(onlineClients[obj.userId]).forEach(token => {
+                onlineClients[obj.userId][token].emit('error', {event: 'user_in_chat', error});
+              });
+            }
+          }
+
         });
 
         socket.on('user_left_chat', (obj: UserActionsSocket) => {
+          if (!obj) {
+            return;
+          }
             try {
-              delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
+              if (obj.chatIdCurr && obj.userId && obj.token) {
+                delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
+              }
               if (Object.keys(clientsInChat[obj.chatIdCurr][obj.userId]).length === 0) {
                   delete clientsInChat[obj.chatIdCurr][obj.userId];
               }
@@ -87,6 +110,9 @@ export function runWebsocketsIO(server): void {
 
         socket.on('disconnect', obj => {
             console.log(`User ${(socket as any).userId} is offline`);
+            if (!socket) {
+              return;
+            }
             try {
               if (onlineClients[(socket as any).userId] && onlineClients[(socket as any).userId][(socket as any).token]) {
                 delete onlineClients[(socket as any).userId][(socket as any).token];
@@ -104,9 +130,9 @@ export function runWebsocketsIO(server): void {
               }
             } catch (error) {
               console.error('disconnect', error);
-              if (onlineClients[obj.userId]) {
-                Object.keys(onlineClients[obj.userId]).forEach(token => {
-                  onlineClients[obj.userId][token].emit('error', {event: 'disconnect', error});
+              if (onlineClients[(socket as any).userId]) {
+                Object.keys(onlineClients[(socket as any).userId]).forEach(token => {
+                  onlineClients[(socket as any).userId][token].emit('error', {event: 'disconnect', error});
                 });
               }
             }

@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as core from 'express-serve-static-core';
 import * as bodyParser from 'body-parser';
 import {settings} from './config';
-import {Login} from './endpoints/login/login'
+import {Login} from './endpoints/login/login';
 import { DeleteChat } from './endpoints/chat/delete_chat';
 import { Server } from 'socket.io';
 import { runWebsocketsIO } from './sockets/socket.io';
@@ -91,10 +91,10 @@ app.route('/change_email')
     .post(new ChangeEmail(express).router);
 
 app.route('/change_password_auth')
-    .post(new ChangePasswordAuth(express).router); 
+    .post(new ChangePasswordAuth(express).router);
 
 app.route('/confirm_change_email/:token/:email/:tokenTime')
-    .get(new ConfirmChangeEmail(express).router); 
+    .get(new ConfirmChangeEmail(express).router);
 
 app.route('/delete_avatar')
     .post(new DeleteAvatar(express).router);
@@ -117,3 +117,4 @@ app.route('/upload_avatar')
 const server = app.listen(port);
 runWebsocketsIO(server);
 console.log(`Backend server is listening on port ${port}`);
+console.log('NODE_ENV', process.env.NODE_ENV);

@@ -1,8 +1,8 @@
-import {Model} from 'mongoose';
+import {Model, Document} from 'mongoose';
 import { MongoActions } from '../interfaces/mongo-actions';
 import { DbQuery } from '../interfaces/types';
 
-export function datareader(collection: Model<any>, params: DbQuery | any, action: MongoActions): Promise <any> {
+export function datareader<T>(collection: Model<Document, T>, params: DbQuery | any, action: MongoActions): Promise <any> {
     return new Promise ((resolve, reject) => {
         if (action === MongoActions.FIND_ONE) {
             collection.findOne(params,  (e, d) => {

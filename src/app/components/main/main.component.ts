@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ActivatedRoute, Router, RouterOutlet, NavigationStart } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TransferService } from 'src/app/services/transfer.service';
 import { types } from 'src/app/types/types';
 import { DataService } from 'src/app/services/data.service';
@@ -12,6 +12,7 @@ import * as userAction from '../../store/actions';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ToastService } from 'src/app/shared/toasts/services/toast.service';
 import { AvatarService } from 'src/app/services/avatar.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-main',
@@ -42,7 +43,9 @@ export class MainComponent implements OnInit, OnDestroy {
     this.user = this.route.snapshot.data.userData;
     if (!this.user) {
       this.toastService.openToastFail(`Unable to get user data. You will be redirected on login page`, {duration: 4500});
-      this.router.navigate(['/login']);
+      if (environment.production) {
+        this.router.navigate(['/login']);
+      }
     }
     this.user.avatar = this.avatarService.parseAvatar(this.user.avatar);
     this.user.contacts.forEach(contact => {
@@ -53,13 +56,7 @@ export class MainComponent implements OnInit, OnDestroy {
     });
     this.store.dispatch(new userAction.InitUserModel(this.user));
     this.transferService.dataSet({name: 'userData', data: this.user});
-    const token = this.sessionStorageService.getValue('_token');
-    this.socketIoService.socketConnect();
-    const dataObj = {
-      userId: this.user.username,
-      token: token
-    };
-    this.socketIoService.socketEmit(SocketIO.events.user, dataObj);
+    this.socketIoService.socketConnect(this.user.username);
     this.chatsModelSubscribe();
     this.messageOutOfChatSubscribe();
     this.addUserRequestSubscribe();
@@ -158,7 +155,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   private messageOutOfChatSubscribe(): void {
     this.socketIoService.on(SocketIO.events.message_out_of_chat).pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
-      .subscribe(message => {
+      .subscribe((message: types.Message) => {
         const messageText: string = message.text.replace(/<br\/>/g, '\n');
         const contactOfIncomingMessage: types.Contact = this.user.contacts.find(contact => contact.id === message.authorId);
         if (!contactOfIncomingMessage) {
@@ -172,6 +169,19 @@ export class MainComponent implements OnInit, OnDestroy {
           userId: message.authorId,
           chatId: message.chatID
         };
+        const ifChatExist = this.user.chats.find(c => c.chatId === message.chatID);
+        if (!ifChatExist) {
+          const chat: types.Chats = {
+            avatar: contactOfIncomingMessage.avatar,
+            chatId: message.chatID,
+            id: message.authorId,
+            name: contactOfIncomingMessage.name,
+            users: message.users,
+            type: contactOfIncomingMessage.status,
+            unreadMes: 1
+          };
+          this.store.dispatch(new userAction.AddChat(chat));
+        }
         this.toastService.openMessageToast(toastMessageObj, {duration: 5000});
     });
   }

@@ -11,9 +11,7 @@ import { ToastWarningComponent } from '../components/toast-warning/toast-warning
 import { NewMessageToastComponent } from '../components/new-message-toast/new-message-toast.component';
 import { types } from 'src/app/types/types';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 
 export class ToastService {
 

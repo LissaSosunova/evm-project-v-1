@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Event } from '../../models/event'
-import { EventDb } from '../../interfaces/types';
+import { EventDb, Auth } from '../../interfaces/types';
 
 export class GetEvent {
     public router: Router;
@@ -15,7 +15,7 @@ export class GetEvent {
     private init(): void {
         this.router = this.express.Router();
         this.router.get('/event/:id/', function (req, res, next) {
-            let auth;
+            let auth: Auth;
             if (!req.headers['authorization']) {
               return res.sendStatus(401);
             }

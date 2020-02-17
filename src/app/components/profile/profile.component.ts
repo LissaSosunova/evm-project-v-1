@@ -18,11 +18,13 @@ export class ProfileComponent implements OnInit {
   public user: types.User = {} as types.User;
   public avatar: string;
   public passwords: {oldPassword: string, newPassword: string} = {} as {oldPassword: string, newPassword: string};
-  public showSpinner = false;
+  public showSpinnerForName = false;
+  public showSpinnerForEmail = false;
+  public showSpinnerPhone = false;
+  public showSpinnerPassword = false;
   @ViewChild('uploadFile', {static: true}) public uploadFile: ElementRef;
 
-  constructor(
-    private data: DataService,
+  constructor(private data: DataService,
     private toastService: ToastService,
     private avatarService: AvatarService,
     private store: Store<any>
@@ -37,6 +39,7 @@ export class ProfileComponent implements OnInit {
     user$.subscribe((state) => {
       if (typeof state !== undefined) {
         this.user = state;
+        // Не понимаю зачем эта проверка???
       }
     });
     this.user.avatar = this.avatarService.parseAvatar(this.user.avatar);
@@ -46,7 +49,9 @@ export class ProfileComponent implements OnInit {
   }
 
   public changePassword(passwords: {oldPassword: string, newPassword: string}): void {
+    this.showSpinnerPassword = true;
     this.data.changePasswordAuth(passwords).subscribe(response => {
+      this.showSpinnerPassword = false;
       if (response.message === 'Incorrect password') {
         this.toastService.openToastFail('Incorrect old password');
         return;
@@ -54,6 +59,7 @@ export class ProfileComponent implements OnInit {
       this.toastService.openToastSuccess('Your password was changed successfully');
     }, () => {
       this.toastService.openToastFail('Server error');
+      this.showSpinnerPassword = false;
     });
   }
   public saveNewName(event): void {
@@ -63,34 +69,40 @@ export class ProfileComponent implements OnInit {
     this.editedPhone = true;
   }
   public saveName(val: string): void {
-    this.showSpinner = true;
+    this.showSpinnerForName = true;
     this.data.setNewProfileData({name: val}).subscribe(() => {
       this.toastService.openToastSuccess('Your name was changed successfully');
       this.editedName = false;
-      this.showSpinner = false;
+      this.showSpinnerForName = false;
     }, () => {
       this.toastService.openToastFail('Server error');
-      this.showSpinner = false;
+      this.showSpinnerForName = false;
     });
   }
   public savePhone(val: string): void {
+    this.showSpinnerPhone = true;
     this.data.setNewProfileData({phone: val}).subscribe(() => {
-      this.toastService.openToastSuccess('Your phone number was chanched successful');
+      this.toastService.openToastSuccess('Your phone number was chanched successfully');
       this.editedPhone = false;
+      this.showSpinnerPhone = false;
     }, () => {
       this.toastService.openToastFail('Server error');
+      this.showSpinnerPhone = false;
     });
   }
   public saveNewMail(event): void {
     this.editedMail = true;
   }
   public saveMail(val: string): void {
+    this.showSpinnerForEmail = true;
     const params = {username: this.user.username, newEmail: val};
     this.data.changeEmail(params).subscribe(() => {
       this.toastService.openToastSuccess('Your e-mail was chanched. Check your e-mail and confirm');
       this.editedMail = false;
+      this.showSpinnerForEmail = false;
     }, () => {
       this.toastService.openToastFail('Server error');
+      this.showSpinnerForEmail = false;
     });
   }
   public deleteAvatar(): void {

@@ -1,4 +1,4 @@
-import { Avatar, UserDataObj } from "../interfaces/types";
+import { Avatar, UserDataObj } from '../interfaces/types';
 
 export class ContactData {
     public id: string;

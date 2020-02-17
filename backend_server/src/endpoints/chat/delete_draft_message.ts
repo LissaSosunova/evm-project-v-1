@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
-import { Server200Response, DeleteDraftMessageObj } from '../../interfaces/types';
+import { Server200Response, DeleteDraftMessageObj, Auth, DbQuery } from '../../interfaces/types';
 
 export class DeleteDraftMessage {
     public router: Router;
@@ -18,14 +18,14 @@ export class DeleteDraftMessage {
             if (!req.headers['authorization']) {
                 return res.sendStatus(401);
               }
-              let auth: string;
+              let auth: Auth;
               try {
                 auth = jwt.decode(req.headers['authorization'], req.headers['token_key'] as string);
               } catch (err) {
                 return res.sendStatus(401);
               }
               const reqObj: DeleteDraftMessageObj = req.body;
-              const deleteDraftMessParams = {
+              const deleteDraftMessParams: DbQuery = {
                 query: {'_id' : reqObj.chatID},
                 objNew: {$pull: {draftMessages: {authorId: reqObj.authorId}}}
               };
@@ -34,7 +34,7 @@ export class DeleteDraftMessage {
                 res.json({status: 200, message: 'message was deleted'} as Server200Response);
               } catch (error) {
                 console.error('/delete_draft_message', error);
-                res.status(500).json({error});
+                res.status(500).json({error, status: 500});
               }
         });
     }

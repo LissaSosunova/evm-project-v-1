@@ -1,6 +1,6 @@
 import { User } from '../../models/user';
 import { datareader } from '../../modules/datareader';
-import { OnlineClients, AddUserToChat, UserItem, ChatDb, Chats } from '../../interfaces/types';
+import { OnlineClients, AddUserToChat, UserItem, ChatDb, Chats, DbQuery, ChatType } from '../../interfaces/types';
 import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
@@ -12,13 +12,13 @@ export function addUserToChat(socket: socketIo.Socket, onlineClients: OnlineClie
             return;
         }
         try {
-            const findUserInfo = {
+            const findUserInfo: DbQuery = {
                 query: {_id: new ObjectId(obj.chatId), 'users.username': obj.user.username},
-                elementMatch: {users: 1}
+                elementMatch: {users: ChatType.PRIVATE_CHAT}
               };
               const response: {_id: string, users: UserItem[]} = await datareader(Chat, findUserInfo, MongoActions.FIND_ONE_ELEMENT_MATCH);
               if (response) {
-                  const restoreUserInChat = {
+                  const restoreUserInChat: DbQuery = {
                       query: {_id: new ObjectId(obj.chatId), 'users.username': obj.user.username},
                       objNew: {$set: {'users.$.deleted': false}}
                   };
@@ -27,10 +27,10 @@ export function addUserToChat(socket: socketIo.Socket, onlineClients: OnlineClie
                       name: obj.chatName,
                       users: response.users,
                       chatId: obj.chatId,
-                      type: 2,
+                      type: ChatType.GROUP_OR_EVENT_CHAT,
                       avatar: '' // add chat avatar
                   };
-                  const addChatToUser = {
+                  const addChatToUser: DbQuery = {
                       query: {username: obj.user.username},
                       objNew: {$push: {chats: chatObj}}
                   };
@@ -41,14 +41,14 @@ export function addUserToChat(socket: socketIo.Socket, onlineClients: OnlineClie
                       });
                   }
               } else {
-                  const addUserToGroupChat = {
+                  const addUserToGroupChat: DbQuery = {
                       query: {_id: new ObjectId(obj.chatId)},
                       objNew: {$push: {users: obj.user}}
                   };
                   await datareader(Chat, addUserToGroupChat, MongoActions.UPDATE_ONE);
-                  const findChat = {
+                  const findChat: DbQuery = {
                       query: {_id: new ObjectId(obj.chatId)},
-                      elementMatch: {users: 1}
+                      elementMatch: {users: ChatType.PRIVATE_CHAT}
                   };
                   const res: {_id: string, users: UserItem[]} = await datareader(Chat, findChat, MongoActions.FIND_ELEMENT_MATCH);
                   const chatObj = {
@@ -58,7 +58,7 @@ export function addUserToChat(socket: socketIo.Socket, onlineClients: OnlineClie
                       type: 2,
                       avatar: '' // add chat avatar
                   };
-                  const addChatToUser = {
+                  const addChatToUser: DbQuery = {
                       query: {username: obj.user.username},
                       objNew: {$push: {chats: chatObj}}
                   };

@@ -16,7 +16,7 @@ export class ChangePassword {
     private init(): void {
         this.router = this.express.Router();
         this.router.post('/change_password', async (req, res, next) => {
-            let username;
+            let username: string;
             try {
                 username = jwt.decode(req.headers['authorization'], config.secretkeyForPasswordReset);
               } catch (err) {
@@ -38,7 +38,7 @@ export class ChangePassword {
                             res.json({message: 'Password changed', status: 200} as Server200Response);
                         } catch (error) {
                             console.error('/change_password', error);
-                            res.status(500).json({error});
+                            res.status(500).json({error, status: 500});
                         }
                     }
                 });

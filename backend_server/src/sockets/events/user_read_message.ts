@@ -3,11 +3,11 @@ import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
 import { ObjectId } from 'mongodb';
-import { UserReadMessage, Message, OnlineClients } from '../../interfaces/types';
+import { UserReadMessage, Message, OnlineClients, DbQuery } from '../../interfaces/types';
 
 export function userReadMessage(socket: socketIo.Socket, onlineClients: OnlineClients): void {
     socket.on('user_read_message', async (obj: UserReadMessage) => {
-        const queryParams = {
+        const queryParams: DbQuery = {
           query: {'_id' : new ObjectId(obj.chatId)},
           queryField1: 'messages',
           queryField2: 'unread',

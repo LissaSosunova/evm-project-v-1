@@ -1,47 +1,48 @@
 import { User } from '../../models/user';
 import { datareader } from '../../modules/datareader';
-import { OnlineClients, AddUserScoketIo, UserDataObj, DeleteContactSocketIo } from '../../interfaces/types';
+import { OnlineClients, DeleteContactSocketIo, ChatType, DbQuery } from '../../interfaces/types';
 import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
 
 export function deleteContact(socket: socketIo.Socket, onlineClients: OnlineClients): void {
     socket.on('delete_contact', async (obj: DeleteContactSocketIo) => {
-        const deleteContactInMyList = {
+        const deleteContactInMyList: DbQuery = {
           query: {username: obj.userId},
           objNew: {$pull: {contacts: {id: obj.deleteContactId}}}
         };
-        const deleteContactInOtherList = {
+        const deleteContactInOtherList: DbQuery = {
           query: {username: obj.deleteContactId},
           objNew: {$pull: {contacts: {id: obj.userId}}}
         };
-        const deleteChat = {
+        const deleteChat: DbQuery = {
           query: {$and: [{'users.username': obj.userId}, {'users.username': obj.deleteContactId}]},
-          objNew: {$set: {type: 4}}
+          objNew: {$set: {type: ChatType.DELETED_CHAT}}
         };
         try {
           await datareader(User, deleteContactInMyList, MongoActions.UPDATE_ONE);
           await datareader(User, deleteContactInOtherList, MongoActions.UPDATE_ONE);
           if (obj.deleteChat) {
-            const deleteChatInMyContact = {
+            const deleteChatInMyContact: DbQuery = {
               query: {username: obj.userId, 'chats.id': obj.deleteContactId},
               objNew: {$pull: {chats: {chatId: obj.chatIdToDelete}}}
             };
-            const deleteChatInOtherList = {
+            const deleteChatInOtherList: DbQuery = {
               query: {username: obj.deleteContactId, 'chats.id': obj.userId},
               objNew: {$pull: {chats: {chatId: obj.chatIdToDelete}}}
             };
-            await datareader(Chat, {$and: [{'users.username': obj.userId}, {'users.username': obj.deleteContactId}]}, MongoActions.DELETE_ONE);
+            await datareader(Chat, {$and: [{'users.username': obj.userId},
+            {'users.username': obj.deleteContactId}, {type: ChatType.GROUP_OR_EVENT_CHAT}]}, MongoActions.DELETE_ONE);
             await datareader(User, deleteChatInMyContact, MongoActions.UPDATE_ONE);
             await datareader(User, deleteChatInOtherList, MongoActions.UPDATE_ONE);
           } else {
-            const deleteChatInMyContact = {
+            const deleteChatInMyContact: DbQuery = {
               query: {username: obj.userId, 'chats.id': obj.deleteContactId},
-              objNew: {$set: {'chats.$.type': 4}}
+              objNew: {$set: {'chats.$.type': ChatType.DELETED_CHAT}}
             };
-            const deleteChatInOtherList = {
+            const deleteChatInOtherList: DbQuery = {
               query: {username: obj.deleteContactId, 'chats.id': obj.userId},
-              objNew: {$set: {'chats.$.type': 4}}
+              objNew: {$set: {'chats.$.type': ChatType.DELETED_CHAT}}
             };
             await datareader(User, deleteChatInMyContact, MongoActions.UPDATE_ONE);
             await datareader(User, deleteChatInOtherList, MongoActions.UPDATE_ONE);

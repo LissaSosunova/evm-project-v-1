@@ -1,10 +1,11 @@
 import { datareader } from '../../modules/datareader';
-import { OnlineClients, EventDb, UserDataObj } from '../../interfaces/types';
+import { OnlineClients, EventDb, UserDataObj, DbQuery } from '../../interfaces/types';
 import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Event } from '../../models/event';
 import { EventData} from '../../modules/eventData';
 import { User } from '../../models/user';
+import { Model } from 'mongoose';
 
 export function newEvent(socket: socketIo.Socket, onlineClients: OnlineClients): void {
     socket.on('new_event', async (obj: EventDb) => {
@@ -18,10 +19,10 @@ export function newEvent(socket: socketIo.Socket, onlineClients: OnlineClients):
         event.additional = obj.additional;
         event.notification = { type: 'event', message: 'You are invited to new event', id: '', status: true};
         try {
-          await datareader(event, null, MongoActions.SAVE);
+          await datareader(event as any, null, MongoActions.SAVE);
           const createdEvent: EventData = new EventData(event);
           const response: UserDataObj = await datareader(User, {username:  obj.authorId}, MongoActions.FIND_ONE);
-          const updateParams = {
+          const updateParams: DbQuery = {
             query: {username: response.username},
             objNew: {$push: {events: createdEvent}}
           };
@@ -29,13 +30,13 @@ export function newEvent(socket: socketIo.Socket, onlineClients: OnlineClients):
           if (event.members && event.members.invited && event.members.invited.length !== 0) {
             event.notification.id = event._id;
             event.members.invited.forEach(async item => {
-              const update = {
+              const update: DbQuery = {
                 query: {username: item},
                 objNew: {$push: {events: createdEvent}}
               };
               await datareader(User, update, MongoActions.UPDATE_ONE);
               if (event.status) {
-                const updateNotifications = {
+                const updateNotifications: DbQuery = {
                   query: {username: item},
                   objNew: {$push: {notifications: event.notification}}
                 };

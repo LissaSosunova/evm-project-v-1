@@ -37,7 +37,7 @@ export class ForgotPassword {
                 }
             } catch (error) {
                 console.error('/forgot_password', error);
-                res.status(500).json({error});
+                res.status(500).json({error, status: 500});
             }
         });
     }

@@ -6,7 +6,8 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
 import * as url from 'url';
 import * as queryString from 'querystring';
-import { ChatDb } from '../../interfaces/types';
+import { ChatDb, Auth, DbQuery } from '../../interfaces/types';
+import { User } from '../../models/user';
 
 export class PrivateChat {
     public router: Router;
@@ -20,7 +21,7 @@ export class PrivateChat {
             if (!req.headers['authorization']) {
               return res.sendStatus(401);
             }
-            let auth;
+            let auth: Auth;
             try {
               auth = jwt.decode(req.headers['authorization'], req.headers['token_key'] as string);
             } catch (err) {
@@ -33,11 +34,19 @@ export class PrivateChat {
               const queryNum: number = +queryString.parse(param).queryNum;
               const mesageShift: number = +queryString.parse(param).messagesShift;
               const n: number = queryNum * mesAmount + mesageShift;
-              const getChatParams = {
+              const getChatParams: DbQuery = {
                 query: {_id: chatId},
                 elementMatch: {messages: {$slice: [n, mesAmount]}}
               };
               const getUserChat: ChatDb = await datareader(Chat, getChatParams, MongoActions.FIND_ONE_ELEMENT_MATCH);
+              if (getUserChat === null) {
+                const deleteChatInMyContact: DbQuery = {
+                  query: {$or: [{username: auth.username, 'chats.chatId': chatId}, {email: auth.username, 'chats.chatId': chatId}]},
+                  objNew: {$pull: {chats: {chatId}}}
+                };
+                await datareader(User, deleteChatInMyContact, MongoActions.UPDATE_ONE);
+                return res.status(404).json({message: 'Cannot find chat', code: 404});
+              }
               if (n > 0) {
                 res.json(getUserChat.messages);
               } else {
@@ -45,7 +54,7 @@ export class PrivateChat {
               }
             } catch (error) {
               console.error(`/private_chat/${req.params.id}`, error);
-              res.status(500).json({error});
+              res.status(500).json({error, status: 500});
             }
           });
     }

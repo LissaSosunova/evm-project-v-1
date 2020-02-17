@@ -1,7 +1,8 @@
 import * as db from './db';
-import {model, Model} from "mongoose";
+import {model, Model, Schema} from 'mongoose';
+import { EventDb } from '../interfaces/types';
 
-const event = new db.default.Schema({
+const event: Schema<EventDb> = new db.default.Schema({
     name: {type: String, required: true},
     status: {type: Boolean, required: true},
     date_type: {type: String},
@@ -13,4 +14,4 @@ const event = new db.default.Schema({
     authorId: { type: String}
 });
 
-export const Event: Model<any> = model('Event', event);
+export const Event: Model<EventDb> = model('Event', event);

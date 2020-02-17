@@ -21,7 +21,7 @@ export class ConfirmEmail {
                 const auth: {email: string} = jwt.decode(token, config.secretkeyForEmail);
                 const pendingUser: PendingRegUser = await datareader(ConfUser, auth, MongoActions.FIND_ONE);
                 if (pendingUser == null) {
-                    res.status(404).json({message: 'User is not found'});
+                    res.status(404).json({message: 'User is not found', status: 404});
                 } else {
                     const pendingUserPassword: {password: string} = await datareader(ConfUser, auth, MongoActions.FIND_WITH_PASSWORD);
                     const defaultAvatar: Avatar = {
@@ -38,13 +38,13 @@ export class ConfirmEmail {
                     user.events = [];
                     user.notifications = [];
                     user.chats = [];
-                    await datareader(user, null, MongoActions.SAVE);
+                    await datareader(user as any, null, MongoActions.SAVE);
                     await datareader(ConfUser, auth, MongoActions.DELETE_ONE);
                     res.redirect(`${config.frontendDomain}/email-confirmed`);
                 }
             } catch (error) {
                 console.error('/confirm_email', error);
-                res.status(500).json({error});
+                res.status(500).json({error, status: 500});
             }
         });
     }
