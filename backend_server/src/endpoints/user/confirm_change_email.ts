@@ -6,7 +6,7 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
 import { Chat } from '../../models/chats';
 import { settings as config } from '../../config';
-import { Server200Response } from '../../interfaces/types';
+import { Server200Response, DbQuery } from '../../interfaces/types';
 
 export class ConfirmChangeEmail {
     public router: Router;
@@ -30,12 +30,12 @@ export class ConfirmChangeEmail {
                     const userInDb = await datareader(User, {username}, MongoActions.FIND_ONE);
                     if (userInDb) {
                         const newEmailDecoded = jwt.decode(newEmail, config.secretkeyForEmail);
-                        const paramsForEmailUpdate = {
+                        const paramsForEmailUpdate: DbQuery = {
                             query: {username},
                             objNew: {$set: {email: newEmailDecoded}}
                         };
                         await datareader(User, paramsForEmailUpdate, MongoActions.UPDATE_ONE);
-                        const paramsForEmailUpdateInContacts = {
+                        const paramsForEmailUpdateInContacts: DbQuery = {
                             query: {
                                 'contacts.id': username,
                             },
@@ -46,7 +46,7 @@ export class ConfirmChangeEmail {
                             }
                         };
                         await datareader(User, paramsForEmailUpdateInContacts, MongoActions.UPDATE_MANY);
-                        const paramsForEmailUpdateInChats = {
+                        const paramsForEmailUpdateInChats: DbQuery = {
                             query: {
                                 'users.username': username
                             },
@@ -60,7 +60,7 @@ export class ConfirmChangeEmail {
                         res.json({message: 'Email was updated', status: 200} as Server200Response);
                         // res.redirect(`${config.frontendDomain}/......`);
                     } else {
-                        return res.json({message: 'User is not found'});
+                        return res.status(404).json({message: 'User is not found', status: 404});
                     }
                 } catch (error) {
                     console.error('confirm_change_email', error);

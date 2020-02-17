@@ -1,5 +1,5 @@
 import { datareader } from '../../modules/datareader';
-import { EditMessageSocketIO, ClientsInChat } from '../../interfaces/types';
+import { EditMessageSocketIO, ClientsInChat, DbQuery } from '../../interfaces/types';
 import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
@@ -11,7 +11,7 @@ export function editMessage(socket: socketIo.Socket, clientsInChat: ClientsInCha
           if (obj.userId !== obj.authorId) {
             return;
           }
-          const editMessageQuery = {
+          const editMessageQuery: DbQuery = {
             query: {'_id': new ObjectId(obj.chatId), 'messages._id': new ObjectId(obj.messageId)},
             objNew: {$set:  {'messages.$.edited': true, 'messages.$.text': obj.text}}
           };

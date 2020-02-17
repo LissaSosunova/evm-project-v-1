@@ -2,7 +2,7 @@ import { datareader } from '../../modules/datareader';
 import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
-import { OnlineClients, ClientsInChat, DeleteMessageSocketIO } from '../../interfaces/types';
+import { OnlineClients, ClientsInChat, DeleteMessageSocketIO, DbQuery } from '../../interfaces/types';
 import { ObjectId } from 'mongodb';
 
 export function deleteMessage(socket: socketIo.Socket, clientsInChat: ClientsInChat, onlineClients: OnlineClients): void {
@@ -11,7 +11,7 @@ export function deleteMessage(socket: socketIo.Socket, clientsInChat: ClientsInC
           if (obj.userId !== obj.authorId) {
             return;
           }
-          const deleteMessageQuery = {
+          const deleteMessageQuery: DbQuery = {
             query: {'_id': new ObjectId(obj.chatId)},
             objNew: {$pull: {messages: {_id: new ObjectId(obj.messageId)}}}
           };

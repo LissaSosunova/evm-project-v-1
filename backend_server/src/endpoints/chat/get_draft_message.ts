@@ -6,7 +6,7 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
 import * as url from 'url';
 import * as queryString from 'querystring';
-import { DraftMessageFromServer, Auth } from '../../interfaces/types';
+import { DraftMessageFromServer, Auth, DbQuery } from '../../interfaces/types';
 
 export class GetDraftMessage {
     public router: Router;
@@ -28,7 +28,7 @@ export class GetDraftMessage {
                 const chatId: string = req.params.id;
                 const queryParam: string = url.parse(req.url).query;
                 const authorId: string = queryString.parse(queryParam).authorId as string;
-                const queryParams = {
+                const queryParams: DbQuery = {
                     query: {_id : chatId},
                     elementMatch: {draftMessages: {$elemMatch: {authorId: authorId}}}
                 };

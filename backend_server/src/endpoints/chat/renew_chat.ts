@@ -27,18 +27,18 @@ export class RenewChat {
               return res.sendStatus(401);
             }
             const dataObj: DeleteChatObj = req.body;
-            const params = {
+            const params: DbQuery = {
               query: {$and: [{users: dataObj.myId}, {users: dataObj.contactId}]},
               elementMatch: {_id: 1}
             };
             try {
               chatId = await datareader(Chat, params, MongoActions.FIND_ELEMENT_MATCH);
-              const renewChatParams = {
+              const renewChatParams: DbQuery = {
                 query: {'username' : dataObj.myId, 'contacts.id' : dataObj.contactId},
                 objNew: {$set : { 'contacts.$.private_chat' : chatId[0]._id }}
                 // возвращаем id чата в документ
               };
-              const renewChat = await datareader(User, renewChatParams, MongoActions.UPDATE_ONE);
+              await datareader(User, renewChatParams, MongoActions.UPDATE_ONE);
               const response: {chatId: string} = {
                 chatId: chatId[0]._id
               };

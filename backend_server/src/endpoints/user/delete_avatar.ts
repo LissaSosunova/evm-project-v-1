@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
-import { Avatar, Auth } from '../../interfaces/types';
+import { Avatar, Auth, DbQuery } from '../../interfaces/types';
 
 export class DeleteAvatar {
 
@@ -35,17 +35,17 @@ export class DeleteAvatar {
                 owner: 'default',
                 url: `assets/img/default-profile-image.png`
             };
-            const queryParam = {
+            const queryParam: DbQuery = {
                 query: params,
                 objNew: {$set: {avatar : avatarObjToSave}}
             };
-            const updateAvatarInContacts = {
+            const updateAvatarInContacts: DbQuery = {
                 query: { 'contacts.id': userId},
                 objNew: {
                     $set : { 'contacts.$.avatar' : avatarObjToSave }
                 }
             };
-            const updateAvatarInChats = {
+            const updateAvatarInChats: DbQuery = {
                 query: {'chats.id': userId},
                 objNew: {
                     $set : { 'chats.$.avatar' : avatarObjToSave }

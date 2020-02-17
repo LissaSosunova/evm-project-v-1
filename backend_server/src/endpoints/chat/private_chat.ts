@@ -6,7 +6,7 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
 import * as url from 'url';
 import * as queryString from 'querystring';
-import { ChatDb, Auth } from '../../interfaces/types';
+import { ChatDb, Auth, DbQuery } from '../../interfaces/types';
 import { User } from '../../models/user';
 
 export class PrivateChat {
@@ -34,13 +34,13 @@ export class PrivateChat {
               const queryNum: number = +queryString.parse(param).queryNum;
               const mesageShift: number = +queryString.parse(param).messagesShift;
               const n: number = queryNum * mesAmount + mesageShift;
-              const getChatParams = {
+              const getChatParams: DbQuery = {
                 query: {_id: chatId},
                 elementMatch: {messages: {$slice: [n, mesAmount]}}
               };
               const getUserChat: ChatDb = await datareader(Chat, getChatParams, MongoActions.FIND_ONE_ELEMENT_MATCH);
               if (getUserChat === null) {
-                const deleteChatInMyContact = {
+                const deleteChatInMyContact: DbQuery = {
                   query: {$or: [{username: auth.username, 'chats.chatId': chatId}, {email: auth.username, 'chats.chatId': chatId}]},
                   objNew: {$pull: {chats: {chatId}}}
                 };

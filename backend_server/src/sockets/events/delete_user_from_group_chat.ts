@@ -1,6 +1,6 @@
 import { User } from '../../models/user';
 import { datareader } from '../../modules/datareader';
-import { OnlineClients, DeleteUserFromChatSocketIO } from '../../interfaces/types';
+import { OnlineClients, DeleteUserFromChatSocketIO, DbQuery } from '../../interfaces/types';
 import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
@@ -8,13 +8,13 @@ import { ObjectId } from 'mongodb';
 
 export function deleteUserFromGroupChat(socket: socketIo.Socket, onlineClients: OnlineClients): void {
     socket.on('delete_user_from_group_chat', async (obj: DeleteUserFromChatSocketIO) => {
-        const deleteUserParams = {
+        const deleteUserParams: DbQuery = {
             query: {_id: new ObjectId(obj.chatId), 'users.username': obj.userToDelete},
             objNew: {$set: {'users.$.deleted': true}}
         };
         try {
             await datareader(Chat, deleteUserParams, MongoActions.UPDATE_ONE);
-            const deleteChatparams = {
+            const deleteChatparams: DbQuery = {
                 query: {username: obj.userToDelete, 'chats.chatId': obj.chatId},
                 objNew:  {$pull: {chats: {chatId: obj.chatId}}}
             };

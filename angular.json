@@ -132,5 +132,8 @@
       }
     }
   },
-  "defaultProject": "evm-proj"
+  "defaultProject": "evm-proj",
+  "cli": {
+    "analytics": false
+  }
 }

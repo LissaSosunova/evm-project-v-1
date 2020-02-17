@@ -5,7 +5,7 @@ import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
 import { FindContact } from '../../modules/findContact';
-import { Contact, Avatar, Auth } from '../../interfaces/types';
+import { Contact, Avatar, Auth, DbQuery } from '../../interfaces/types';
 
 export class FindUser {
 
@@ -25,11 +25,11 @@ export class FindUser {
             } catch (err) {
               return res.sendStatus(401);
             }
-            const queryParam = {
+            const queryParam: DbQuery = {
               query: {$or: [{username: {$regex: query}}, {email: {$regex: query}}, {name: {$regex: query}}]},
               elementMatch: {avatar: 1, username: 1, email: 1, name: 1}
             };
-            const params = {
+            const params: DbQuery = {
               query: {$or: [
                 {username: auth.username},
                 {email: auth.username}

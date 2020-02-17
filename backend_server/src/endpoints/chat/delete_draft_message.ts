@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
-import { Server200Response, DeleteDraftMessageObj, Auth } from '../../interfaces/types';
+import { Server200Response, DeleteDraftMessageObj, Auth, DbQuery } from '../../interfaces/types';
 
 export class DeleteDraftMessage {
     public router: Router;
@@ -25,7 +25,7 @@ export class DeleteDraftMessage {
                 return res.sendStatus(401);
               }
               const reqObj: DeleteDraftMessageObj = req.body;
-              const deleteDraftMessParams = {
+              const deleteDraftMessParams: DbQuery = {
                 query: {'_id' : reqObj.chatID},
                 objNew: {$pull: {draftMessages: {authorId: reqObj.authorId}}}
               };

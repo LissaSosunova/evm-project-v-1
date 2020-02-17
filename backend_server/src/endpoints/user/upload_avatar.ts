@@ -7,7 +7,7 @@ import * as path from 'path';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
-import { Avatar, Auth } from '../../interfaces/types';
+import { Avatar, Auth, DbQuery } from '../../interfaces/types';
 
 export class UploadAvatar {
 
@@ -77,23 +77,23 @@ export class UploadAvatar {
                     owner: req.headers.userid,
                     avatar: finalImg
                 };
-                const queryParam = {
+                const queryParam: DbQuery = {
                     query: params,
                     objNew: {$set: {avatar : avatarObjToSave}}
                 };
-                const updateAvatarInContacts = {
+                const updateAvatarInContacts: DbQuery = {
                     query: { 'contacts.id': req.headers.userid},
                     objNew: {
                         $set : { 'contacts.$.avatar' : avatarObjToSave }
                     }
                 };
-                const updateAvatarInChats = {
+                const updateAvatarInChats: DbQuery = {
                     query: {'chats.id': req.headers.userid},
                     objNew: {
                         $set : {'chats.$.avatar' : avatarObjToSave }
                     }
                 };
-                const queryParams = {
+                const queryParams: DbQuery = {
                     query: {$or: [
                     {username: auth.username},
                     {email: auth.username}

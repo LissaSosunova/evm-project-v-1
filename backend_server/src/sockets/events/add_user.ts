@@ -31,7 +31,7 @@ export function addUser(socket: socketIo.Socket, onlineClients: OnlineClients): 
             query: {username: obj.userId},
             objNew:  {$push: {contacts: contact}}
           };
-          const updateRes = await datareader(User, updateParams, MongoActions.UPDATE_ONE);
+          await datareader(User, updateParams, MongoActions.UPDATE_ONE);
           // добавить найденому другу тоже со статусом ожидания подтверждения с его стороны
           const params2 = {
             $or: [
@@ -46,7 +46,7 @@ export function addUser(socket: socketIo.Socket, onlineClients: OnlineClients): 
             query: params2,
             objNew:  {$push: {contacts: result2}}
           };
-          const updateFindedUser = await datareader(User, addParams, MongoActions.UPDATE_ONE);
+          await datareader(User, addParams, MongoActions.UPDATE_ONE);
           if (onlineClients[obj.queryUserId]) {
             Object.keys(onlineClients[obj.queryUserId]).forEach(token => {
               onlineClients[obj.queryUserId][token].emit('add_user_request', result2);

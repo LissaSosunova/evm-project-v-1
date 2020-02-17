@@ -1,5 +1,5 @@
 import { datareader } from '../../modules/datareader';
-import { ClientsInChat, OnlineClients, Message } from '../../interfaces/types';
+import { ClientsInChat, OnlineClients, Message, DbQuery } from '../../interfaces/types';
 import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
@@ -20,14 +20,14 @@ export function message (socket: socketIo.Socket, onlineClients: OnlineClients, 
             });
         }
 
-        const updateParams = {
+        const updateParams: DbQuery = {
             query: {_id: obj.chatID},
             objNew: {$push: {messages: {$each: [obj], $position: 0}}}
         };
         await datareader(Chat, updateParams, MongoActions.UPDATE_ONE);
         // Сохраняем в базу данных сообщение, причём записываем его в начало массива
          // Шлём сообщения всем, кто в чате
-             const getSavedMess = {
+             const getSavedMess: DbQuery = {
                 query: {_id: obj.chatID},
                 elementMatch: {messages: {$slice: [0, 1]}}
              };

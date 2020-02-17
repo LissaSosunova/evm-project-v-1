@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
-import { DraftMessageDb, Server200Response, ChatDb, Auth } from '../../interfaces/types';
+import { DraftMessageDb, Server200Response, ChatDb, Auth, DbQuery } from '../../interfaces/types';
 
 export class SetDraftMessage {
     public router: Router;
@@ -25,11 +25,11 @@ export class SetDraftMessage {
               return res.sendStatus(401);
             }
             const reqObj: DraftMessageDb = req.body;
-            const deleteDraftMessParams = {
+            const deleteDraftMessParams: DbQuery = {
               query: {'_id' : reqObj.chatID},
               objNew: {$pull: {draftMessages: {authorId: reqObj.authorId}}}
             };
-            const updateParams = {
+            const updateParams: DbQuery = {
               query: {'_id' : reqObj.chatID},
               objNew: {$push: {'draftMessages': reqObj}}
             };

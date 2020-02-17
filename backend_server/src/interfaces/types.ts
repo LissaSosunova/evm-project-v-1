@@ -8,13 +8,13 @@ export interface LoginResponse {
 }
 
 export interface DbQuery {
-    query?: {any};
-    objNew?: {any};
+    query?: any;
+    objNew?: any;
     multi?: ModelUpdateOptions;
-    elementMatch?: {any};
-    queryField1?: {any};
-    contidition?: {any};
-    queryField2?: {any};
+    elementMatch?: any;
+    queryField1?: any;
+    contidition?: any;
+    queryField2?: any;
 }
 
 export interface DeleteChatObj {

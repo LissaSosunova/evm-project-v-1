@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
-import { Server200Response, DeleteContactObj, Auth } from '../../interfaces/types';
+import { Server200Response, DeleteContactObj, Auth, DbQuery } from '../../interfaces/types';
 
 export class DeleteContact {
 
@@ -26,7 +26,7 @@ export class DeleteContact {
               return res.sendStatus(401);
             }
             const dataObj: DeleteContactObj = req.body;
-            const params = {
+            const params: DbQuery = {
               query: {username: dataObj.username},
               objNew: {$pull: {contacts: {id: dataObj.contactUsername}}}
             };

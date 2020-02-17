@@ -7,7 +7,7 @@ import { User } from '../../models/user';
 import { ObjectId } from 'mongodb';
 import { UserData } from '../../modules/userData';
 import { Chat } from '../../models/chats';
-import { UserDataObj, Chats, ChatDb, Message, Auth } from '../../interfaces/types';
+import { UserDataObj, Chats, ChatDb, Message, Auth, DbQuery } from '../../interfaces/types';
 
 export class GetUser {
 
@@ -42,13 +42,13 @@ export class GetUser {
               const promisesLastMes: Promise<ChatDb>[] = [];
               chatList.forEach(chat => {
                 if (chat.chatId) {
-                  const queryParams = {
+                  const queryParams: DbQuery = {
                     query: {'_id' : new ObjectId(chat.chatId)},
                     queryField1: 'messages',
                     queryField2: 'unread',
                     contidition:  user.username
                   };
-                  const queryParamsForLastMes = {
+                  const queryParamsForLastMes: DbQuery = {
                     query: {'_id' : new ObjectId(chat.chatId)},
                     elementMatch: {messages: {$slice: [0, 1]}}
                   };
