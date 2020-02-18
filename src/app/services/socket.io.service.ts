@@ -5,6 +5,7 @@ import { Subject, Observable } from 'rxjs';
 import { SocketIO} from 'src/app/types/socket.io.types';
 import { environment } from 'src/environments/environment';
 import { SessionStorageService } from './session.storage.service';
+import { throwToolbarMixedModesError } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,24 @@ export class SocketIoService {
   private socketInstance: SocketIOClient.Socket;
   private currentTrackedMessages = {};
   private socketMessageBus: Subject<types.SocketMessage> = new Subject<types.SocketMessage>();
+  private chatId: string;
 
   constructor(private sessionStorageService: SessionStorageService) { }
+
+
+  public set setChatId(chatId: string) {
+    this.chatId = chatId;
+  }
+
+  public get getChatId(): string {
+    return this.chatId;
+  }
+
+  public deleteChatId(chatId: string): void {
+    if (this.chatId === chatId) {
+      this.chatId = null;
+    }
+  }
 
   public on(msgName: SocketIO.events): Observable<any> {
     this.addToTrackedMessages(msgName);
@@ -52,7 +69,13 @@ export class SocketIoService {
       this.socketInstance.off('connect');
       this.socketInstance.close();
     }
-    this.socketInstance = io(this.getURI(), { reconnection: true });
+    this.socketInstance = io(this.getURI(), {
+      reconnection: true,
+      query: {
+        token: this.sessionStorageService.getValue('_token'),
+        token_key: this.sessionStorageService.getValue('token_key')
+      }
+    });
     this.socketInstance.on('reconnect', this.onSocketReconnect.bind(this, username));
     this.socketInstance.on('connect', this.onSocketReconnect.bind(this, username));
   }
@@ -76,6 +99,14 @@ export class SocketIoService {
       token: token
     };
     this.socketEmit(SocketIO.events.user, dataObj);
+    if (this.chatId) {
+      const data = {
+        userId: username,
+        token: token,
+        chatIdCurr: this.chatId
+      };
+      this.socketEmit(SocketIO.events.user_in_chat, data);
+    }
     if (this.socketInstance) {
       Object.keys(this.currentTrackedMessages).forEach((msgName: SocketIO.events) => {
           if (this.currentTrackedMessages[msgName] > 0) {
