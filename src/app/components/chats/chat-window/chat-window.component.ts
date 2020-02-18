@@ -316,6 +316,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private destroy(): void {
     this.socketIoService.socketEmit(SocketIO.events.user_left_chat, this.userObj);
+    this.socketIoService.deleteChatId(this.chatId);
     if (this.inputMes && !this.editMessageMode) {
       this.sendDraftMessage();
     } else if (this.isDraftMessageSent && this.inputMes === '') {
@@ -365,6 +366,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       token: this.sessionStorageService.getValue('_token')
     };
     this.socketIoService.socketEmit(SocketIO.events.user_in_chat, this.userObj);
+    this.socketIoService.setChatId = this.chatId;
     this.initDraftMessagesSubscription();
     this.subscribeUserIsTyping();
     const thisChat: types.Chats = this.user.chats.find(chat => chat.chatId === this.chatId);

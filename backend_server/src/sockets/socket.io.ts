@@ -1,5 +1,6 @@
 import * as socketIo from 'socket.io';
-import { UserActionsSocket, OnlineClients, ClientsInChat } from '../interfaces/types';
+import * as jwt from 'jwt-simple';
+import { UserActionsSocket, OnlineClients, ClientsInChat, Auth } from '../interfaces/types';
 import { addUser } from './events/add_user';
 import { confirmUser } from './events/confirm_user';
 import { deleteContact } from './events/delete_contact';
@@ -15,15 +16,29 @@ import { userIsTyping } from './events/user_is_typing';
 import { userReadMessage } from './events/user_read_message';
 import { addUserToChat } from './events/add_user_to_chat';
 
-export function runWebsocketsIO(server): void {
+export function runWebsocketsIO(server: any): void {
     const onlineClients: OnlineClients = {};
     const clientsInChat: ClientsInChat = {};
     const io: socketIo.Server = socketIo.listen(server);
     console.log('Socket IO is running');
-
-    io.on('connection', socket => {
-        console.log('new connection');
-
+    io.on('connection', (socket) => {
+      /** User authentication */
+        if (socket && socket.handshake && socket.handshake.query && !socket.handshake.query.token ||
+          !socket.handshake.query.token_key) {
+          console.error('Unauthorized user');
+          return new Error('Unauthorized user');
+        }
+        let auth: Auth;
+        try {
+          auth = jwt.decode(socket.handshake.query.token, socket.handshake.query.token_key as string);
+        } catch (err) {
+          console.error('Error in decoding token');
+          return new Error('Error in decoding token');
+        }
+        /** User authentication
+         * Unauthorized are not allowed to connect to sockets
+         */
+        console.log('new connection ', auth);
         socket.on('user', (obj: UserActionsSocket) => {
           if (!obj) {
             return;
