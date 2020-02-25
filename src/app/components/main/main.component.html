@@ -1,8 +1,7 @@
-<div class="header">
-  <span class="header-user-container">{{user.name}}
-
-      <img src="{{user.avatar.url}}" class="avatar" (click)="editProfile()">
-  </span>
+<div class="header middle-xs">
+  <section class="header-user-container"> <span>{{user.name}}</span>
+    <div class="avatar" [style.background-image]="'url('+user.avatar.url+')'" (click)="editProfile()"></div>
+  </section>
   <img src="assets/img/logo_login_page.png" alt="EVENT messenger" class="logo">
 </div>
 

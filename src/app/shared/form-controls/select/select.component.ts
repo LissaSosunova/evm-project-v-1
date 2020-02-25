@@ -9,7 +9,7 @@ import { InputAbstract, MakeProvider } from '../model/input-abstract';
 })
 export class SelectComponent extends InputAbstract implements OnInit {
 
-  @Input() options: {label: string, value: string | number}[];
+  @Input() options?: {label: string, value: string | number}[];
 
   constructor() {
     super();
