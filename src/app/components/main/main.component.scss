@@ -16,15 +16,29 @@
 }
 
 .avatar {
+  display: inline-block;
   height: 30px;
-  align-self: center;
+  width: 30px;
   border-radius: 50%;
-  cursor: pointer;
+  background-repeat: no-repeat;
+  background-size: 130%;
+  background-position: center;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .header-user-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
   margin-right: 5%;
   position: relative;
+  min-width: 300px;
+  span {
+    margin-right: 10px;
+  }
 }
 
 [type="file"] {

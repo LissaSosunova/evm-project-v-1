@@ -45,7 +45,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { NewGroupChatPopupComponent } from './components/chats/new-group-chat-popup/new-group-chat-popup.component';
 import { GroupChatInfoPopupComponent } from './components/chats/chat-window/group-chat-info-popup/group-chat-info-popup.component';
 import { SharedModule } from './shared/shared.module';
-
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from 'ngx-mat-datetime-picker';
+import { InputDateAndTimePickerComponent } from './shared/form-controls/input-date-and-time-picker/input-date-and-time-picker.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { SharedModule } from './shared/shared.module';
     MessageTextComponent,
     ProfileComponent,
     NewGroupChatPopupComponent,
-    GroupChatInfoPopupComponent
+    GroupChatInfoPopupComponent,
+    InputDateAndTimePickerComponent
   ],
   imports: [
     BrowserModule,
@@ -104,6 +106,8 @@ import { SharedModule } from './shared/shared.module';
     MatNativeDateModule,
     MatRadioModule,
     MatSelectModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
     StoreModule.forRoot({user: userReducer})
   ],
   providers: [DatePipe],

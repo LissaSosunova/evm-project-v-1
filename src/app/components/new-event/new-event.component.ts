@@ -25,20 +25,12 @@ export class NewEventComponent implements OnInit, OnDestroy {
   public event: types.EventUI;
   public eventToDb: types.EventDb;
   public dateTypes: types.dateTypeEvent[] = [
-    types.dateTypeEvent.DIAPASON_OF_DATES,
     types.dateTypeEvent.DIAPASON_OF_DATES_WITH_TIME,
-    types.dateTypeEvent.EXACT_DATE,
     types.dateTypeEvent.EXACT_DATE_WITH_TIME
   ];
   public dateTypesForTemplate: typeof types.dateTypeEvent;
   public contactsForDropDown: CheckboxDropdownOption<{avatar: string}>[];
-  public hours: {label: string, value: number}[] = [];
-  public minutes: {label: string, value: number}[] = [
-    {label: '00', value: 0},
-    {label: '15', value: 15},
-    {label: '30', value: 30},
-    {label: '45', value: 45}
-  ];
+
   @ViewChild('eventLeavePopup', {static: true}) public eventLeavePopup: NewEventLeavePopupComponent;
 
   @ViewChild('eventForm', {static: true}) private eventForm: NgForm;
@@ -112,14 +104,9 @@ export class NewEventComponent implements OnInit, OnDestroy {
 
   private dateToUTC(date: types.EventDate): types.EventDateDb {
     const UTCdate: types.EventDateDb = {} as types.EventDateDb;
-    if (this.event.dateType === types.dateTypeEvent.EXACT_DATE) {
-      UTCdate.startDate = this.dateTransformService.dateToUtc(date.startDate);
-    } else if (this.event.dateType === types.dateTypeEvent.EXACT_DATE_WITH_TIME) {
+     if (this.event.dateType === types.dateTypeEvent.EXACT_DATE_WITH_TIME) {
       UTCdate.startDate = this.dateTransformService.dateToUtcWithTime(date.startDate, date.startHours, date.startMinutes, 0, 0);
-    } else if (this.event.dateType === types.dateTypeEvent.DIAPASON_OF_DATES) {
-      UTCdate.startDate = this.dateTransformService.dateToUtc(date.startDate);
-      UTCdate.endDate = this.dateTransformService.dateToUtc(date.endDate);
-    } else if (this.event.dateType === types.dateTypeEvent.DIAPASON_OF_DATES_WITH_TIME) {
+      } else if (this.event.dateType === types.dateTypeEvent.DIAPASON_OF_DATES_WITH_TIME) {
       UTCdate.startDate = this.dateTransformService.dateToUtcWithTime(date.startDate, date.startHours, date.startMinutes, 0, 0);
       UTCdate.endDate = this.dateTransformService.dateToUtcWithTime(date.endDate, date.endHours, date.endMinutes, 0, 0);
     }
@@ -137,7 +124,7 @@ export class NewEventComponent implements OnInit, OnDestroy {
         label: String(i),
         value: i
       };
-      this.hours.push(obj);
+      // this.hours.push(obj);
     }
   }
 
