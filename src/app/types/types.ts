@@ -114,8 +114,8 @@ export module types {
   }
 
   export interface EventDateDb {
-    startDate: number;
-    endDate?: number;
+    startDate: any;
+    endDate?: any;
   }
 
   export interface EventUI {
