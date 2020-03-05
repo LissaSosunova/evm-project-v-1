@@ -79,7 +79,6 @@ const routes: Routes = [
         path: 'chat-window/:chatId',
         component: ChatWindowComponent,
         resolve: {
-          draftMessage: GetDraftMessagesResolverService,
           chatMessages: GetChatResolverService
         },
       },

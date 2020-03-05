@@ -29,7 +29,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public blockedChats: Array<types.Chats> = [];
   public control: FormControl;
   public deletedChats: Array<types.Chats> = [];
-  public draftMessage: types.DraftMessageFromServer;
+  public draftMessage: types.DraftMessage[];
   public groupChats: Array<types.Chats> = [];
   public editMessageMode = false;
   public inputMes: string;
@@ -369,6 +369,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketIoService.setChatId = this.chatId;
     this.initDraftMessagesSubscription();
     this.subscribeUserIsTyping();
+    this.subscribeUserReadMessage();
     const thisChat: types.Chats = this.user.chats.find(chat => chat.chatId === this.chatId);
     if (thisChat && thisChat.unreadMes > 0) {
       this.socketIoService.socketEmit(SocketIO.events.user_read_message, {
@@ -396,7 +397,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initDraftMessagesSubscription(): void {
-    this.draftMessage = this.route.snapshot.data.draftMessage;
+    this.draftMessage = this.chats.draftMessages;
     if (!this.draftMessage) {
       this.toastService.openToastFail('Unable to get data from server');
     }
@@ -405,7 +406,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     let draftMessageItem: types.DraftMessage;
     if (this.draftMessage) {
-      draftMessageItem = this.draftMessage.draftMessages.find(item => {
+      draftMessageItem = this.draftMessage.find(item => {
         return item.authorId === this.user.username;
       });
     }
@@ -559,5 +560,18 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userNameIsTyping = obj.name;
         this.showUserIsTyping = obj.typing;
       });
+  }
+
+  private subscribeUserReadMessage(): void {
+    this.socketIoService.on(SocketIO.events.user_read_message)
+    .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((obj: {chatId: string, userId: string}) => {
+      if (this.chatId !== obj.chatId) {
+        return;
+      }
+      this.arrayOfMessages.forEach(message => {
+        message.unread = message.unread.filter(u => u !== obj.userId);
+      });
+    });
   }
 }

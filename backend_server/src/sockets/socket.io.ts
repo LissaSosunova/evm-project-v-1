@@ -166,6 +166,6 @@ export function runWebsocketsIO(server: any): void {
           newEvent(socket, onlineClients);
           newGroupChat(socket, onlineClients);
           userIsTyping(socket, clientsInChat);
-          userReadMessage(socket, onlineClients);
+          userReadMessage(socket, onlineClients, clientsInChat);
     });
 }
