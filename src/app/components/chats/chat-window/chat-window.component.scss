@@ -138,6 +138,7 @@ ul {
   padding: 10px 20px 10px 20px;
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 .message-not-author {
   background-color: map-get($bg-color, 'gray-lighter');
@@ -308,6 +309,24 @@ form {
 
 .smile-wrapper {
   display: inline-block;
+}
+
+.user-read-message {
+  position: absolute;
+  right: 1px;
+  bottom: 0;
+  color: map-get($bg-color, 'dark');
+  span {
+    font-size: 16px;
+  }
+  .open-list {
+    font-size: 25px;
+    cursor: pointer;
+  }
+}
+
+.unread-users {
+  margin: 10px;
 }
 
 @media only screen and (max-width: 768px) {

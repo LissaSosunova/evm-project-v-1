@@ -3,9 +3,9 @@ import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
 import { ObjectId } from 'mongodb';
-import { UserReadMessage, Message, OnlineClients, DbQuery } from '../../interfaces/types';
+import { UserReadMessage, Message, OnlineClients, DbQuery, ClientsInChat } from '../../interfaces/types';
 
-export function userReadMessage(socket: socketIo.Socket, onlineClients: OnlineClients): void {
+export function userReadMessage(socket: socketIo.Socket, onlineClients: OnlineClients, clientsInChat: ClientsInChat): void {
     socket.on('user_read_message', async (obj: UserReadMessage) => {
         const queryParams: DbQuery = {
           query: {'_id' : new ObjectId(obj.chatId)},
@@ -26,6 +26,11 @@ export function userReadMessage(socket: socketIo.Socket, onlineClients: OnlineCl
               objNew: {$set: {'messages.$.unread': mes.unread}}}, MongoActions.UPDATE_ONE));
           });
           await Promise.all(promises);
+          Object.keys(clientsInChat[obj.chatId]).forEach(userId => {
+            Object.keys(clientsInChat[obj.chatId][userId]).forEach(token => {
+                clientsInChat[obj.chatId][userId][token].emit('user_read_message', obj);
+            });
+        });
         } catch (error) {
           console.error('user_read_message', error);
           if (onlineClients[obj.userId]) {

@@ -21,6 +21,7 @@ export module types {
     type: ChatType;
     chatName?: string;
     admin?: string;
+    draftMessages: DraftMessage[];
   }
 
   export interface Chats {

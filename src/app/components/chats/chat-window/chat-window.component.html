@@ -31,6 +31,8 @@
                                     <div *ngIf="item.authorId === user.username">
                                         <span class="material-icons menu-btn" 
                                                 [matMenuTriggerFor]="menu"
+                                                matTooltip="More options"
+                                                matTooltipPosition="above"
                                                 data-cy="open-menu">more_vert</span>
                                         <mat-menu #menu="matMenu">
                                             <div class="edit-btn"
@@ -45,6 +47,19 @@
                                                 <span class="material-icons">delete</span> 
                                                 <span>Delete</span>
                                             </div>
+                                        </mat-menu>
+                                    </div>
+                                    <div class="user-read-message" *ngIf="item.authorId === user.username">
+                                        <span *ngIf="item?.unread?.length === 0" class="material-icons">done</span>
+                                        <span *ngIf="item?.unread?.length !== 0"
+                                               class="material-icons open-list"
+                                               matTooltip="Click here to see who has not read message"
+                                               matTooltipPosition="above"
+                                               [matMenuTriggerFor]="unread">
+                                            arrow_drop_up
+                                        </span>
+                                        <mat-menu #unread="matMenu">
+                                            <div class="unread-users" *ngFor="let username of item.unread">{{arrayOfUsers | getNameFromUserID: username}}</div>
                                         </mat-menu>
                                     </div>
                                 </div>
