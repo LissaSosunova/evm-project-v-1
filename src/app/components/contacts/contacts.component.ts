@@ -44,6 +44,7 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   public nothingFound = false;
   public selectedContact: types.Contact;
   public showSpinner = false;
+  public contactAction = types.ContactAction;
 
   @ViewChild('userPopup', {static: true}) private userPopup: UserInfoPopupComponent;
   @ViewChild('popupDetails', {static: true}) private confirmAction: PopupDetailsComponent;

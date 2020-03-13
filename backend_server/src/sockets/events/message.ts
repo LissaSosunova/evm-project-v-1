@@ -8,6 +8,7 @@ export function message (socket: socketIo.Socket, onlineClients: OnlineClients, 
     socket.on('message', async (obj: Message) => {
       try {
         obj.unread = obj.unread || [];
+        obj.users = obj.users.filter(user => !user.deleted);
         if (clientsInChat[obj.chatID]) {
             // Находим пользователей, которые не в чате
             obj.users.forEach(userId => {

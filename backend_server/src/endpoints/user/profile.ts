@@ -4,7 +4,8 @@ import * as express from 'express';
 import { Router } from 'express';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { User } from '../../models/user';
-import { EditProfile, UserDataObj, Auth } from '../../interfaces/types';
+import { EditProfile, UserDataObj, Auth, DbQuery } from '../../interfaces/types';
+import { Chat } from '../../models/chats';
 
 export class Profile {
 
@@ -15,7 +16,7 @@ export class Profile {
 
     private init(): void {
         this.router = this.express.Router();
-        this.router.post('/profile', (req, res, next) => {
+        this.router.post('/profile', async (req, res, next) => {
             let auth: Auth;
             if (!req.headers['authorization']) {
               return res.sendStatus(401);
@@ -34,7 +35,34 @@ export class Profile {
             const editedData: EditProfile = req.body;
             const key: string[] = Object.keys(req.body);
             if (key[0] === 'name') {
-              datareader(User, params, MongoActions.FIND_ONE)
+              let paramsForNameUpdateInChats:  DbQuery;
+              if (auth.username.indexOf('@') === -1) {
+                paramsForNameUpdateInChats = {
+                  query: {
+                      'users.username': auth.username,
+                  },
+                  objNew: {
+                      $set: {
+                          'users.$.name': editedData.name
+                      }
+                  }
+              };
+              } else {
+                paramsForNameUpdateInChats = {
+                  query: {
+                      'users.email': auth.username
+                  },
+                  objNew: {
+                      $set: {
+                          'users.$.name': editedData.name
+                      }
+                  }
+              };
+            }
+            datareader(Chat, paramsForNameUpdateInChats, MongoActions.UPDATE_MANY)
+            .then(r => {
+              return datareader(User, params, MongoActions.FIND_ONE);
+            })
               .then(response => {
                 if (editedData.name && response.name !== editedData.name) {
                   User.updateOne({'username' : response.username},

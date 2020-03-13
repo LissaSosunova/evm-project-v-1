@@ -4,6 +4,7 @@ import { OnlineClients, DeleteContactSocketIo, ChatType, DbQuery } from '../../i
 import * as socketIo from 'socket.io';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Chat } from '../../models/chats';
+import { ObjectId } from 'mongodb';
 
 export function deleteContact(socket: socketIo.Socket, onlineClients: OnlineClients): void {
     socket.on('delete_contact', async (obj: DeleteContactSocketIo) => {
@@ -31,8 +32,7 @@ export function deleteContact(socket: socketIo.Socket, onlineClients: OnlineClie
               query: {username: obj.deleteContactId, 'chats.id': obj.userId},
               objNew: {$pull: {chats: {chatId: obj.chatIdToDelete}}}
             };
-            await datareader(Chat, {$and: [{'users.username': obj.userId},
-            {'users.username': obj.deleteContactId}, {type: ChatType.GROUP_OR_EVENT_CHAT}]}, MongoActions.DELETE_ONE);
+            await datareader(Chat, { _id: new ObjectId(obj.chatIdToDelete)}, MongoActions.DELETE_ONE);
             await datareader(User, deleteChatInMyContact, MongoActions.UPDATE_ONE);
             await datareader(User, deleteChatInOtherList, MongoActions.UPDATE_ONE);
           } else {

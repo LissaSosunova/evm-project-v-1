@@ -84,6 +84,11 @@ export interface DeleteGroupChat {
     users: UserItem[];
 }
 
+export interface UserLeftChat {
+    userId: string;
+    chatId: string;
+}
+
 export interface UserItem {
     username: string;
     name: string;
@@ -283,7 +288,7 @@ export interface Message {
     chatID: string;
     authorId: string;
     text: string;
-    users?: CreateNewChatUser[];
+    users?: UsersInChatDb[];
     edited: boolean;
     unread?: string[];
     date: number; // timeStamp (to UTC)
@@ -308,9 +313,12 @@ export interface ChatDb extends Document {
 }
 
 export interface UsersInChatDb {
+    _id?: string;
     username: string;
     name: string;
     email: string;
+    avatar?: Avatar;
+    deleted?: boolean;
 }
 
 export interface DraftMessageDb {
