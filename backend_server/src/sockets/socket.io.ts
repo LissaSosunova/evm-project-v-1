@@ -15,6 +15,7 @@ import { newGroupChat } from './events/new_group_chat';
 import { userIsTyping } from './events/user_is_typing';
 import { userReadMessage } from './events/user_read_message';
 import { addUserToChat } from './events/add_user_to_chat';
+import { userLeftGroupChat } from './events/user_left_group_chat';
 
 export function runWebsocketsIO(server: any): void {
     const onlineClients: OnlineClients = {};
@@ -167,5 +168,6 @@ export function runWebsocketsIO(server: any): void {
           newGroupChat(socket, onlineClients);
           userIsTyping(socket, clientsInChat);
           userReadMessage(socket, onlineClients, clientsInChat);
+          userLeftGroupChat(socket, onlineClients, clientsInChat);
     });
 }

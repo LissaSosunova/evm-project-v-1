@@ -34,11 +34,17 @@
                 </ul>
               </ng-container>
             </section>
-            <section class="delete-chat-container" *ngIf="user.username === admin">
-              <span>Delete chat...</span>
-              <span class="material-icons delete-chat" (click)="deleteChat()">delete</span>
-            </section>    
-       
+            <ng-container *ngIf="isGroupChat">
+              <section class="delete-chat-container" *ngIf="user.username === admin; else leave">
+                <span>Delete chat...</span>
+                <span class="material-icons delete-chat" (click)="deleteChat()">delete</span>
+              </section>
+              <ng-template #leave>
+                <section class="delete-chat-container">
+                  <span>Leave chat...</span>
+                  <span class="material-icons delete-chat" (click)="leaveChat()">person</span>
+                </section>
+              </ng-template>    
+            </ng-container>
     </section>        
 </app-popup>
-

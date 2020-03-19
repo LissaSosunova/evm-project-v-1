@@ -360,6 +360,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscribeNewMessagesInit();
     this.subscribeDeleteMessagesInit();
     this.subscribeEditMessagesInit();
+    this.subscribeUserLeftChat();
     this.userObj = {
       chatIdCurr: this.chatId,
       userId: this.user.username,
@@ -498,7 +499,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private scrollDownMessageWindow(): void {
+  public scrollDownMessageWindow(): void {
     const chatWindowsSrollHeight: number = this.messageBoxElement.scrollHeight;
     const chatWindowsClientHeight: number = this.messageBoxElement.clientHeight;
     this.messageBoxElement.scrollTo(0, chatWindowsSrollHeight - chatWindowsClientHeight);
@@ -572,6 +573,16 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       this.arrayOfMessages.forEach(message => {
         message.unread = message.unread.filter(u => u !== obj.userId);
       });
+    });
+  }
+
+  private subscribeUserLeftChat(): void {
+    this.socketIoService.on(SocketIO.events.user_left_group_chat)
+    .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((data: {userId: string, chatId: string}) => {
+      const user = this.chats.users.find(u => u.username === data.userId);
+      this.toastService.openToastSuccess(`User ${user.name} left chat`);
+      this.chats.users = this.chats.users.filter(u => u.username !== data.userId);
     });
   }
 }

@@ -32,6 +32,8 @@ export module SocketIO {
         delete_user_from_group_chat_response = 'delete_user_from_group_chat_response',
         add_user_to_chat = 'add_user_to_chat',
         add_user_to_chat_response = 'add_user_to_chat_response',
-        error = 'error'
+        error = 'error',
+        user_left_group_chat = 'user_left_group_chat',
+        user_left_group_chat_response = 'user_left_group_chat_response'
     }
 }

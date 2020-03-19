@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { PopupControlsService, PopupControls } from 'src/app/services/popup-controls.service';
 import { types } from 'src/app/types/types';
 import { Observable, Subject } from 'rxjs';
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   templateUrl: './group-chat-info-popup.component.html',
   styleUrls: ['./group-chat-info-popup.component.scss']
 })
-export class GroupChatInfoPopupComponent implements OnInit, OnDestroy {
+export class GroupChatInfoPopupComponent implements OnChanges, OnInit, OnDestroy {
 
   public popup: PopupControls;
   public popupConfig: types.FormPopupConfig;
@@ -36,6 +36,12 @@ export class GroupChatInfoPopupComponent implements OnInit, OnDestroy {
               private store: Store<types.User>,
               private socketIOService: SocketIoService,
               private router: Router) { }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes && changes.usersInChat && changes.usersInChat.currentValue && !changes.usersInChat.isFirstChange()) {
+      this.getUsersInAndOutOfChat();
+    }
+  }
 
   ngOnInit() {
     this.popup = this.popupControlsService.create(true);
@@ -88,6 +94,15 @@ export class GroupChatInfoPopupComponent implements OnInit, OnDestroy {
       this.store.dispatch(new userAction.DeleteGroupChat(response));
       this.router.navigate(['/main/chats']);
     });
+    this.socketIOService.on(SocketIO.events.user_left_group_chat_response)
+    .pipe(distinctUntilChanged(), takeUntil(this.unsubscribe$))
+    .subscribe((response: {userId: string, chatId: string}) => {
+      const userLeft = this.usersInChat.find(user => user.username === response.userId);
+      this.usersOutOfChat.push(userLeft);
+      this.usersInChat = this.usersInChat.filter(user => user.username !== response.userId);
+      this.router.navigate(['/main/chats']);
+      this.store.dispatch(new userAction.DeleteGroupChat({chatId: response.chatId}));
+    });
   }
 
   ngOnDestroy() {
@@ -112,19 +127,7 @@ export class GroupChatInfoPopupComponent implements OnInit, OnDestroy {
 
   public addUsersToChat(): void {
     this.showUsersOutOfChat = !this.showUsersOutOfChat;
-    const userOutOfChat = this.user.contacts.filter(contact => !this.usersInChat.some(user =>  user.username === contact.id));
-    const deletedUsers = this.usersInChat.filter(user => user.deleted === true);
-    this.usersOutOfChat = userOutOfChat.map(user => {
-      return {
-        avatar: user.avatar,
-        email: user.email,
-        username: user.id,
-        name: user.name
-      };
-    });
-    deletedUsers.forEach(u => {
-      this.usersOutOfChat.push(u);
-    });
+    this.getUsersInAndOutOfChat();
   }
 
   public deleteChat(): void {
@@ -145,6 +148,19 @@ export class GroupChatInfoPopupComponent implements OnInit, OnDestroy {
     this.socketIOService.socketEmit(SocketIO.events.delete_user_from_group_chat, userToDelete);
   }
 
+  public get isGroupChat(): boolean {
+    const chat = this.user.chats.find(c => c.chatId === this.chatId);
+    return chat && chat.type === types.ChatType.GROUP_OR_EVENT_CHAT;
+  }
+
+  public leaveChat(): void {
+    const userLeftChat = {
+      userId: this.user.username,
+      chatId: this.chatId
+    };
+    this.socketIOService.socketEmit(SocketIO.events.user_left_group_chat, userLeftChat);
+  }
+
   public open(): void {
     if (this.popup) {
       this.popup.open();
@@ -158,6 +174,22 @@ export class GroupChatInfoPopupComponent implements OnInit, OnDestroy {
       this.popup.close();
       this.popupClosed = true;
     }
+  }
+
+  private getUsersInAndOutOfChat(): void {
+    const userOutOfChat = this.user.contacts.filter(contact => !this.usersInChat.some(user =>  user.username === contact.id));
+    const deletedUsers = this.usersInChat.filter(user => user.deleted === true);
+    this.usersOutOfChat = userOutOfChat.map(user => {
+      return {
+        avatar: user.avatar,
+        email: user.email,
+        username: user.id,
+        name: user.name
+      };
+    });
+    deletedUsers.forEach(u => {
+      this.usersOutOfChat.push(u);
+    });
   }
 
 }
