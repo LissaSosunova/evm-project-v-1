@@ -1,3 +1,6 @@
 .mat-calendar-header {
   padding: 5px 8px 0 8px;
 }
+.mat-form-field {
+  max-width: 180px;
+}

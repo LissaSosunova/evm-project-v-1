@@ -22,7 +22,7 @@ export class InputDateAndTimePickerComponent implements ControlValueAccessor, On
   public date: moment.Moment;
   public disabled = false;
   public showSpinners = true;
-  public disableSecond = true;
+  @Input() public disableSecond: boolean;
   @Input() public placeholder?: string;
   private unsubscribe$: Subject<void> = new Subject();
   // For NG_VALUE_ACCESSOR
@@ -50,7 +50,7 @@ export class InputDateAndTimePickerComponent implements ControlValueAccessor, On
 
   }
 
-  closePicker(){
+  closePicker() {
     this.picker.cancel();
   }
   ngOnDestroy() {
