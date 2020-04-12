@@ -45,7 +45,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { NewGroupChatPopupComponent } from './components/chats/new-group-chat-popup/new-group-chat-popup.component';
 import { GroupChatInfoPopupComponent } from './components/chats/chat-window/group-chat-info-popup/group-chat-info-popup.component';
 import { SharedModule } from './shared/shared.module';
-import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from 'ngx-mat-datetime-picker';
+import { NgxMatTimepickerModule } from './shared/form-controls/ngx-mat-timepicker/ngx-mat-timepicker.module';
+import { NgxMatDatetimePickerModule } from './shared/form-controls/ngx-mat-timepicker/ngx-mat-datetime-picker.module';
 import { InputDateAndTimePickerComponent } from './shared/form-controls/input-date-and-time-picker/input-date-and-time-picker.component';
 
 @NgModule({

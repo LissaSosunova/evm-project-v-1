@@ -84,7 +84,7 @@ export class NewEventComponent implements OnInit, OnDestroy {
       place: this.event.place,
       members: this.event.members,
       additional: this.event.additional,
-      date: this.dateToUTC(this.event.date),
+      date: this.event.date,
       authorId: this.user.username
     };
     this.socketIOService.socketEmit(SocketIO.events.new_event, this.eventToDb);
@@ -101,7 +101,7 @@ export class NewEventComponent implements OnInit, OnDestroy {
   public selectDateOption(): void {
     this.event.date = {} as types.EventDate;
   }
-
+// Old function to convert date to UTC
   private dateToUTC(date: types.EventDate): types.EventDateDb {
     const UTCdate: types.EventDateDb = {} as types.EventDateDb;
      if (this.event.dateType === types.dateTypeEvent.EXACT_DATE_WITH_TIME) {

@@ -40,7 +40,9 @@ input, button {
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
   border-color: map-get($bg-color, 'green') !important;
 }
-
+.radio-button {
+  font-size: 14px;
+}
 .mat-form-field.mat-focused .mat-form-field-label {
   color: map-get($bg-color, 'green') !important;
 }

@@ -1,0 +1,29 @@
+
+<mat-calendar cdkTrapFocus [id]="datepicker.id" [ngClass]="datepicker.panelClass" [startAt]="datepicker.startAt"
+    [startView]="datepicker.startView" [minDate]="datepicker._minDate" [maxDate]="datepicker._maxDate"
+    [dateFilter]="datepicker._dateFilter" [headerComponent]="datepicker.calendarHeaderComponent"
+    [selected]="datepicker._selected" [dateClass]="datepicker.dateClass" [@fadeInCalendar]="'enter'"
+    (selectedChange)="datepicker.select($event)" (yearSelected)="datepicker._selectYear($event)"
+    (monthSelected)="datepicker._selectMonth($event)">
+</mat-calendar>
+<div class="time-container">
+<div class="time-box">
+    <label class="title-time">Set time: </label>
+    <ngx-mat-timepicker [showSpinners]="datepicker._showSpinners" [disableSecond]="datepicker._disableSecond"
+    [disabled]="datepicker._disabled" 
+    [stepHour]="datepicker._stepHour" [stepMinute]="datepicker._stepMinute" [stepSecond]="datepicker._stepSecond"
+    [(ngModel)]="datepicker._selected"></ngx-mat-timepicker>
+    <div class="actions">
+        <button class="cancel btn-round-middle" (click)="datepicker.cancel()">
+            <i class="material-icons btn-confirm">
+                clear
+            </i>
+        </button>
+        <button class="confirm btn-round-middle" (click)="datepicker.ok()">
+            <i class="material-icons btn-confirm">
+            check
+        </i>
+        </button>
+    </div>
+</div>
+</div>

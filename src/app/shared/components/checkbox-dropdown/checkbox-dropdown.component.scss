@@ -11,7 +11,7 @@
       margin-right: 6px;
       color: #b3b3b3;
       font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
+      font-size: 10px;
     }
     &__trigger {
         cursor: pointer;
@@ -86,7 +86,7 @@
   }
   
   .input-wrap {
-      margin: 20px 10px 10px;
+      margin: 8px 10px 8px 8px;
   }
 
   .avatar {
@@ -96,4 +96,11 @@
       height: 30px;
       border-radius: 50%;
   }
+}
+.app-dropdown__panel {
+  border-radius: 18px;
+  padding: 0px 10px 10px 10px;
+}
+.app-dropdown__option {
+  border-radius: 8px;
 }

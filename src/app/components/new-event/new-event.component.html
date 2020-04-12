@@ -39,10 +39,17 @@ class="main-block">
                 <div class="input-container col-xs-12 row"> 
                   <app-input-date-and-time-picker
                   class="col-xs-12 col-sm-12 col-md-6 col-lg-6"
-                  [placeholder]="'Start date and time'"></app-input-date-and-time-picker>
+                  [placeholder]="'Start date and time'"
+                  [(ngModel)]="event.date.startDate"
+                  [disableSecond]="true"
+                  name="startDate"
+                  ></app-input-date-and-time-picker>
                   <app-input-date-and-time-picker
                   class="col-xs-12 col-sm-12 col-md-6 col-lg-6"
-                  [placeholder]="'End date and time'"></app-input-date-and-time-picker>
+                  [placeholder]="'End date and time'"
+                  [(ngModel)]="event.date.endDate"
+                  [disableSecond]="true"
+                  name="endDate"></app-input-date-and-time-picker>
                 </div>
               </div>
             
@@ -50,7 +57,10 @@ class="main-block">
                 <div class="input-container col-xs-12 row">
                   <app-input-date-and-time-picker
                   class="col-xs-6"
-                  [placeholder]="'Choose date and time'"></app-input-date-and-time-picker>
+                  [placeholder]="'Choose date and time'"
+                  [(ngModel)]="event.date.startDate"
+                  [disableSecond]="true"
+                  name="startDate"></app-input-date-and-time-picker>
                 </div>
               </div>
           </div>
@@ -99,7 +109,7 @@ class="main-block">
                 <mat-checkbox [(ngModel)]="event.status"
                               name="status">
                 </mat-checkbox>
-                <span clas="remind">Remind me</span>
+                <span class="remind">Remind me</span>
               </label>
         </div>
       </div>
