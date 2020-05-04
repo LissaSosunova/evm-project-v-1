@@ -35,20 +35,20 @@ module.exports = (on, config) => {
     options.browserifyOptions.extensions.unshift('.ts');
     options.browserifyOptions.plugin.unshift(['tsify', {project: './cypress/tsconfig.json'}]);
 
-    on('before:browser:launch', (browser = {}, args) => {
+    on('before:browser:launch', (browser = {}, launchOptions) => {
         if (browser.name === 'chrome') {
-            args.push('--disable-dev-shm-usage');
-            args.push('--allow-running-insecure-content');
-            return args;
+          launchOptions.args.push('--disable-dev-shm-usage');
+          launchOptions.args.push('--allow-running-insecure-content');
+            return launchOptions;
         }
-        return args;
+        return launchOptions;
     });
 
   on('file:preprocessor', cucumber(options));
 
   on('task', {
     createUser(user) {
-      return executeCommandPromiseAndWait(`npx lerna run create-user --stream -- -- --credsUser ../../backend_server/admin_api/for_e2e/${user}/e2eUser.json`)
+      return executeCommandPromiseAndWait(`npx lerna run create-user --stream -- -- --credsUser ../../../backend_server/src/admin_api/for_e2e/${user}/e2eUser.json`)
     },
   });
 

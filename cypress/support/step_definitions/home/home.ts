@@ -1,4 +1,4 @@
-import * as userCreds from '../../../../backend_server/admin_api/for_e2e/user1/e2eUser.json';
+import * as userCreds from '../../../../backend_server/src/admin_api/for_e2e/user1/e2eUser.json';
 
 given('I visit home page', () => {
     cy.visit('/main/home');
@@ -6,12 +6,11 @@ given('I visit home page', () => {
 
 then('I see name of user {string}', username => {
     cy.wrap(userCreds).its('username').should('eq', username);
-    cy.get('span.header-user-container').contains(userCreds.name);
+    cy.get('.header-user-container span').contains(userCreds.name);
 });
 
 then('I see avatar', () => {
-    cy.get('img.avatar').should('exist');
-    cy.get('input[type=file]').should('exist');
+    cy.get('div.avatar').should('exist');
 });
 
 then('I see evm logo', () => {

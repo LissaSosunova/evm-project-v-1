@@ -1,6 +1,6 @@
-import * as user1 from '../../../../backend_server/admin_api/for_e2e/user1/e2eUser.json';
-import * as user2 from '../../../../backend_server/admin_api/for_e2e/user2/e2eUser.json';
-import * as user3 from '../../../../backend_server/admin_api/for_e2e/user3/e2eUser.json';
+import * as user1 from '../../../../backend_server/src/admin_api/for_e2e/user1/e2eUser.json';
+import * as user2 from '../../../../backend_server/src/admin_api/for_e2e/user2/e2eUser.json';
+import * as user3 from '../../../../backend_server/src/admin_api/for_e2e/user3/e2eUser.json';
 
 given('I create user', () => {
     cy.visit('/');
