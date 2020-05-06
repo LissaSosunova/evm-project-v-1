@@ -49,8 +49,8 @@ Scenario Outline: I test creating new event
     Then I see the "<newEventComponent>"
     Then I see disabled button "<saveEventBtn>"
     Then I type "<eventName>" in input "<eventNameInput>"
-    Then I see button "#mat-radio-4" which can be clicked
-    Then I fill today date in datepicker input "[name=startDate] input[name=visible]"
+    Then I see button "#mat-radio-3" which can be clicked
+    Then I fill today date in datepicker input "mat-datepicker-toggle" clicking on ".confirm"
     Then I select user "<name2>"
     Then I type "<eventLocation>" in input "<eventLocationInput>"
     Then I see button "mat-checkbox" which can be clicked
@@ -59,8 +59,10 @@ Scenario Outline: I test creating new event
     Then I see "New event was successfully saved" in element "snack-bar-container app-toast-success"
     Then I see button "<sidebarBtn>" with content "Events" which can be clicked
     Then I see the "<eventComponent>"
+    Then I see button "[data-cy=current-events]" which can be clicked
     Then I see "<eventName>" in element ".event-list li"
     Then I reload page
+    Then I see button "[data-cy=current-events]" which can be clicked
     Then I see "<eventName>" in element ".event-list li"
     Then I sign-out
     Then I delete user "<username1>"

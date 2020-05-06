@@ -12,7 +12,7 @@
     "backend": "npx lerna run dev:backend --stream",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "test-specific": "cypress run -s cypress/integration/chats/chats.feature"
+    "test-specific": "cypress run -s cypress/integration/calendar/calendar.feature"
   },
   "private": true,
   "dependencies": {
@@ -53,8 +53,8 @@
     "@types/node": "^12.7.5",
     "@types/socket.io-client": "^1.4.32",
     "codelyzer": "^5.1.0",
-    "cypress": "^3.6.0",
-    "cypress-cucumber-preprocessor": "^1.16.2",
+    "cypress": "^4.5.0",
+    "cypress-cucumber-preprocessor": "^2.3.1",
     "fs": "0.0.1-security",
     "fullcalendar": "^3.10.0",
     "jasmine-core": "^3.4.0",
