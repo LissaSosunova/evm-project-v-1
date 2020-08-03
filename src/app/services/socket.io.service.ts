@@ -5,7 +5,7 @@ import { Subject, Observable } from 'rxjs';
 import { SocketIO} from 'src/app/types/socket.io.types';
 import { environment } from 'src/environments/environment';
 import { SessionStorageService } from './session.storage.service';
-import { throwToolbarMixedModesError } from '@angular/material';
+import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 
 @Injectable({
   providedIn: 'root'

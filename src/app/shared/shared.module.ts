@@ -6,9 +6,18 @@ import { CounterComponent } from './components/counter/counter.component';
 import { ErrMsgComponent } from './components/err-msg/err-msg.component';
 import { MultiLineEllipsisComponent } from './components/multi-line-ellipsis/multi-line-ellipsis.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatSnackBarModule, MatTooltipModule, MatButtonModule, MatCheckboxModule,
-  MatInputModule, MatBadgeModule, MatProgressSpinnerModule, MatDatepickerModule,
-  MatRadioModule, MatIconModule, MatNativeDateModule, MatSelectModule } from '@angular/material';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterPipe } from '../pipes/filter.pipe';
 import { InputSearchComponent } from './form-controls/input-search/input-search.component';
