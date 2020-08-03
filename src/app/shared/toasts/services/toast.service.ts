@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  MatSnackBar,
-  MatSnackBarConfig,
-  MatSnackBarHorizontalPosition,
-  MatSnackBarVerticalPosition } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { TransferService } from 'src/app/services/transfer.service';
 import { ToastSuccessComponent } from '../components/toast-succes/toast-success.component';
 import { ToastFailComponent } from '../components/toast-fail/toast-fail.component';
