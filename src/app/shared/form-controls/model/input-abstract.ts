@@ -1,8 +1,9 @@
-import { Input, Output, EventEmitter, forwardRef, OnDestroy } from '@angular/core';
+import { Input, Output, EventEmitter, forwardRef, OnDestroy, Directive } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
+@Directive()
 export abstract class InputAbstract implements ControlValueAccessor, OnDestroy {
   /**
    * Floating strategy
