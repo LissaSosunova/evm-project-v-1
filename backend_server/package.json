@@ -14,7 +14,7 @@
         "dev:backend": "nodemon --exec ts-node src/index.ts"
     },
     "dependencies": {
-        "bcrypt": "^3.0.6",
+        "bcrypt": "^5.0.0",
         "body-parser": "^1.18.2",
         "express": "^4.16.3",
         "fs": "0.0.1-security",
@@ -39,7 +39,7 @@
         "@types/nodemailer": "^6.4.0",
         "@types/socket.io": "^2.1.4",
         "argv": "0.0.2",
-        "bcrypt": "^3.0.6",
+        "bcrypt": "^5.0.0",
         "body-parser": "^1.18.2",
         "express": "^4.16.3",
         "fs": "0.0.1-security",
