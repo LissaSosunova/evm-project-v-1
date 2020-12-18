@@ -5,6 +5,7 @@ export interface LoginResponse {
     success: boolean;
     access_token: string;
     token_key: string;
+    expires_in: number;
 }
 
 export interface DbQuery {
@@ -361,8 +362,11 @@ export interface Config {
     mongodb: string;
     backendPort: number;
     frontendPort: number;
+    tokenExpiration: number;
+    version: string;
 }
 
 export interface Auth {
     username: string;
+    id: string;
 }
