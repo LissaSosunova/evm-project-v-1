@@ -6,7 +6,10 @@ import { URIObj } from 'src/app/constants/backendURI';
 
 export const environment = {
   production: false,
-  backendURI: URIObj.getLocalURI()
+  backendURI: URIObj.getLocalURI(),
+  baseApi: '/api',
+  versionApi: '/v1',
+  cors: true,
 };
 
 /*

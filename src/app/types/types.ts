@@ -53,6 +53,7 @@ export module types {
     success: boolean;
     access_token: string;
     token_key: string;
+    expires_in: number;
   }
 
   export interface Registration {
@@ -323,6 +324,7 @@ export interface LoginServerResponse {
   access_token?: string;
   token_key?: string;
   message?: string;
+  expires_in: number;
 }
 
 export interface SocketError {

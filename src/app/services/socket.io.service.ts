@@ -4,8 +4,7 @@ import { types } from '../types/types';
 import { Subject, Observable } from 'rxjs';
 import { SocketIO} from 'src/app/types/socket.io.types';
 import { environment } from 'src/environments/environment';
-import { SessionStorageService } from './session.storage.service';
-import { throwToolbarMixedModesError } from '@angular/material/toolbar';
+import { CookieService } from '../core/services/cookie.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,7 @@ export class SocketIoService {
   private socketMessageBus: Subject<types.SocketMessage> = new Subject<types.SocketMessage>();
   private chatId: string;
 
-  constructor(private sessionStorageService: SessionStorageService) { }
+  constructor(private cookieService: CookieService) { }
 
 
   public set setChatId(chatId: string) {
@@ -72,8 +71,8 @@ export class SocketIoService {
     this.socketInstance = io(this.getURI(), {
       reconnection: true,
       query: {
-        token: this.sessionStorageService.getValue('_token'),
-        token_key: this.sessionStorageService.getValue('token_key')
+        token: this.cookieService.getCookie('access_token'),
+        token_key: this.cookieService.getCookie('token_key')
       }
     });
     this.socketInstance.on('reconnect', this.onSocketReconnect.bind(this, username));
@@ -93,7 +92,7 @@ export class SocketIoService {
   }
 
   private async onSocketReconnect(username: string): Promise<void> {
-    const token = this.sessionStorageService.getValue('_token');
+    const token = this.cookieService.getCookie('access_token');
     const dataObj = {
       userId: username,
       token: token

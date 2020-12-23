@@ -1,0 +1,20 @@
+@import '../../../../../scss/variables';
+@import '../../../../../scss/functions';
+
+.counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 1px 2px 1px;
+  border-radius: 50%;
+  background-color: map-get($bg-color, 'orange');
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  span {
+    padding: 0px;
+    font-size: 10px;
+    color: black;
+    font-weight: 500;
+  }
+  }

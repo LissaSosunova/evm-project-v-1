@@ -1,14 +1,13 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SessionStorageService } from 'src/app/services/session.storage.service';
 import { RouterService } from 'src/app/services/router.service';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { TransferService } from 'src/app/services/transfer.service';
-import { types } from 'src/app/types/types';
 import { SocketIO} from 'src/app/types/socket.io.types';
 import { PageMaskService } from 'src/app/services/page-mask.service';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CookieService } from 'src/app/core/services/cookie.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -28,11 +27,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(public router: Router,
             private activateRouter: ActivatedRoute,
-            private sessionStorageService: SessionStorageService,
             private routerService: RouterService,
             private socketIoService: SocketIoService,
             private transferService: TransferService,
-            private pageMaskService: PageMaskService) { }
+            private pageMaskService: PageMaskService,
+            private cookieService: CookieService) { }
 
   ngOnInit() {
     this.getCurrentRoute();
@@ -56,12 +55,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   public exit(): void {
     const userData  = this.transferService.dataGet('userData');
-    const token = this.sessionStorageService.getValue('_token');
+    const token = this.cookieService.getCookie('access_token');
     const dataObj = {
       userId: userData.username,
       token: token
     };
     this.socketIoService.socketEmit(SocketIO.events.user_left, dataObj);
+    this.cookieService.deleteCookie('access_token');
+    this.cookieService.deleteCookie('token_key');
   }
 
   public onClickOutside(event: MouseEvent): void {
@@ -89,7 +90,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.currParentUrl = urlSegments[1];
     if (this.currParentUrl === '/' || !this.currParentUrl) {
       this.currParentUrl = 'login';
-      const token = this.sessionStorageService.getValue('_token');
+      const token = this.cookieService.getCookie('access_token');
       if (token) {
         this.currParentUrl = 'main';
       }

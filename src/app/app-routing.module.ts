@@ -1,26 +1,6 @@
-import { AboutComponent } from './components/about/about.component';
-import { ChatsComponent } from './components/chats/chats.component';
-import { ChatListComponent } from './components/chats/chat-list/chat-list.component';
-import { ChatWindowComponent } from './components/chats/chat-window/chat-window.component';
-import { ContactsComponent } from './components/contacts/contacts.component';
-import { EventCalendarComponent } from './components/event-calendar/event-calendar.component';
-import { EventsComponent } from './components/events/events.component';
-import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
-import { GetDraftMessagesResolverService } from './resolvers/get-draft-messages-resolver.service';
-import { HomeComponent } from './components/home/home.component';
-import { LoginPageComponent } from './components/login-page/login-page.component';
-import { MainComponent } from './components/main/main.component';
-import { MainGuard } from './components/main/main.guard';
-import { NewEventComponent } from './components/new-event/new-event.component';
-import { NewEventGuard } from './components/new-event/new-event.guard';
 import { NgModule } from '@angular/core';
-import { RegistrationComponent } from './components/registration/registration.component';
 import { Routes, RouterModule } from '@angular/router';
-import { GetChatResolverService } from './resolvers/get-chat-resolver.service';
-import { EmailConfirmedComponent } from './components/email-confirmed/email-confirmed.component';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-import { ProfileComponent } from './components/profile/profile.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -29,78 +9,24 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginPageComponent
+    loadChildren: () => import ('./modules/login/login.module').then(m => m.LoginModule),
   },
   {
     path: 'registration',
-    component: RegistrationComponent
+    loadChildren: () => import ('./modules/registration/registration.module').then(m => m.RegistrationModule),
   },
   {
     path: 'about',
-    component: AboutComponent
-  },
-  {
-    path: 'email-confirmed',
-    component: EmailConfirmedComponent
-  },
-  {
-    path: 'forgot-password',
-    component: ForgotPasswordComponent
-  },
-  {
-    path: 'reset-password/:token/:tokenTime',
-    component: ResetPasswordComponent
+    loadChildren: () => import('./modules/about/about.module').then(m => m.AboutModule),
   },
   {
     path: 'main',
-    component: MainComponent,
-    canActivate: [MainGuard],
-    resolve: {
-      userData: GetDataUserResolverService
-    },
-    children: [
-      {
-        path: 'home',
-        component: HomeComponent
-      },
-      {
-        path: 'calendar',
-        component: EventCalendarComponent
-      },
-      {
-        path: 'contacts',
-        component: ContactsComponent
-      },
-      {
-        path: 'chats',
-        component: ChatsComponent,
-      },
-      {
-        path: 'chat-window/:chatId',
-        component: ChatWindowComponent,
-        resolve: {
-          chatMessages: GetChatResolverService
-        },
-      },
-      {
-        path: 'events',
-        component: EventsComponent
-      },
-      {
-        path: 'new_event',
-        component: NewEventComponent,
-        canDeactivate: [NewEventGuard]
-      },
-      {
-        path: 'profile',
-        component: ProfileComponent,
-      }
-    ]
+    loadChildren: () => import('./modules/main/main.module').then(m => m.MainModule),
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes), RouterModule.forChild(routes)],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
