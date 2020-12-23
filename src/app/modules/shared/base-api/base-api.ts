@@ -9,19 +9,11 @@ export abstract class BaseApi {
   protected constructor(protected http: HttpClient) {
   }
 
-  private static getHttpOptions() {
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    };
-  }
-
   public get(url: string, params?: {}, headers?: HttpHeaders): Observable<any> {
     if (params) {
       return this.http.get(this.getUrl(url), {headers, params});
     }
-    return this.http.get(this.getUrl(url), BaseApi.getHttpOptions());
+    return this.http.get(this.getUrl(url), {headers});
   }
 
   public post(url: string, data: any, headers?: HttpHeaders): Observable<any> {

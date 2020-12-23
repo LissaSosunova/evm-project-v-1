@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastService } from 'src/app/modules/shared/toasts/services/toast.service';
-import { DataService } from 'src/app/services/data.service';
+import { RegistrationApiService } from '../../services/registration-api.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -12,15 +12,16 @@ export class ForgotPasswordComponent implements OnInit {
   public email: string;
   public isPendingResponse = false;
 
-  constructor(private dataService: DataService,
-              private toastService: ToastService) { }
+  constructor(private toastService: ToastService,
+              private registrationApiService: RegistrationApiService) { }
 
   ngOnInit() {
   }
 
   public sendEmail(email: string): void {
     this.isPendingResponse = true;
-    this.dataService.forgotPassword(email).subscribe(res => {
+    this.registrationApiService.postRequest('/registration/forgot_password', {email})
+    .subscribe(res => {
       if (res.status === 404) {
         this.toastService.openToastFail('Wrong email');
       } else {

@@ -16,8 +16,8 @@ export class MainApiService extends BaseApi {
     return super.get(url, params, this.getHeaders());
   }
 
-  public postRequest(url: string, params: {}): Observable<any> {
-    return super.post(url, params, this.getHeaders());
+  public postRequest(url: string, params: {}, headers?: {[name: string]: string}): Observable<any> {
+    return super.post(url, params, this.getHeaders(headers));
   }
 
   public putRequest(url: string, params: {}): Observable<any> {
@@ -28,10 +28,10 @@ export class MainApiService extends BaseApi {
     return super.delete(url, this.getHeaders());
   }
 
-  private getHeaders(): HttpHeaders {
+  private getHeaders(additionalHeaders?: {[name: string]: string}): HttpHeaders {
     const token = this.cookieService.getCookie('access_token');
     const tokenKey = this.cookieService.getCookie('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey});
+    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey, ... additionalHeaders});
     return headers;
   }
 }

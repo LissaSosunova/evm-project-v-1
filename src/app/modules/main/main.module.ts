@@ -43,6 +43,9 @@ import { NgxMatDatetimePickerModule } from '../shared/form-controls/ngx-mat-time
 import { NgxMatTimepickerModule } from '../shared/form-controls/ngx-mat-timepicker/ngx-mat-timepicker.module';
 import { DateTransformService } from './services/date-transform.service';
 import { MainApiService } from './services/main.api.service';
+import { GetChatResolverService } from './resolvers/get-chat-resolver.service';
+import { GetDataUserResolverService } from './resolvers/get-data-user-resolver.service';
+import { GetDraftMessagesResolverService } from './resolvers/get-draft-messages-resolver.service';
 
 @NgModule({
   declarations: [
@@ -96,6 +99,9 @@ import { MainApiService } from './services/main.api.service';
     DatePipe,
     DateTransformService,
     MainApiService,
+    GetChatResolverService,
+    GetDataUserResolverService,
+    GetDraftMessagesResolverService,
   ]
 })
 export class MainModule { }

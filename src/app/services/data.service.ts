@@ -76,7 +76,7 @@ export class DataService {
   public getDraftMessage(userId: string, chatId: string): Observable<types.DraftMessageFromServer> {
     const query = {authorId: userId};
     return this.http.get<types.DraftMessageFromServer>(`${URL_BACK}${baseApi}${versionApi}/chat/get_draft_message/${chatId}`,
-    {headers: this.getHeaders()});
+    {headers: this.getHeaders(), params: query});
   }
 
   public uploadAvatar(obj: FormData, userId: string): Observable<types.UploadAvatarResponse> {

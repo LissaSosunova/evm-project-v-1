@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/modules/shared/toasts/services/toast.service';
+import { RegistrationApiService } from '../../services/registration-api.service';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-reset-password',
@@ -21,7 +22,7 @@ export class ResetPasswordComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private toastService: ToastService,
-              private dataService: DataService) { }
+              private registrationApiService: RegistrationApiService) { }
 
   ngOnInit() {
     this.token = this.route.snapshot.params.token;
@@ -35,7 +36,9 @@ export class ResetPasswordComponent implements OnInit {
       this.isPendingResponse = false;
       return;
     }
-    this.dataService.changePassword(this.resetPasswordForm.value.pass, this.token, this.tokenTime).subscribe(res => {
+    const headers = new HttpHeaders({'authorization': this.token});
+    this.registrationApiService.postRequest('/registration/change_password', {password: this.resetPasswordForm.value.pass, tokenTime: this.tokenTime}, headers)
+    .subscribe(res => {
       if (res.status === 200) {
         this.toastService.openToastSuccess('Your password has been changed!');
         this.router.navigate(['/login']);

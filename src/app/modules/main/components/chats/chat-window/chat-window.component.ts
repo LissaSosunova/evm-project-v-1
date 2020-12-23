@@ -2,8 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, Hos
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
 import { TransferService } from 'src/app/services/transfer.service';
-import { DataService } from 'src/app/services/data.service';
-import { FormControl, Validators, NgForm } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
 import { DateTransformService } from 'src/app/modules/main/services/date-transform.service';
 import { Observable, Subject } from 'rxjs';
@@ -17,6 +16,7 @@ import { GroupChatInfoPopupComponent } from './group-chat-info-popup/group-chat-
 import { NewGroupChatPopupComponent } from '../new-group-chat-popup/new-group-chat-popup.component';
 import { ToastService } from 'src/app/modules/shared/toasts/services/toast.service';
 import { CookieService } from 'src/app/core/services/cookie.service';
+import { MainApiService } from '../../../services/main.api.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -74,12 +74,12 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private toastService: ToastService,
-    private data: DataService,
     private dateTransformService: DateTransformService,
     private socketIoService: SocketIoService,
     private pageMaskService: PageMaskService,
     private store: Store<types.User>,
     private cookieService: CookieService,
+    private mainApiService: MainApiService,
   ) {}
 
   ngOnInit() {
@@ -388,11 +388,8 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private deleteDraftMessage(): void {
-    const draftMessageDeleteObj: types.DraftMessageDeleteObj = {
-      chatID: this.chatId,
-      authorId: this.user.username
-    };
-    this.data.deleteDraftMessage(draftMessageDeleteObj).subscribe(res => {
+    this.mainApiService.deleteRequest(`/chat/delete_draft_message/${this.chatId}/${this.user.username}`)
+    .subscribe(res => {
       this.isDraftMessageExist = false;
     });
   }
@@ -470,7 +467,12 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private getMessages(chatId: string, n: number, queryMessagesAmount: number, messagesShift: number): void {
     this.isLoadingMessages = true;
-    this.data.getPrivatChat(chatId, String(n), String(queryMessagesAmount), String(messagesShift))
+    const data = {
+      queryNum: String(n),
+      queryMessagesAmount: String(queryMessagesAmount),
+      messagesShift: String(messagesShift)
+    };
+    this.mainApiService.getRequest(`/chat/private_chat/${chatId}`, data)
       .subscribe((response: types.Message[]) => {
         this.isLoadingMessages = false;
         if (response && response.length < 20) {
@@ -513,7 +515,8 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       date: date,
       authorId: this.user.username
     };
-    this.data.sendDraftMessage(draftMessage).subscribe(res => {
+    this.mainApiService.postRequest('/chat/set_draft_message', draftMessage)
+    .subscribe(res => {
       this.isDraftMessageSent = true;
     });
   }

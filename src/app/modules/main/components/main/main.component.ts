@@ -12,6 +12,7 @@ import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ToastService } from 'src/app/modules/shared/toasts/services/toast.service';
 import { AvatarService } from '../../services/avatar.service';
+import { MainApiService } from '../../services/main.api.service';
 
 @Component({
   selector: 'app-main',
@@ -34,17 +35,12 @@ export class MainComponent implements OnInit, OnDestroy {
               private socketIoService: SocketIoService,
               private toastService: ToastService,
               private store: Store<types.User>,
-              private avatarService: AvatarService) {
+              private avatarService: AvatarService,
+              private mainApiService: MainApiService) {
     }
 
   ngOnInit() {
     this.user = this.route.snapshot.data.userData;
-    if (!this.user) {
-      this.toastService.openToastFail(`Unable to get user data. You will be redirected on login page`, {duration: 4500});
-      if (environment.production) {
-        this.router.navigate(['/login']);
-      }
-    }
     this.user.avatar = this.avatarService.parseAvatar(this.user.avatar);
     this.user.contacts.forEach(contact => {
       contact.avatar = this.avatarService.parseAvatar(contact.avatar);
@@ -81,32 +77,12 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.socketIoService.closeConnection();
-    sessionStorage.clear();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
 
-  public deleteAvatar(): void {
-    this.data.deleteAvatar(this.user.username).subscribe(response => {
-      this.store.dispatch(new userAction.UpdateAvatarURL(response));
-    });
-  }
-
   public editProfile(): void {
     this.router.navigate(['main/profile']);
-  }
-
-  public uploadAvatar(event): void {
-    const files = this.uploadFile.nativeElement.files;
-    const formData: FormData = new FormData();
-    formData.append('image', files[0]);
-    formData.append('userId', this.user.username);
-    this.data.uploadAvatar(formData, this.user.username).subscribe((res) => {
-      const avatar: types.Avatar = this.avatarService.parseAvatar(res);
-      this.store.dispatch(new userAction.UpdateAvatarURL(avatar));
-    }, err => {
-      this.toastService.openToastFail('Error in uploading avatar');
-    });
   }
 
   private addUserRequestSubscribe(): void {

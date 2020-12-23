@@ -7,6 +7,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { EmailConfirmedComponent } from './components/email-confirmed/email-confirmed.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { SharedModule } from '../shared/shared.module';
+import { RegistrationApiService } from './services/registration-api.service';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { SharedModule } from '../shared/shared.module';
     RegistrationRoutingModule,
     SharedModule,
     FormsModule,
-  ]
+  ],
+  providers: [RegistrationApiService]
 })
 export class RegistrationModule { }

@@ -3,6 +3,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtInterceptor } from './interceptors/jwt-interceptor';
+import { ResponseExceptionInterceptorService } from './interceptors/response-exception-interceptor.service';
 
 @NgModule({
   imports: [
@@ -12,11 +13,11 @@ import { JwtInterceptor } from './interceptors/jwt-interceptor';
   declarations: [
   ],
   providers: [
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: JwtInterceptor,
-    //   multi: true,
-    // },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ResponseExceptionInterceptorService,
+      multi: true,
+    },
   ],
   exports: [
   ],

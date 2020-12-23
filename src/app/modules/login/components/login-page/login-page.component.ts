@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
-import { DataService } from 'src/app/services/data.service';
 import { NgForm } from '@angular/forms';
 import { ToastService } from 'src/app/modules/shared/toasts/services/toast.service';
 import { CookieService } from 'src/app/core/services/cookie.service';
+import { LoginApiService } from '../../services/login-api.service';
 
 @Component({
   selector: 'app-login-page',
@@ -25,9 +25,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private data: DataService,
               private cookieService: CookieService,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private loginApiService: LoginApiService) {
    }
 
 
@@ -50,7 +50,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         username,
         password
       };
-    this.data.setAuth(this.params).subscribe(
+    this.loginApiService.postRequest('/login', this.params)
+    .subscribe(
       data => {
         this.dataResp = data as types.LoginResp;
         if (this.dataResp.success) {

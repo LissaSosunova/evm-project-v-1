@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { types } from 'src/app/types/types';
-import { DataService } from 'src/app/services/data.service';
 import { NgForm } from '@angular/forms';
 import { ToastService } from 'src/app/modules/shared/toasts/services/toast.service';
+import { RegistrationApiService } from '../../services/registration-api.service';
 
 @Component({
   selector: 'app-registration',
@@ -26,8 +26,8 @@ export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private data: DataService,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private registrationApiService: RegistrationApiService) {
 
    }
 
@@ -59,7 +59,8 @@ export class RegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
       password
     };
 
-    this.data.setReg(this.params).subscribe(
+    this.registrationApiService.postRequest('/registration/user/', this.params)
+    .subscribe(
       data => {
         const response = data;
         if (response.message === 'MongoError' || response.status === 409) {

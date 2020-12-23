@@ -1,6 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { DataService } from 'src/app/services/data.service';
 import { debounceTime, distinctUntilChanged, takeUntil, take } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { PopupDetailsComponent } from './popup-details/popup-details.component';
@@ -55,7 +54,6 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private avatarService: AvatarService,
               private route: ActivatedRoute,
               private router: Router,
-              private data: DataService,
               private toastService: ToastService,
               private transferService: TransferService,
               private socketIOService: SocketIoService,
@@ -172,7 +170,7 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.query = {
       query: query
     };
-    this.data.findUser(query)
+    this.mainApiService.getRequest('/user/find_user/', {query})
     .subscribe(
       (data: types.SearchContact[]) => {
         this.showSpinner = false;

@@ -6,6 +6,7 @@ import * as userAction from '../../../../store/actions';
 import { ToastService } from 'src/app/modules/shared/toasts/services/toast.service';
 import { MainApiService } from '../../services/main.api.service';
 import { AvatarService } from '../../services/avatar.service';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
@@ -52,7 +53,7 @@ export class ProfileComponent implements OnInit {
 
   public changePassword(passwords: {oldPassword: string, newPassword: string}): void {
     this.showSpinnerPassword = true;
-    this.data.changePasswordAuth(passwords)
+    this.mainApiService.postRequest('/user/change_password_auth', passwords)
     .subscribe(response => {
       this.showSpinnerPassword = false;
       if (response.message === 'Incorrect password') {
@@ -71,9 +72,10 @@ export class ProfileComponent implements OnInit {
   public saveNewPhone(event): void {
     this.editedPhone = true;
   }
-  public saveName(val: string): void {
+  public saveName(name: string): void {
     this.showSpinnerForName = true;
-    this.data.setNewProfileData({name: val}).subscribe(() => {
+    this.mainApiService.putRequest('/user/profile', {name})
+    .subscribe(() => {
       this.toastService.openToastSuccess('Your name was changed successfully');
       this.editedName = false;
       this.showSpinnerForName = false;
@@ -82,9 +84,10 @@ export class ProfileComponent implements OnInit {
       this.showSpinnerForName = false;
     });
   }
-  public savePhone(val: string): void {
+  public savePhone(phone: string): void {
     this.showSpinnerPhone = true;
-    this.data.setNewProfileData({phone: val}).subscribe(() => {
+    this.mainApiService.putRequest('/user/profile', {phone})
+    .subscribe(() => {
       this.toastService.openToastSuccess('Your phone number was chanched successfully');
       this.editedPhone = false;
       this.showSpinnerPhone = false;
@@ -99,9 +102,9 @@ export class ProfileComponent implements OnInit {
   public saveMail(val: string): void {
     this.showSpinnerForEmail = true;
     const params = {username: this.user.username, newEmail: val};
-    this.data.changeEmail(params)
+    this.mainApiService.putRequest('/user/change_email', params)
     .subscribe(() => {
-      this.toastService.openToastSuccess('Your e-mail was chanched. Check your e-mail and confirm');
+      this.toastService.openToastSuccess('Your e-mail was changed. Check your e-mail and confirm');
       this.editedMail = false;
       this.showSpinnerForEmail = false;
     }, () => {
@@ -110,7 +113,8 @@ export class ProfileComponent implements OnInit {
     });
   }
   public deleteAvatar(): void {
-    this.data.deleteAvatar(this.user.username).subscribe(response => {
+    this.mainApiService.deleteRequest(`/user/delete_avatar/${this.user.username}`)
+    .subscribe(response => {
       this.store.dispatch(new userAction.UpdateAvatarURL(response));
     }, () => {
       this.toastService.openToastFail('Server error');
@@ -121,11 +125,13 @@ export class ProfileComponent implements OnInit {
     const formData: FormData = new FormData();
     formData.append('image', files[0]);
     formData.append('userId', this.user.username);
-    this.data.uploadAvatar(formData, this.user.username).subscribe((res) => {
+    this.mainApiService.postRequest('/user/upload_avatar', formData, {'userId': this.user.username})
+    .subscribe((res) => {
       const avatar: types.Avatar = this.avatarService.parseAvatar(res);
       this.store.dispatch(new userAction.UpdateAvatarURL(avatar));
     }, () => {
       this.toastService.openToastFail('Error in uploading avatar');
     });
   }
+
 }
