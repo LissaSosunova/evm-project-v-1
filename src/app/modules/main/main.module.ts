@@ -39,8 +39,6 @@ import { CalendarComponent } from './components/calendar/calendar';
 import { ChatsComponent } from './components/chats/chats.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { SharedModule } from '../shared/shared.module';
-import { NgxMatDatetimePickerModule } from '../shared/form-controls/ngx-mat-timepicker/ngx-mat-datetime-picker.module';
-import { NgxMatTimepickerModule } from '../shared/form-controls/ngx-mat-timepicker/ngx-mat-timepicker.module';
 import { DateTransformService } from './services/date-transform.service';
 import { MainApiService } from './services/main.api.service';
 import { GetChatResolverService } from './resolvers/get-chat-resolver.service';
@@ -92,8 +90,6 @@ import { GetDraftMessagesResolverService } from './resolvers/get-draft-messages-
     MatNativeDateModule,
     MatRadioModule,
     MatSelectModule,
-    NgxMatDatetimePickerModule,
-    NgxMatTimepickerModule,
   ],
   providers: [
     DatePipe,

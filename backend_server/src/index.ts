@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as core from 'express-serve-static-core';
 import * as bodyParser from 'body-parser';
+import * as cookieParser  from 'cookie-parser';
 import {settings} from './config';
 import { runWebsocketsIO } from './sockets/socket.io';
 import routes from './routes/routes';
@@ -12,10 +13,11 @@ const port: string | number = process.env.PORT || settings.backendPort;
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, token_key, userId');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, token_key, userId, Set-Cookie');
   next();
 });
 

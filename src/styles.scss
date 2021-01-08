@@ -99,3 +99,27 @@ $font-primary: Montserrat;
     padding-right: 5px;
   }
 }
+
+ngx-mat-datetime-content {
+  .actions {
+    button {
+      &.mat-button-base {
+        background-color: map-get($bg-color, 'green');
+        color: black;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover, &:active{
+          background-color: map-get($bg-color, 'dark');
+          span {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}

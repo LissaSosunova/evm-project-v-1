@@ -1,5 +1,5 @@
 import * as socketIo from 'socket.io';
-import * as jwt from 'jwt-simple';
+import * as jwt from 'jsonwebtoken';
 import { UserActionsSocket, OnlineClients, ClientsInChat, Auth } from '../interfaces/types';
 import { addUser } from './events/add_user';
 import { confirmUser } from './events/confirm_user';
@@ -31,7 +31,7 @@ export function runWebsocketsIO(server: any): void {
         }
         let auth: Auth;
         try {
-          auth = jwt.decode(socket.handshake.query.token, socket.handshake.query.token_key as string);
+          auth = jwt.verify(socket.handshake.query.token, socket.handshake.query.token_key as string) as Auth;
         } catch (err) {
           console.error('Error in decoding token');
           return new Error('Error in decoding token');

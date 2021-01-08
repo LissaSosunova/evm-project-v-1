@@ -7,7 +7,7 @@ import { BaseApi } from '../../shared/base-api/base-api';
 export class LoginApiService extends BaseApi {
 
   constructor(protected http: HttpClient) {
-    super(http)
+    super(http);
   }
 
   public postRequest(url: string, params: {}): Observable<any> {

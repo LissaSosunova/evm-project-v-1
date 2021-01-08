@@ -92,7 +92,7 @@ export class NgxMatDatetimeContent<D> extends _MatDatepickerContentMixinBase
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class NgxMatDatetimePicker<D> implements OnDestroy, CanColor {
+export class NgxMatDatetimePicker<D> implements OnDestroy {
   private _scrollStrategy: () => ScrollStrategy;
 
   /** An input indicating the type of the custom header component for the calendar, if set. */
@@ -260,6 +260,8 @@ export class NgxMatDatetimePicker<D> implements OnDestroy, CanColor {
 
   /** Emits new selected date when selected date changes. */
   readonly _selectedChanged = new Subject<D>();
+
+  readonly _stateChanges  = new Subject<D>();
 
   /** Raw value before  */
   private _rawValue: D;

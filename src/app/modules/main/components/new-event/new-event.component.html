@@ -42,6 +42,7 @@ class="main-block">
                   [placeholder]="'Start date and time'"
                   [(ngModel)]="event.date.startDate"
                   [disableSecond]="true"
+                  [max]="event.date.endDate"
                   name="startDate"
                   ></app-input-date-and-time-picker>
                   <app-input-date-and-time-picker
@@ -49,6 +50,7 @@ class="main-block">
                   [placeholder]="'End date and time'"
                   [(ngModel)]="event.date.endDate"
                   [disableSecond]="true"
+                  [min]="event.date.startDate"
                   name="endDate"></app-input-date-and-time-picker>
                 </div>
               </div>
