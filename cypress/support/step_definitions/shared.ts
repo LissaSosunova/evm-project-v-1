@@ -2,6 +2,7 @@ import * as user1 from '../../../backend_server/src/admin_api/for_e2e/user1/e2eU
 import * as user2 from '../../../backend_server/src/admin_api/for_e2e/user2/e2eUser.json';
 import * as user3 from '../../../backend_server/src/admin_api/for_e2e/user3/e2eUser.json';
 import {config} from '../../config';
+import { deleteCookie, setCookie } from '../utils/cookies-service';
 
 then('I see the {string}', component => {
     cy.get(component).should('exist');
@@ -17,12 +18,8 @@ given('I visit login page', () => {
 
 given('I am alredy sign-out', () => {
     cy.window().then($window => {
-        if ($window.sessionStorage.getItem('_token')) {
-            $window.sessionStorage.removeItem('_token');
-        }
-        if ($window.sessionStorage.getItem('token_key')) {
-            $window.sessionStorage.removeItem('token_key');
-        }
+        deleteCookie('token_key', $window.document);
+        deleteCookie('access_token', $window.document);
     });
 });
 
@@ -40,8 +37,8 @@ given('I am already signed-in as {string}', username => {
     cy.request('POST', `${config.backendUrl}/login`, {username: userObj[username].username, password: userObj[username].password})
     .then((response: Cypress.Response) => {
         cy.window().then($window => {
-            $window.sessionStorage.setItem('_token', response.body.access_token);
-            $window.sessionStorage.setItem('token_key', response.body.token_key);
+            setCookie('access_token', response.body.access_token, $window.document);
+            setCookie('token_key', response.body.token_key, $window.document);
         });
     });
 });
