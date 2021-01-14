@@ -55,14 +55,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   public exit(): void {
     const userData  = this.transferService.dataGet('userData');
-    const token = this.cookieService.getCookie('access_token');
     const dataObj = {
       userId: userData.username,
-      token: token
     };
     this.socketIoService.socketEmit(SocketIO.events.user_left, dataObj);
-    this.cookieService.deleteCookie('access_token');
-    this.cookieService.deleteCookie('token_key');
+    this.cookieService.deleteCookie('sign_in');
   }
 
   public onClickOutside(event: MouseEvent): void {
@@ -90,8 +87,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.currParentUrl = urlSegments[1];
     if (this.currParentUrl === '/' || !this.currParentUrl) {
       this.currParentUrl = 'login';
-      const token = this.cookieService.getCookie('access_token');
-      if (token) {
+      const sign_in = this.cookieService.getCookie('sign_in');
+      if (sign_in) {
         this.currParentUrl = 'main';
       }
     }

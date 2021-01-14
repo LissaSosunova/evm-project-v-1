@@ -20,8 +20,10 @@ export class DeleteChatController extends AuthToken {
               objNew: {$pull: {chats: {id: contactId}}}
         };
         try {
-            await datareader(User, deleteChatParams, MongoActions.UPDATE_ONE);
-            await datareader(User, params, MongoActions.UPDATE_ONE);
+            await Promise.all([
+                datareader(User, deleteChatParams, MongoActions.UPDATE_ONE),
+                datareader(User, params, MongoActions.UPDATE_ONE)
+            ]);
         } catch (error) {
             console.error('/delete_chat', error);
             return res.status(500).json({error, status: 500});

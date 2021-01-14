@@ -36,7 +36,6 @@ export interface DraftMessageFromServer {
 
 export interface UserActionsSocket {
     userId: string;
-    token: string;
     chatIdCurr?: string;
 }
 

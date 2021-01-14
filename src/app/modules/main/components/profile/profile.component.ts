@@ -123,6 +123,9 @@ export class ProfileComponent implements OnInit {
   public uploadAvatar(event): void {
     const files = this.uploadFile.nativeElement.files;
     const formData: FormData = new FormData();
+    if (files?.length === 0) {
+      return;
+    }
     formData.append('image', files[0]);
     formData.append('userId', this.user.username);
     this.mainApiService.postRequest('/user/upload_avatar', formData, {'userId': this.user.username})

@@ -70,10 +70,6 @@ export class SocketIoService {
     }
     this.socketInstance = io(this.getURI(), {
       reconnection: true,
-      query: {
-        token: this.cookieService.getCookie('access_token'),
-        token_key: this.cookieService.getCookie('token_key')
-      }
     });
     this.socketInstance.on('reconnect', this.onSocketReconnect.bind(this, username));
     this.socketInstance.on('connect', this.onSocketReconnect.bind(this, username));
@@ -92,16 +88,13 @@ export class SocketIoService {
   }
 
   private async onSocketReconnect(username: string): Promise<void> {
-    const token = this.cookieService.getCookie('access_token');
     const dataObj = {
       userId: username,
-      token: token
     };
     this.socketEmit(SocketIO.events.user, dataObj);
     if (this.chatId) {
       const data = {
         userId: username,
-        token: token,
         chatIdCurr: this.chatId
       };
       this.socketEmit(SocketIO.events.user_in_chat, data);

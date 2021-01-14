@@ -18,6 +18,11 @@ import { ResponseExceptionInterceptorService } from './interceptors/response-exc
       useClass: ResponseExceptionInterceptorService,
       multi: true,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true,
+    },
   ],
   exports: [
   ],

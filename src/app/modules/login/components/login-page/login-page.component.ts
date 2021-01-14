@@ -32,8 +32,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    const token = this.cookieService.getCookie('access_token');
-    if (token) {
+    const sign_in = this.cookieService.getCookie('sign_in');
+    if (sign_in) {
       setTimeout(() => {
         this.router.navigate(['/main/home']);
       });
@@ -55,10 +55,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       data => {
         this.dataResp = data as types.LoginResp;
         if (this.dataResp.success) {
-          const token = this.dataResp.access_token;
-          const tokenKey = this.dataResp.token_key;
-          this.cookieService.setCookie('access_token', token, {'max-age': data.expires_in});
-          this.cookieService.setCookie('token_key', tokenKey, {'max-age': data.expires_in});
+          this.cookieService.setCookie('sign_in', 'true', {'max-age': data.expires_in});
           this.router.navigate(['/main/home']);
         } else {
           this.errorMessage = data.message;

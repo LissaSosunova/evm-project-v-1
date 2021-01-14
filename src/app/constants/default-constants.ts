@@ -7,6 +7,6 @@ export module constants {
 
     export const deployedBackEnd = {
         protocol: 'https',
-        host: 'evm-backend.herokuapp.com'
+        host: 'evm-client.herokuapp.com'
     };
 }

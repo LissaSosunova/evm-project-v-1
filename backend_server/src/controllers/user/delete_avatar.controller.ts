@@ -38,9 +38,11 @@ export class DeleteAvatarController extends AuthToken {
             }
         };
         try {
-            await datareader(User, queryParam, MongoActions.UPDATE_ONE);
-            await datareader(User, updateAvatarInContacts, MongoActions.UPDATE_MANY);
-            await datareader(User, updateAvatarInChats, MongoActions.UPDATE_MANY);
+            await Promise.all([
+                datareader(User, queryParam, MongoActions.UPDATE_ONE),
+                datareader(User, updateAvatarInContacts, MongoActions.UPDATE_MANY),
+                datareader(User, updateAvatarInChats, MongoActions.UPDATE_MANY),
+            ]);
             res.json(avatarObjToSave);
         } catch (error) {
             console.error('/delete_avatar', error);
