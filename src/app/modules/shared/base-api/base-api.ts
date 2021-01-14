@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 
 export abstract class BaseApi {
   private readonly baseApiUrl: string = `
-  ${environment.cors ? environment.backendURI : null}${environment.baseApi}${environment.versionApi}`;
+  ${environment.cors ? environment.backendURI : ''}${environment.baseApi}${environment.versionApi}`;
 
   protected constructor(protected http: HttpClient) {
   }

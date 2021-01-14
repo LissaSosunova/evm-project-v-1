@@ -10,7 +10,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -39,9 +39,8 @@ import { SelectComponent } from './form-controls/select/select.component';
 import { InputNumberComponent } from './form-controls/input-number/input-number.component';
 import { TextFieldComponent } from './form-controls/text-field/text-field.component';
 import { InputDateAndTimePickerComponent } from './form-controls/input-date-and-time-picker/input-date-and-time-picker.component';
-import { NgxMatDatetimePickerModule } from './form-controls/ngx-mat-timepicker/ngx-mat-datetime-picker.module';
-import { NgxMatTimepickerModule } from './form-controls/ngx-mat-timepicker/ngx-mat-timepicker.module';
 import { FilterPipe } from 'src/app/modules/main/pipes/filter.pipe';
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 
 @NgModule({
   declarations: [
@@ -89,7 +88,8 @@ import { FilterPipe } from 'src/app/modules/main/pipes/filter.pipe';
     MatIconModule,
     MatNativeDateModule,
     MatSelectModule,
-    NgxMatDatetimePickerModule,
+    NgxMatDatetimePickerModule, 
+    NgxMatNativeDateModule, 
     NgxMatTimepickerModule,
   ],
   exports: [
@@ -118,6 +118,9 @@ import { FilterPipe } from 'src/app/modules/main/pipes/filter.pipe';
     InputNumberComponent,
     TextFieldComponent,
     InputDateAndTimePickerComponent,
+    NgxMatDatetimePickerModule, 
+    NgxMatNativeDateModule, 
+    NgxMatTimepickerModule,
   ],
   entryComponents: [
     ToastSuccessComponent,

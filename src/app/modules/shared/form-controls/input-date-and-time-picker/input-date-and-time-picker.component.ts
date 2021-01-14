@@ -1,21 +1,25 @@
-import { Component, NgZone, OnInit, ViewChild, Input, forwardRef, Output, EventEmitter, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, forwardRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 import { DatePipe } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NgxMatDatetimePicker } from '@angular-material-components/datetime-picker';
 
 @Component({
   selector: 'app-input-date-and-time-picker',
   templateUrl: './input-date-and-time-picker.component.html',
-  styleUrls: ['./input-date-and-time-picker.component.css'],
+  styleUrls: ['./input-date-and-time-picker.component.scss'],
   providers: [{provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => InputDateAndTimePickerComponent),
     multi: true}]
 })
-export class InputDateAndTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, AfterViewInit {
+export class InputDateAndTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
-  @ViewChild('picker') picker: any;
+  // start date of clickable dates
+  @Input() public min?: Date;
+  // end date of clickable dates
+  @Input() public max?: Date;
   @Output() public dateChange: EventEmitter<any> = new EventEmitter<any>();
 
   public localDateStr: string;
@@ -30,29 +34,25 @@ export class InputDateAndTimePickerComponent implements ControlValueAccessor, On
   private onTouched: () => void;
   public formGroup = new FormGroup({
     date: new FormControl(null, [Validators.required])
-  })
+  });
   @Input() public control?: FormControl;
   @Input() public value?: Date | number;
   @Input() public format = 'M/d/yy, h:mm a';
-
+  @ViewChild('picker') public picker: NgxMatDatetimePicker<any>;
 
   constructor(
-    private zone: NgZone,
     private datePipe: DatePipe) {
   }
 
- 
+
   ngOnInit() {
     this.init();
   }
 
-  ngAfterViewInit() {
-
+  public openDatePicker(): void {
+    this.picker.open();
   }
 
-  closePicker() {
-    this.picker.cancel();
-  }
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

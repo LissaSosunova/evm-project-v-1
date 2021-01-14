@@ -52,6 +52,9 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
+            },
+            "dev": {
+              "outputPath": "backend_server/src/evm-proj"
             }
           }
         },
@@ -59,7 +62,8 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "evm-proj:build",
-            "port": 3000
+            "port": 3000,
+            "proxyConfig": "proxy.conf.localDev.js"
           },
           "configurations": {
             "production": {

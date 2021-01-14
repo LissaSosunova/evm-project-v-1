@@ -9,7 +9,7 @@ export const environment = {
   backendURI: URIObj.getLocalURI(),
   baseApi: '/api',
   versionApi: '/v1',
-  cors: true,
+  cors: false,
 };
 
 /*

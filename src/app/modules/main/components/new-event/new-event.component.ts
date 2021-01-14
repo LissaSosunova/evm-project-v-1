@@ -97,7 +97,11 @@ export class NewEventComponent implements OnInit, OnDestroy {
   }
 
   public selectDateOption(): void {
-    this.event.date = {} as types.EventDate;
+    // fix for expresionHasBeenChangedAfterItHasBeenChecked
+    setTimeout(() => {
+      this.event.date.endDate = null;
+      this.event.date.startDate = null;
+    });
   }
 // Old function to convert date to UTC
   private dateToUTC(date: types.EventDate): types.EventDateDb {
@@ -124,6 +128,8 @@ export class NewEventComponent implements OnInit, OnDestroy {
       };
       // this.hours.push(obj);
     }
+    this.event.date.endDate = null;
+    this.event.date.startDate = null;
   }
 
   private initNewEventConfirm(): void {
