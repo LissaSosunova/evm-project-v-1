@@ -17,8 +17,8 @@ export class MainGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    const token = this.cookieService.getCookie('access_token');
-    if (token) {
+    const sign_in = this.cookieService.getCookie('sign_in');
+    if (sign_in) {
       return true;
     } else {
       this.router.navigate(['/login']);

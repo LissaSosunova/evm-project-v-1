@@ -31,9 +31,8 @@ export class ResponseExceptionInterceptorService implements HttpInterceptor {
             const {status} = error;
             if (status === 401) {
               this.router.navigate(['/login']);
-              this.toastService.openToastFail('Please sign in');
-              this.cookieService.deleteCookie('token_key');
-              this.cookieService.deleteCookie('access_token');
+              this.toastService.openToastFail('Please sign in', {duration: 7000});
+              this.cookieService.deleteCookie('sign_in');
             }
           }
           return throwError(error);

@@ -19,8 +19,8 @@ export class UploadAvatarController extends AuthToken {
           ]
         };
         try {
-            const img = fs.readFileSync((req as any).file.path);
-            const encode_image = img.toString('base64');
+            const img = (req as any).file && fs.readFileSync((req as any).file.path);
+            const encode_image = img && img.toString('base64');
             // BASE64 object
             const finalImg = {
             contentType: (req as any).file.mimetype,
@@ -53,9 +53,11 @@ export class UploadAvatarController extends AuthToken {
                 ]},
                 elementMatch: {avatar: 1}
             };
-            await datareader(User, queryParam, MongoActions.UPDATE_ONE);
-            await datareader(User, updateAvatarInContacts, MongoActions.UPDATE_MANY);
-            await datareader(User, updateAvatarInChats, MongoActions.UPDATE_MANY);
+            await Promise.all([
+                datareader(User, queryParam, MongoActions.UPDATE_ONE),
+                datareader(User, queryParam, MongoActions.UPDATE_ONE),
+                datareader(User, updateAvatarInChats, MongoActions.UPDATE_MANY),
+            ]);
             const savedAvatar: {_id: string, avatar: Avatar}[] = await datareader(User, queryParams, MongoActions.FIND_ELEMENT_MATCH);
             fs.readdir(path.join(__dirname, `../../../uploads/${req.headers.userid}/avatars/`), (err, items) => {
                 items.forEach((file) => {

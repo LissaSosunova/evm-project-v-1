@@ -49,6 +49,8 @@ export class LoginController {
                     id: response._id,
                 };
                 const access_token: string = jwt.sign(forToken, token_key, {expiresIn: settings.tokenExpiration});
+                res.cookie('access_token', access_token, {path: '/' , httpOnly: true, maxAge: settings.tokenExpiration * 1000});
+                res.cookie('token_key', token_key, {path: '/', httpOnly: true, maxAge: settings.tokenExpiration * 1000});
                 res.json({
                     success: true,
                     access_token,

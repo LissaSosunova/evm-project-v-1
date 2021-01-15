@@ -16,6 +16,7 @@ import { userIsTyping } from './events/user_is_typing';
 import { userReadMessage } from './events/user_read_message';
 import { addUserToChat } from './events/add_user_to_chat';
 import { userLeftGroupChat } from './events/user_left_group_chat';
+import { cookiesToObject } from '../modules/cookies-Parser';
 
 export function runWebsocketsIO(server: any): void {
     const onlineClients: OnlineClients = {};
@@ -24,17 +25,15 @@ export function runWebsocketsIO(server: any): void {
     console.log('Socket IO is running');
     io.on('connection', (socket) => {
       /** User authentication */
-        if (socket && socket.handshake && socket.handshake.query && !socket.handshake.query.token ||
-          !socket.handshake.query.token_key) {
+      const cookies: string = socket.handshake.headers.cookie;
+      const cookiesObj = cookiesToObject(cookies);
+      const {access_token, token_key} = cookiesObj;
+      let auth: Auth;
+        try {
+          auth = jwt.verify(access_token, token_key) as Auth;
+        } catch (err) {
           console.error('Unauthorized user');
           return new Error('Unauthorized user');
-        }
-        let auth: Auth;
-        try {
-          auth = jwt.verify(socket.handshake.query.token, socket.handshake.query.token_key as string) as Auth;
-        } catch (err) {
-          console.error('Error in decoding token');
-          return new Error('Error in decoding token');
         }
         /** User authentication
          * Unauthorized are not allowed to connect to sockets
@@ -48,8 +47,8 @@ export function runWebsocketsIO(server: any): void {
                 onlineClients[obj.userId] = {};
               }
               (socket as any).userId = obj.userId;
-              (socket as any).token = obj.token;
-              onlineClients[obj.userId][obj.token] = socket;
+              (socket as any).token = access_token;
+              onlineClients[obj.userId][access_token] = socket;
               socket.emit('all_online_users', Object.keys(onlineClients));
               socket.broadcast.emit('user', {userId: obj.userId});
         });
@@ -59,7 +58,7 @@ export function runWebsocketsIO(server: any): void {
             return;
           }
              try {
-                delete onlineClients[obj.userId][obj.token];
+                delete onlineClients[obj.userId][access_token];
                 if (Object.keys(onlineClients[obj.userId]).length === 0) {
                   delete onlineClients[obj.userId];
                 }
@@ -86,9 +85,9 @@ export function runWebsocketsIO(server: any): void {
                 clientsInChat[obj.chatIdCurr][obj.userId] = {};
             }
             (socket as any).userId = obj.userId;
-            (socket as any).token = obj.token;
+            (socket as any).token = access_token;
             (socket as any).chatIdCurr = obj.chatIdCurr;
-            clientsInChat[obj.chatIdCurr][obj.userId][obj.token] = socket;
+            clientsInChat[obj.chatIdCurr][obj.userId][access_token] = socket;
           } catch (error) {
             console.error('user_in_chat', error);
             if (obj && onlineClients[obj.userId]) {
@@ -105,8 +104,8 @@ export function runWebsocketsIO(server: any): void {
             return;
           }
             try {
-              if (obj.chatIdCurr && obj.userId && obj.token) {
-                delete clientsInChat[obj.chatIdCurr][obj.userId][obj.token];
+              if (obj.chatIdCurr && obj.userId) {
+                delete clientsInChat[obj.chatIdCurr][obj.userId][access_token];
               }
               if (Object.keys(clientsInChat[obj.chatIdCurr][obj.userId]).length === 0) {
                   delete clientsInChat[obj.chatIdCurr][obj.userId];

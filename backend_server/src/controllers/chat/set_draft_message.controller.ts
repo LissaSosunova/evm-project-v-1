@@ -26,8 +26,10 @@ export class SetDraftMessageController extends AuthToken {
           if (findDraftMes == null) {
             await datareader(Chat, updateParams, MongoActions.UPDATE_ONE);
           } else {
-            await datareader(Chat, deleteDraftMessParams, MongoActions.UPDATE_ONE);
-            await datareader(Chat, updateParams, MongoActions.UPDATE_ONE);
+            await Promise.all([
+              datareader(Chat, deleteDraftMessParams, MongoActions.UPDATE_ONE),
+              datareader(Chat, updateParams, MongoActions.UPDATE_ONE)
+            ]);
           }
           res.json({status: 200, message: 'message saved'} as Server200Response);
         } catch (error) {

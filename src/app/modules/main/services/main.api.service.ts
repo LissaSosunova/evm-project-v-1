@@ -7,9 +7,8 @@ import { BaseApi } from '../../shared/base-api/base-api';
 @Injectable()
 export class MainApiService extends BaseApi {
 
-  constructor(protected http: HttpClient,
-    private cookieService: CookieService) {
-    super(http)
+  constructor(protected http: HttpClient) {
+    super(http);
   }
 
   public getRequest(url: string, params?: {}): Observable<any> {
@@ -29,9 +28,7 @@ export class MainApiService extends BaseApi {
   }
 
   private getHeaders(additionalHeaders?: {[name: string]: string}): HttpHeaders {
-    const token = this.cookieService.getCookie('access_token');
-    const tokenKey = this.cookieService.getCookie('token_key');
-    const headers = new HttpHeaders({'authorization': token, 'token_key': tokenKey, ... additionalHeaders});
+    const headers = new HttpHeaders({... additionalHeaders});
     return headers;
   }
 }
