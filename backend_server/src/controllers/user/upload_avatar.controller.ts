@@ -10,8 +10,8 @@ import { User } from '../../models/user';
 export class UploadAvatarController extends AuthToken {
 
     public async uploadAvatar(req: Request, res: Response): Promise<void> {
-        let auth: Auth = this.checkToken(req);
-        
+        const auth: Auth = this.checkToken(req);
+        const {id: userId, username} = auth;
         const params = {
           $or: [
             {username: auth.username},
@@ -23,11 +23,11 @@ export class UploadAvatarController extends AuthToken {
             const encode_image = img && img.toString('base64');
             // BASE64 object
             const finalImg = {
-            contentType: (req as any).file.mimetype,
-            image: new Buffer(encode_image, 'base64')
+                contentType: (req as any).file.mimetype,
+                image: Buffer.from(encode_image, 'base64')
             };
             const avatarObjToSave = {
-                owner: req.headers.userid,
+                owner: username,
                 avatar: finalImg
             };
             const queryParam: DbQuery = {
@@ -35,22 +35,22 @@ export class UploadAvatarController extends AuthToken {
                 objNew: {$set: {avatar : avatarObjToSave}}
             };
             const updateAvatarInContacts: DbQuery = {
-                query: { 'contacts.id': req.headers.userid},
+                query: { 'contacts.id': username},
                 objNew: {
                     $set : { 'contacts.$.avatar' : avatarObjToSave }
                 }
             };
             const updateAvatarInChats: DbQuery = {
-                query: {'chats.id': req.headers.userid},
+                query: {'chats.id': username},
                 objNew: {
                     $set : {'chats.$.avatar' : avatarObjToSave }
                 }
             };
             const queryParams: DbQuery = {
                 query: {$or: [
-                {username: auth.username},
-                {email: auth.username}
-                ]},
+                                {username: auth.username},
+                                {email: auth.username}
+                        ]},
                 elementMatch: {avatar: 1}
             };
             await Promise.all([
@@ -59,11 +59,11 @@ export class UploadAvatarController extends AuthToken {
                 datareader(User, updateAvatarInChats, MongoActions.UPDATE_MANY),
             ]);
             const savedAvatar: {_id: string, avatar: Avatar}[] = await datareader(User, queryParams, MongoActions.FIND_ELEMENT_MATCH);
-            fs.readdir(path.join(__dirname, `../../../uploads/${req.headers.userid}/avatars/`), (err, items) => {
+            fs.readdir(path.join(__dirname, `../../../uploads/${userId}/avatars/`), (err, items) => {
                 items.forEach((file) => {
-                    fs.unlinkSync(path.join(__dirname, `../../../uploads/${req.headers.userid}/avatars/${file}`));
+                    fs.unlinkSync(path.join(__dirname, `../../../uploads/${userId}/avatars/${file}`));
                 });
-                fs.rmdirSync(path.join(__dirname, `../../../uploads/${req.headers.userid}/avatars/`));
+                fs.rmdirSync(path.join(__dirname, `../../../uploads/${userId}/avatars/`));
             });
             res.json(savedAvatar[0].avatar);
         } catch (error) {

@@ -164,14 +164,13 @@ export module types {
   export interface DraftMessage {
     _id?: string;
     chatID: string;
-    authorId: string;
+    authorId?: string;
     text: string;
     date: number;
   }
 
   export interface DraftMessageDeleteObj {
     chatID: string;
-    authorId: string;
   }
 
   export interface Events {

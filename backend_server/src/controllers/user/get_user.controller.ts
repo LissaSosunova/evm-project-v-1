@@ -11,7 +11,7 @@ import { Chat } from '../../models/chats';
 export class GetUserController extends AuthToken {
 
     public async user(req: Request, res: Response): Promise<void> {
-        let auth: Auth = this.checkToken(req);
+        const auth: Auth = this.checkToken(req);
         const params = {
           $or: [
             {username: auth.username},

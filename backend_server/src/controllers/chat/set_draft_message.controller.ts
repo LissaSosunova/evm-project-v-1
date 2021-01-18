@@ -8,18 +8,19 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 export class SetDraftMessageController extends AuthToken {
 
     public async setMessage(req: Request, res: Response): Promise<void> {
-        // let auth: Auth = this.checkToken(req);
+        const auth: Auth = this.checkToken(req);
         const reqObj: DraftMessageDb = req.body;
+        const {username: authorId} = auth;
         const deleteDraftMessParams: DbQuery = {
           query: {'_id' : reqObj.chatID},
-          objNew: {$pull: {draftMessages: {authorId: reqObj.authorId}}}
+          objNew: {$pull: {draftMessages: {authorId }}}
         };
         const updateParams: DbQuery = {
           query: {'_id' : reqObj.chatID},
           objNew: {$push: {'draftMessages': reqObj}}
         };
         const queryParams = {
-          _id: reqObj.chatID, 'draftMessages.authorId': reqObj.authorId
+          _id: reqObj.chatID, 'draftMessages.authorId': authorId
         };
         try {
           const findDraftMes: ChatDb = await datareader(Chat, queryParams, MongoActions.FIND_ONE);

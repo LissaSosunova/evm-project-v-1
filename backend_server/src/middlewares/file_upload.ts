@@ -1,17 +1,21 @@
 import * as multer from 'multer';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Auth } from '../interfaces/types';
+import { AuthToken } from '../abstract_classes/auth_abstract';
 
-export class FileUpload {
+export class FileUpload extends AuthToken {
 
+    public upload: multer.Multer;
     private fileName: string;
-    private storage;
-    public upload;
+    private storage: multer.StorageEngine;
 
     constructor() {
+        super();
         this.storage = multer.diskStorage({
-            destination: function (req, file, cb) {
-                const userId = req.headers.userid;
+            destination: (req, file, cb) => {
+                const auth: Auth = this.checkToken(req);
+                const userId = auth.id;
                 const uploadPathRoot = `../../uploads`;
                 const uploadPathNested1 = `../../uploads/${userId}`;
                 const uploadPathNested2 = `../../uploads/${userId}/avatars`;

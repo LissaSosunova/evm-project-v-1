@@ -9,8 +9,7 @@ import { datareader } from '../../modules/datareader';
 export class ProfileController extends AuthToken {
 
     public async profile(req: Request, res: Response) {
-            let auth: Auth = this.checkToken(req);
-          
+            const auth: Auth = this.checkToken(req);
             const params = {
               $or: [
                 {username: auth.username},

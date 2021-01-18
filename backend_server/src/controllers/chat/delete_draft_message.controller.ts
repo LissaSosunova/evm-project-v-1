@@ -8,12 +8,12 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 export class DeleteDraftMessageController extends AuthToken {
 
     public async delete(req: Request, res: Response): Promise<void> {
-        // let auth: Auth = this.checkToken(req);
+        const auth: Auth = this.checkToken(req);
+        const authorId = auth.username;
         const chatId = req.params.chatID;
-        const authorId = req.params.authorId;
         const deleteDraftMessParams: DbQuery = {
         query: {'_id' : chatId},
-        objNew: {$pull: {draftMessages: {authorId: authorId}}}
+        objNew: {$pull: {draftMessages: {authorId}}}
         };
         try {
             await datareader(Chat, deleteDraftMessParams, MongoActions.UPDATE_ONE);
@@ -23,5 +23,4 @@ export class DeleteDraftMessageController extends AuthToken {
             res.status(500).json({error, status: 500});
         }
     }
-    
 }

@@ -8,7 +8,7 @@ import { datareader } from '../../modules/datareader';
 export class DeleteContactController extends AuthToken {
 
     public async delete(req: Request, res: Response) {
-        let auth: Auth = this.checkToken(req);
+        const auth: Auth = this.checkToken(req);
         const contactUsername = req.params.contactUsername;
         const params: DbQuery = {
             query: {username: auth.username},

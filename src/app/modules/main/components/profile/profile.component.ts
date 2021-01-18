@@ -101,7 +101,7 @@ export class ProfileComponent implements OnInit {
   }
   public saveMail(val: string): void {
     this.showSpinnerForEmail = true;
-    const params = {username: this.user.username, newEmail: val};
+    const params = {newEmail: val};
     this.mainApiService.putRequest('/user/change_email', params)
     .subscribe(() => {
       this.toastService.openToastSuccess('Your e-mail was changed. Check your e-mail and confirm');
@@ -128,7 +128,7 @@ export class ProfileComponent implements OnInit {
     }
     formData.append('image', files[0]);
     formData.append('userId', this.user.username);
-    this.mainApiService.postRequest('/user/upload_avatar', formData, {'userId': this.user.username})
+    this.mainApiService.postRequest('/user/upload_avatar', formData)
     .subscribe((res) => {
       const avatar: types.Avatar = this.avatarService.parseAvatar(res);
       this.store.dispatch(new userAction.UpdateAvatarURL(avatar));

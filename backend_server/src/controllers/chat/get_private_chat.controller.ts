@@ -11,7 +11,7 @@ import { User } from '../../models/user';
 export class GetPrivateChatController extends AuthToken {
 
     public async getChat(req: Request, res: Response): Promise<Response> {
-        let auth: Auth = this.checkToken(req);
+        const auth: Auth = this.checkToken(req);
 
         try {
           const chatId: string = req.params.chatId;
