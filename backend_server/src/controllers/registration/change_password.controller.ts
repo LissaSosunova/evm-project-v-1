@@ -36,6 +36,6 @@ export class ChangePasswordController {
                     }
                 }
             });
-        }        
+        }
     }
 }

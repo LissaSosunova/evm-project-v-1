@@ -59,7 +59,7 @@ export class NewUserController {
             });
           } else {
             const token = jwt.encode({username: user.username}, config.secretkeyForEmail);
-            const url = `${config.backendDomain}/confirm_email/${token}`;
+            const url = `${config.backendDomain}/api/${config.version}/confirm_email/${token}`;
             await transporter.sendMail({
               from: 'event-messenger',
               to: user.email,
