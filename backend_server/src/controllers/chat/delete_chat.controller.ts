@@ -8,8 +8,7 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 export class DeleteChatController extends AuthToken {
 
     public async delete(req: Request, res: Response): Promise<Response> {
-        let auth: Auth = this.checkToken(req);
-            
+        const auth: Auth = this.checkToken(req);
         const contactId = req.params.contactId;
         const deleteChatParams: DbQuery = {
             query: {'username' : auth.username, 'contacts.id' : contactId},

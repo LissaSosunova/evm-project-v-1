@@ -1,15 +1,15 @@
-import { AuthToken } from "../../abstract_classes/auth_abstract";
+import { AuthToken } from '../../abstract_classes/auth_abstract';
 import { Request, Response } from 'express';
-import { Auth, Avatar, DbQuery } from "../../interfaces/types";
-import { datareader } from "../../modules/datareader";
-import { MongoActions } from "../../interfaces/mongo-actions";
-import { User } from "../../models/user";
+import { Auth, Avatar, DbQuery } from '../../interfaces/types';
+import { datareader } from '../../modules/datareader';
+import { MongoActions } from '../../interfaces/mongo-actions';
+import { User } from '../../models/user';
 
 
 export class DeleteAvatarController extends AuthToken {
 
     public async delete(req: Request, res: Response) {
-        let auth: Auth = this.checkToken(req);
+        const auth: Auth = this.checkToken(req);
         const params = {
             $or: [
                 {username: auth.username},

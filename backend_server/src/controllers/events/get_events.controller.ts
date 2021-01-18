@@ -7,8 +7,7 @@ import { Event } from '../../models/event'
 export class GetEventsController extends AuthToken {
 
     public getEvents(req: Request, res: Response): void {
-        let auth: Auth = this.checkToken(req);
-        
+        const auth: Auth = this.checkToken(req);
         Event.findOne({
           $or: [
             {_id: req.params.id},

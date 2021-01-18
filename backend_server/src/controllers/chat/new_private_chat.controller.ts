@@ -9,9 +9,8 @@ import { ChatData } from '../../modules/chatData';
 
 export class NewPrivateChatController extends AuthToken {
 
-    public async createChat(req: Request, res: Response): Promise<Response>{
-        let auth: Auth = this.checkToken(req);
-        
+    public async createChat(req: Request, res: Response): Promise<Response> {
+        const auth: Auth = this.checkToken(req);
         const reqArr: NewPrivateChatReq = req.body;
         // Params for search in Chat DB (exist chat): req.body.users[0] - id autorisated user, а req.body.users[1] - id of second user
         const findChatParams = {

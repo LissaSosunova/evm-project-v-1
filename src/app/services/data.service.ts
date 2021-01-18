@@ -65,8 +65,8 @@ export class DataService {
   }
 
   public deleteDraftMessage(query: types.DraftMessageDeleteObj): Observable<types.Server200Response> {
-    const {chatID, authorId} = query; 
-    return this.http.delete<types.Server200Response>(`${URL_BACK}${baseApi}${versionApi}/chat/delete_draft_message/${chatID}/${authorId}`, {headers: this.getHeaders(), params: {chatID, authorId}});
+    const {chatID} = query; 
+    return this.http.delete<types.Server200Response>(`${URL_BACK}${baseApi}${versionApi}/chat/delete_draft_message/${chatID}}`, {headers: this.getHeaders(), params: {chatID}});
   }
 
   public deleteAvatar(userId: string): Observable<{owner: string; url: string}> {

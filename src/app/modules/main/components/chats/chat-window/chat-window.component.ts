@@ -388,7 +388,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private deleteDraftMessage(): void {
-    this.mainApiService.deleteRequest(`/chat/delete_draft_message/${this.chatId}/${this.user.username}`)
+    this.mainApiService.deleteRequest(`/chat/delete_draft_message/${this.chatId}`)
     .subscribe(res => {
       this.isDraftMessageExist = false;
     });
@@ -513,7 +513,6 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
       chatID: this.chatId,
       text: this.inputMes,
       date: date,
-      authorId: this.user.username
     };
     this.mainApiService.postRequest('/chat/set_draft_message', draftMessage)
     .subscribe(res => {

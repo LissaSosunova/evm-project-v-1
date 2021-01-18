@@ -8,7 +8,7 @@ import { MongoActions } from '../../interfaces/mongo-actions';
 export class ChangeEventStatusController extends AuthToken {
 
     public changeStatus(req: Request, res: Response): void {
-        let auth: Auth = this.checkToken(req);
+        const auth: Auth = this.checkToken(req);
         const eventId: string = req.params.eventId;
         const params = {
           $or: [
