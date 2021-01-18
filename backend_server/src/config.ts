@@ -6,7 +6,8 @@ const frontendPort = 3000;
 const config = {
     backendLocal: `http://localhost:${String(backendPort)}`,
     tokenExpiration: 3600,
-    backendDeploy: 'https://evm-backend.herokuapp.com',
+    // backendDeploy: 'https://evm-backend.herokuapp.com',
+    backendDeploy: 'https://evm-client.herokuapp.com',
     filesDomainLocal: `http://localhost:${String(backendPort)}`,
     filesDomainDeploy: 'https://evm-backend.herokuapp.com',
     frontendDomainLocal: `http://localhost:${String(frontendPort)}`,

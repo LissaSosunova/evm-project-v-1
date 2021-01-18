@@ -18,7 +18,7 @@ export class ForgotPasswordController {
             } else {
                 const token: string = jwt.encode(emailInDb.username, config.secretkeyForPasswordReset);
                 const tokenTime: number = Date.now();
-                const url = `${config.backendDomain}/registration/reset_password/${token}/${tokenTime}`;
+                const url = `${config.backendDomain}/api/${config.version}/registration/reset_password/${token}/${tokenTime}`;
                     await transporter.sendMail({
                         from: 'event-messenger',
                         to: email,

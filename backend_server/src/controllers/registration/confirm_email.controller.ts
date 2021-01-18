@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as jwt from 'jwt-simple';
-import { settings as config} from '../../config';
+import { settings as config } from '../../config';
 import { MongoActions } from '../../interfaces/mongo-actions';
 import { Avatar, PendingRegUser } from '../../interfaces/types';
 import { ConfUser } from '../../models/pending_registration_user';
@@ -43,4 +43,4 @@ export class ConfirmEmailController {
             res.status(500).json({error, status: 500});
         }
     }
-} 
+}
