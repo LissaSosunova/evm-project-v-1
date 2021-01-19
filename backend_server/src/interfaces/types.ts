@@ -352,6 +352,7 @@ export interface EventNotification {
 export interface Config {
     secretkeyForEmail: string;
     secretkeyForPasswordReset: string;
+    secretKeyForRefreshToken: string;
     filesDomain: string;
     confirmEmail: boolean;
     backendDomain: string;

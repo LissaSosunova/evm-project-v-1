@@ -8,6 +8,7 @@ import { PageMaskService } from 'src/app/services/page-mask.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CookieService } from 'src/app/core/services/cookie.service';
+import { SessionStorageService } from 'src/app/services/session.storage.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -31,7 +32,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
             private socketIoService: SocketIoService,
             private transferService: TransferService,
             private pageMaskService: PageMaskService,
-            private cookieService: CookieService) { }
+            private cookieService: CookieService,
+            private sessionStorageService: SessionStorageService) { }
 
   ngOnInit() {
     this.getCurrentRoute();
@@ -59,7 +61,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       userId: userData.username,
     };
     this.socketIoService.socketEmit(SocketIO.events.user_left, dataObj);
-    this.cookieService.deleteCookie('sign_in');
+    this.cookieService.deleteCookie('access_token_valid');
+    this.sessionStorageService.clearSessionStorage();
   }
 
   public onClickOutside(event: MouseEvent): void {
@@ -87,8 +90,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.currParentUrl = urlSegments[1];
     if (this.currParentUrl === '/' || !this.currParentUrl) {
       this.currParentUrl = 'login';
-      const sign_in = this.cookieService.getCookie('sign_in');
-      if (sign_in) {
+      const access_token_valid = this.cookieService.getCookie('access_token_valid');
+      if (access_token_valid) {
         this.currParentUrl = 'main';
       }
     }
