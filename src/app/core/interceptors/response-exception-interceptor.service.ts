@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { ToastService } from 'src/app/modules/shared/toasts/services/toast.service';
+import { SessionStorageService } from 'src/app/services/session.storage.service';
 import { CookieService } from '../services/cookie.service';
 
 
@@ -14,7 +15,8 @@ export class ResponseExceptionInterceptorService implements HttpInterceptor {
 
   constructor(private router: Router,
             private toastService: ToastService,
-            private cookieService: CookieService) {
+            private cookieService: CookieService,
+            private sessionStorageService: SessionStorageService) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -32,7 +34,8 @@ export class ResponseExceptionInterceptorService implements HttpInterceptor {
             if (status === 401) {
               this.router.navigate(['/login']);
               this.toastService.openToastFail('Please sign in', {duration: 7000});
-              this.cookieService.deleteCookie('sign_in');
+              this.cookieService.deleteCookie('access_token_valid');
+              this.sessionStorageService.clearSessionStorage();
             }
           }
           return throwError(error);

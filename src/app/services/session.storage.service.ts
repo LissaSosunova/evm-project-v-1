@@ -15,4 +15,8 @@ export class SessionStorageService {
     sessionStorage.setItem(key, value);
   }
 
+  public clearSessionStorage(): void {
+    sessionStorage.clear();
+  }
+
 }

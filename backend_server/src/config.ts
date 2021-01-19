@@ -23,6 +23,7 @@ if (process.env.NODE_ENV === 'production') {
     settings = {
         secretkeyForEmail: 'fghhrweyop76326mb09358j',
         secretkeyForPasswordReset: 'bvb47refh90bnqer09',
+        secretKeyForRefreshToken: 'ghn45hjh578bnfSfgYuRIf67',
         filesDomain: config.filesDomainDeploy,
         confirmEmail: true,
         backendDomain: config.backendDeploy,
@@ -39,6 +40,7 @@ if (process.env.NODE_ENV === 'production') {
     settings = {
         secretkeyForEmail: 'fghhrweyop76326mb09358j',
         secretkeyForPasswordReset: 'bvb47refh90bnqer09',
+        secretKeyForRefreshToken: 'ghn45hjh578bnfSfgYuRIf67',
         filesDomain: config.filesDomainLocal,
         confirmEmail: true,
         backendDomain: config.backendLocal,

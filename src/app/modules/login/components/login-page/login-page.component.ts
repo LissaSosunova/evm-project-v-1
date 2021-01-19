@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms';
 import { ToastService } from 'src/app/modules/shared/toasts/services/toast.service';
 import { CookieService } from 'src/app/core/services/cookie.service';
 import { LoginApiService } from '../../services/login-api.service';
+import { SessionStorageService } from 'src/app/services/session.storage.service';
 
 @Component({
   selector: 'app-login-page',
@@ -27,13 +28,14 @@ export class LoginPageComponent implements OnInit, OnDestroy {
               private router: Router,
               private cookieService: CookieService,
               private toastService: ToastService,
-              private loginApiService: LoginApiService) {
+              private loginApiService: LoginApiService,
+              private sessionStorageService: SessionStorageService) {
    }
 
 
   ngOnInit() {
-    const sign_in = this.cookieService.getCookie('sign_in');
-    if (sign_in) {
+    const access_token_valid = this.cookieService.getCookie('access_token_valid');
+    if (access_token_valid) {
       setTimeout(() => {
         this.router.navigate(['/main/home']);
       });
@@ -55,7 +57,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       data => {
         this.dataResp = data as types.LoginResp;
         if (this.dataResp.success) {
-          this.cookieService.setCookie('sign_in', 'true', {'max-age': data.expires_in});
+          this.cookieService.setCookie('access_token_valid', 'true', {'max-age': data.expires_in});
+          this.sessionStorageService.setValue('true', 'session');
           this.router.navigate(['/main/home']);
         } else {
           this.errorMessage = data.message;
