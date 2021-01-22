@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PageMaskComponent } from './page-mask.component';
 
@@ -6,7 +6,7 @@ describe('PageMaskComponent', () => {
   let component: PageMaskComponent;
   let fixture: ComponentFixture<PageMaskComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PageMaskComponent ]
     })
