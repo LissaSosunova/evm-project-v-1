@@ -93,6 +93,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       const access_token_valid = this.cookieService.getCookie('access_token_valid');
       if (access_token_valid) {
         this.currParentUrl = 'main';
+        this.currChildUrl = 'home';
+        return;
       }
     }
     if (urlSegments.length > 2) {
