@@ -3,9 +3,10 @@ import * as core from 'express-serve-static-core';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import {settings} from './config';
-import { runWebsocketsIO } from './sockets/socket.io';
 import routes from './routes/routes';
 import * as path from 'path';
+import { SocketIOServer } from './sockets/socketIOServer';
+import { StoreService } from './services/store-service';
 
 const app: core.Express = express();
 const port: string | number = process.env.PORT || settings.backendPort;
@@ -34,6 +35,8 @@ app.get('*', (req, res, next) => {
 app.use(`/api/${settings.version}`, routes);
 
 const server = app.listen(port);
-runWebsocketsIO(server);
+const socketIOServer = new SocketIOServer(server, new StoreService());
+socketIOServer.initServer();
+socketIOServer.onConnection();
 console.log(`Backend server is listening on port ${port}`);
 console.log('NODE_ENV', process.env.NODE_ENV);

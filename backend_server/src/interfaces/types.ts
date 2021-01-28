@@ -43,7 +43,7 @@ export interface OnlineClients {
     [userId: string]: TokenObj;
 }
 
-interface TokenObj {
+export interface TokenObj {
     [token: string]: socketIo.Socket;
 }
 
@@ -51,7 +51,7 @@ export interface ClientsInChat {
     [chatId: string]: UserIdObj;
 }
 
-interface UserIdObj {
+export interface UserIdObj {
     [userId: string]: TokenObj;
 }
 
