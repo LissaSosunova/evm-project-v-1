@@ -19,7 +19,7 @@ function validateEmail(email) {
         let password: string;
         let username: string;
         let name: string;
-        const pathfile: string = argv.credsUser;
+        const pathfile: string = argv.credsUser as string;
         if (pathfile) {
             userData = JSON.parse(fs.readFileSync(path.resolve(__dirname, pathfile), 'utf8'));
             email = userData.email;
@@ -27,10 +27,10 @@ function validateEmail(email) {
             username = userData.username;
             name = userData.name;
         } else {
-            email = argv.email;
-            password = argv.password;
-            username = argv.username;
-            name = argv.name;
+            email = argv.email as string;
+            password = argv.password as string;
+            username = argv.username as string;
+            name = argv.name as string;
         }
         if (!email || !password || !username || !name) {
             console.error(`Some input params are missed`);

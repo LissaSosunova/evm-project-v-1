@@ -46,6 +46,7 @@
         "@types/nodemailer": "^6.4.0",
         "@types/redis": "^2.8.28",
         "@types/socket.io": "^2.1.4",
+        "@types/yargs": "^16.0.0",
         "argv": "0.0.2",
         "bcrypt": "^3.0.6",
         "body-parser": "^1.18.2",
