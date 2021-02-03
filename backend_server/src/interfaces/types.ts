@@ -359,6 +359,7 @@ export interface Config {
     frontendDomain: string;
     expireResetPasswordLink: number;
     expireChangeEmailLink: number;
+    acountBlock: number;
     mongodb: string;
     backendPort: number;
     frontendPort: number;

@@ -66,8 +66,13 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         }
       },
       err => {
-        this.toastService.openToastFail('Server error');
+        const {status, error: {message}} = err;
         this.isPendingResponse = false;
+        if (status === 429) {
+          this.errorMessage = message;
+          return;
+        } 
+        this.toastService.openToastFail('Server error');
       }
     );
   }
