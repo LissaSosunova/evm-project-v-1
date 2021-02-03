@@ -34,7 +34,8 @@ if (process.env.NODE_ENV === 'production') {
         backendPort,
         frontendPort,
         tokenExpiration: config.tokenExpiration,
-        version: config.version
+        version: config.version,
+        acountBlock: 3600000,
     };
 } else {// for development, local settings
     settings = {
@@ -51,7 +52,8 @@ if (process.env.NODE_ENV === 'production') {
         backendPort,
         frontendPort,
         tokenExpiration: config.tokenExpiration,
-        version: config.version
+        version: config.version,
+        acountBlock: 60000,
     };
 }
 

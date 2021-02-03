@@ -7,19 +7,29 @@ import { settings } from '../../config';
 import { Request, Response } from 'express';
 import { datareader } from '../../modules/datareader';
 import { MongoActions } from '../../interfaces/mongo-actions';
+import { BruteForceProtectionService } from '../../services/brute-force-protection-service';
 
 export class LoginController {
 
-    constructor() {}
+    constructor(private bruteForceProtectionService: BruteForceProtectionService) {}
 
     public login(req: Request, res: Response): Response {
         let username: string;
         let password: string;
+        const maxNumberAttempts = 5;
         if (!req.body.username || !req.body.password) {
             return res.sendStatus(400);
         } else {
             username = req.body.username;
             password = req.body.password;
+            const bruteForceProtectionData = this.bruteForceProtectionService.getBruteForceData(username);
+            let attempts = bruteForceProtectionData && bruteForceProtectionData.attempts || 0;
+            if (attempts >= maxNumberAttempts && Date.now() < bruteForceProtectionData.blockExpiration) {
+                return res.status(429).json({status: 429, message: 'Too many attempts. Account is blocked temporary'});
+            } else if (attempts >= maxNumberAttempts && Date.now() > bruteForceProtectionData.blockExpiration) {
+                this.bruteForceProtectionService.deleteBruteForceData(username);
+                attempts = 0;
+            }
             const params = {
                 $or: [
                   {username: username},
@@ -40,6 +50,17 @@ export class LoginController {
                     return res.status(500).json({error});
                 }
                 if (!valid) {
+                    attempts++;
+                    if (attempts === maxNumberAttempts) {
+                        this.bruteForceProtectionService.setBruteForceData({
+                            username,
+                            attempts,
+                            blockExpiration: Date.now() + settings.acountBlock,
+                            isBlocked: true
+                        });
+                    } else {
+                        this.bruteForceProtectionService.setBruteForceData({username, attempts});
+                    }
                     return res.json({message: 'Incorrect password'}).status(401);
                 }
                 const response: UserDataObj = await datareader(User, params, MongoActions.FIND_ONE);
@@ -67,6 +88,7 @@ export class LoginController {
                     httpOnly: true,
                     sameSite: 'strict',
                 });
+                this.bruteForceProtectionService.deleteBruteForceData(username);
                 res.json({
                     success: true,
                     access_token,

@@ -7,6 +7,7 @@ import routes from './routes/routes';
 import * as path from 'path';
 import { SocketIOServer } from './sockets/socketIOServer';
 import { StoreService } from './services/store-service';
+import { rateLimiterMiddleware } from './middlewares/rate_limiter';
 
 const app: core.Express = express();
 const port: string | number = process.env.PORT || settings.backendPort;
@@ -32,7 +33,7 @@ app.get('*', (req, res, next) => {
     next();
   }
 });
-app.use(`/api/${settings.version}`, routes);
+app.use(`/api/${settings.version}`, rateLimiterMiddleware , routes);
 
 const server = app.listen(port);
 const socketIOServer = new SocketIOServer(server, new StoreService());
